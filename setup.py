@@ -24,7 +24,7 @@ setup(name='minecraft-launcher-lib',
         'Intended Audience :: Developers',
         'Environment :: Other Environment',
         'License :: OSI Approved :: BSD License',
-        'Topic :: Games/Entertainment'
+        'Topic :: Games/Entertainment',
         'Operating System :: OS Independent',
         "Operating System :: POSIX",
         "Operating System :: POSIX :: BSD",
