@@ -6,6 +6,8 @@
 Welcome to minecraft-launcher-lib's documentation!
 ==================================================
 
+minecraft-launcher-lib is a easy to use Python library for creating your own Minecraft Launcher.
+
 .. toctree::
     :maxdepth: 2
 

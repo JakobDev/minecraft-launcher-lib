@@ -1,0 +1,13 @@
+__pycache__/
+
+#setup.py
+build/
+dist/
+minecraft-launcher-lib.egg-info/
+
+#doc
+doc/_build
+doc/_static
+
+#logs
+logs/

@@ -15,9 +15,12 @@ def parseSingeRule(rule,options):
                     return returnvalue
                 elif value == "linux" and platform.system() != 'Linux':
                     return returnvalue
+            elif key == "arch":
+                if value == "x86" and platform.architecture()[0] != "32bit":
+                    return returnvalue
     if "features" in rule:
         for key, value in rule["features"].items():
-            if key == "has_custom_resolution" and not options.get("custom_resolution",False):
+            if key == "has_custom_resolution" and not options.get("customResolution",False):
                 return returnvalue
             elif key == "is_demo_user" and not options.get("demo",False):
                 return returnvalue

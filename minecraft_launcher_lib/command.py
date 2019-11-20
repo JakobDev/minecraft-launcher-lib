@@ -1,5 +1,6 @@
 from minecraft_launcher_lib.helper import parseRuleList, getNatives
 import json
+import copy
 import os
 
 def get_libraries(data,path):
@@ -23,20 +24,30 @@ def get_libraries(data,path):
         if not os.path.isfile(currentPath):
             print(currentPath)
         libstr = libstr + currentPath + ":"
-    libstr = libstr + os.path.join(path,"versions",data["id"],data["id"] + ".jar")
+    if "jar" in data:
+        libstr = libstr + os.path.join(path,"versions",data["jar"],data["jar"] + ".jar")
+    else:
+        libstr = libstr + os.path.join(path,"versions",data["id"],data["id"] + ".jar")
     return libstr
 
 def replace_arguments(argstr,versionData,path,options):
     #Replace all arguments with the needed value
+    argstr = argstr.replace("${natives_directory}",options["nativesDirectory"])
+    argstr = argstr.replace("${launcher_name}",options.get("launcherName","minecraft-launcher-lib"))
+    argstr = argstr.replace("${launcher_version}",options.get("launcherVersion","0.2"))
+    argstr = argstr.replace("${classpath}",options["classpath"])
     argstr = argstr.replace("${auth_player_name}",options.get("username","{username}"))
     argstr = argstr.replace("${version_name}",versionData["id"])
     argstr = argstr.replace("${game_directory}",options.get("gameDirectory",path))
     argstr = argstr.replace("${assets_root}",os.path.join(path,"assets"))
-    argstr = argstr.replace("${assets_index_name}",versionData["assets"])
+    argstr = argstr.replace("${assets_index_name}",versionData.get("assets",versionData["id"]))
     argstr = argstr.replace("${auth_uuid}",options.get("uuid","{uuid}"))
     argstr = argstr.replace("${auth_access_token}",options.get("token","{token}"))
     argstr = argstr.replace("${user_type}","mojang")
     argstr = argstr.replace("${version_type}",versionData["type"])
+    argstr = argstr.replace("${user_properties}","{}")
+    argstr = argstr.replace("${resolution_width}",options.get("resolutionWidth","854"))
+    argstr = argstr.replace("${resolution_height}",options.get("resolutionHeight","480"))
     return argstr
 
 def get_arguments_string(versionData,path,options):
@@ -68,19 +79,54 @@ def get_arguments(data,versionData,path,options):
                     arglist.append(v)
     return arglist
 
-def get_command(version,path,options):
+def inherit_json(original_data,path):
+    #See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
+    inherit_version = original_data["inheritsFrom"]
+    with open(os.path.join(path,"versions",inherit_version,inherit_version + ".json")) as f:
+        new_data = json.load(f)
+    for key, value in original_data.items():
+        if isinstance(value,list) and isinstance(new_data.get(key,None),list):
+            new_data[key] = new_data[key] + value
+        elif isinstance(value,dict) and isinstance(new_data.get(key,None),dict):
+            for a, b in value.items():
+                if isinstance(b,list):
+                    new_data[key][a] = new_data[key][a] + b
+        else:
+            new_data[key] = value
+    return new_data
+
+def get_minecraft_command(version,path,options):
     with open(os.path.join(path,"versions",version,version + ".json")) as f:
         data = json.load(f)
+    if "inheritsFrom" in data:
+        data = inherit_json(data,path)
+    options["nativesDirectory"] = os.path.join(path,"versions",data["id"],"natives")
+    options["classpath"] = get_libraries(data,path)
     command = ["java"]
-    command.append("-Xms512M")
-    command.append("-Xmx512M")
-    command.append("-Djava.library.path=" + os.path.join(path,"versions",data["id"],"natives"))
-    command.append("-cp")
-    command.append(get_libraries(data,path))
+    if "jvmArguments" in options:
+        command = command + options["jvmArguments"]
+    #Newer Versions have jvmArguments in version.json
+    if isinstance(data.get("arguments",None),dict):
+        if "jvm" in data["arguments"]:
+            command = command + get_arguments(data["arguments"]["jvm"],data,path,options)
+        else:
+            command.append("-Djava.library.path=" + options["nativesDirectory"])
+            command.append("-cp")
+            command.append(options["classpath"])
+    else:
+        command.append("-Djava.library.path=" + options["nativesDirectory"])
+        command.append("-cp")
+        command.append(options["classpath"])
     command.append(data["mainClass"])
     if "minecraftArguments" in data:
         #For older versions
         command = command + get_arguments_string(data,path,options)
     else:
         command = command + get_arguments(data["arguments"]["game"],data,path,options)
+    if "server" in options:
+        command.append("--server")
+        command.append(options["server"])
+        if "port" in options:
+            command.append("--port")
+            command.append(options["port"])
     return command

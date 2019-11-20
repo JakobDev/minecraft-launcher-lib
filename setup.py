@@ -5,7 +5,7 @@ with open("README.md","r",encoding="utf-8") as f:
     description = f.read()
 
 setup(name='minecraft-launcher-lib',
-    version='0.1',
+    version='0.2',
     description=' A library for creating a custom Minecraft launcher',
     long_description=description,
     long_description_content_type='text/markdown',

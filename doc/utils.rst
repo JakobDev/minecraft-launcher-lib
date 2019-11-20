@@ -19,3 +19,9 @@ Returns the latest versions of snapshot and release.
     get_version_list()
 
 Returns a list of all versions with the type.
+
+.. code:: python
+
+    get_installed_versions(path)
+
+Returns a list with all installed versions in the given path.
