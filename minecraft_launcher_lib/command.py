@@ -1,9 +1,14 @@
 from minecraft_launcher_lib.helper import parseRuleList, getNatives
+import platform
 import json
 import copy
 import os
 
 def get_libraries(data,path):
+    if platform.system() == "Windows":
+        classpath_seperator = ";"
+    else:
+        classpath_seperator = ":"
     libstr = ""
     for i in data["libraries"]:
         if not parseRuleList(i,"rules",{}):
@@ -18,12 +23,8 @@ def get_libraries(data,path):
             jarFilename = name + "-" + version + ".jar"
         else:
             jarFilename = name + "-" + version + "-" + native + ".jar"
-        #if jarFilename == "jinput-platform-2.0.5-natives-linux.jar":
-        #    continue
         currentPath = os.path.join(currentPath,jarFilename)
-        if not os.path.isfile(currentPath):
-            print(currentPath)
-        libstr = libstr + currentPath + ":"
+        libstr = libstr + currentPath + classpath_seperator
     if "jar" in data:
         libstr = libstr + os.path.join(path,"versions",data["jar"],data["jar"] + ".jar")
     else:
@@ -34,7 +35,7 @@ def replace_arguments(argstr,versionData,path,options):
     #Replace all arguments with the needed value
     argstr = argstr.replace("${natives_directory}",options["nativesDirectory"])
     argstr = argstr.replace("${launcher_name}",options.get("launcherName","minecraft-launcher-lib"))
-    argstr = argstr.replace("${launcher_version}",options.get("launcherVersion","0.2"))
+    argstr = argstr.replace("${launcher_version}",options.get("launcherVersion","0.3"))
     argstr = argstr.replace("${classpath}",options["classpath"])
     argstr = argstr.replace("${auth_player_name}",options.get("username","{username}"))
     argstr = argstr.replace("${version_name}",versionData["id"])
@@ -102,7 +103,7 @@ def get_minecraft_command(version,path,options):
         data = inherit_json(data,path)
     options["nativesDirectory"] = os.path.join(path,"versions",data["id"],"natives")
     options["classpath"] = get_libraries(data,path)
-    command = ["java"]
+    command = [options.get("executablePath","java")]
     if "jvmArguments" in options:
         command = command + options["jvmArguments"]
     #Newer Versions have jvmArguments in version.json

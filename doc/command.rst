@@ -18,6 +18,7 @@ options is a dict:
         "uuid": uuid of the user,
         "token": the accessToken,
         #This is optional
+        "executablePath": "java", #The path to the java executable
         "jvmArguments": [], #The jvmArguments
         "launcherName": "minecraft-launcher-lib", #The name of your launcher
         "launcherVersion": "1.0", #The version of your launcher

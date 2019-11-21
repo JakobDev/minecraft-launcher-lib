@@ -40,7 +40,6 @@ def logout_user(username, password):
     response = requests.post("https://authserver.mojang.com/signout", json=payload)
     return  response.status_code == 204
 
-
 def invalidate_access_token(access_token, client_token):
     payload = {
         'accessToken': access_token,

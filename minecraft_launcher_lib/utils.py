@@ -8,8 +8,7 @@ def get_minecraft_directory():
     if platform.system() == "Windows":
         return os.path.join(os.getenv('APPDATA'), ".minecraft")
     elif platform.system() == "Darwin":
-        return os.path.join(str(pathlib.Path.home()), "Library",
-                            "Application Support", "minecraft")
+        return os.path.join(str(pathlib.Path.home()), "Library", "Application Support", "minecraft")
     else:
         return os.path.join(str(pathlib.Path.home()), ".minecraft")
 

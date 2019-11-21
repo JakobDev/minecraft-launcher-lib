@@ -36,20 +36,24 @@ def parseRuleList(data,ruleString,options):
     return True
 
 def getNatives(data):
+    if platform.architecture()[0] == "32bit":
+        arch_type = "32"
+    else:
+        arch_type = "64"
     if "natives" in data:
         if platform.system() == 'Windows':
             if "windows" in data["natives"]:
-                return data["natives"]["windows"]
+                return data["natives"]["windows"].replace("${arch}",arch_type)
             else:
                 return ""
         elif platform.system() == 'Darwin':
             if "osx" in data["natives"]:
-                return data["natives"]["osx"]
+                return data["natives"]["osx"].replace("${arch}",arch_type)
             else:
                 return ""           
         else:
             if "linux" in data["natives"]:
-                return data["natives"]["linux"]
+                return data["natives"]["linux"].replace("${arch}",arch_type)
             else:
                 return "" 
     else:

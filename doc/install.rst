@@ -17,3 +17,5 @@ callback is a dict with functions that are called with arguments to get the prog
         "setProgress" some_function, #This function is called to set the progress.
         "setMax": some_function, #This function is called to set to max progress.
     }
+
+Files that are already exists will not be replaced.
