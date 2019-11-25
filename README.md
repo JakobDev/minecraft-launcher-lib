@@ -1,6 +1,6 @@
 # minecraft-launcher-lib
 
-A Python library for creating a custom minecraft launcher. This library containts function to install and execute minecraft and interacting with mojang accounts.
+A Python library for creating a custom minecraft launcher. This library containts functions to install and execute minecraft and interacting with mojang accounts.
 
 ```python
 import minecraft_launcher_lib
