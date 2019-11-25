@@ -1,5 +1,6 @@
-from minecraft_launcher_lib.helper import parseRuleList, getNatives
+from minecraft_launcher_lib.helper import parseRuleList, getNatives, inherit_json
 import requests
+import zipfile
 import shutil
 import json
 import os
@@ -34,10 +35,29 @@ def install_libraries(data,path,callback):
         if native != "":
             jarFilenameNative = name + "-" + version + "-" + native + ".jar"
         jarFilename = name + "-" + version + ".jar"
-        download_file(i["downloads"]["artifact"]["url"],os.path.join(currentPath,jarFilename),callback)
+        if not "downloads" in i:
+            continue
+        if "artifact" in i["downloads"]:
+            download_file(i["downloads"]["artifact"]["url"],os.path.join(currentPath,jarFilename),callback)
         if native != "":
             download_file(i["downloads"]["classifiers"][native]["url"],os.path.join(currentPath,jarFilenameNative),callback)
+            if "extract" in i:
+                extract_natives(data,path,os.path.join(currentPath,jarFilenameNative),i["extract"])
         callback.get("setProgress",empty)(count)
+
+def extract_natives(data,path,filename,extract_data):
+    #Unpack natives
+    natives_path = os.path.join(path,"versions",data["id"],"natives")
+    try:
+        os.mkdir(natives_path)
+    except:
+        pass
+    zf = zipfile.ZipFile(filename,"r")
+    for i in zf.namelist():
+        for e in extract_data["exclude"]:
+            if i.startswith(e):
+                continue
+        zf.extract(i,natives_path)
 
 def install_assets(data,path,callback):
     #Download all assets
@@ -54,15 +74,19 @@ def install_assets(data,path,callback):
         count += 1
         callback.get("setProgress",empty)(count)
 
-def do_version_install(data,path,callback):
+def do_version_install(versionid,path,callback,url=None):
     #Download and read versions.json
-    download_file(data["url"],os.path.join(path,"versions",data["id"],data["id"] + ".json"),callback)
-    with open(os.path.join(path,"versions",data["id"],data["id"] + ".json")) as f:
+    if url:
+        download_file(url,os.path.join(path,"versions",versionid,versionid + ".json"),callback)
+    with open(os.path.join(path,"versions",versionid,versionid + ".json")) as f:
         versiondata = json.load(f)
+    #For Forge
+    if "inheritsFrom" in versiondata:
+        versiondata = inherit_json(versiondata,path)
     install_libraries(versiondata,path,callback)
     install_assets(versiondata,path,callback)
     #Download minecraft.jar
-    download_file(versiondata["downloads"]["client"]["url"],os.path.join(path,"versions",data["id"],data["id"] + ".jar"),callback)
+    download_file(versiondata["downloads"]["client"]["url"],os.path.join(path,"versions",versiondata["id"],versiondata["id"] + ".jar"),callback)
 
 def install_minecraft_version(versionid,path,callback=None):
     if callback == None:
@@ -70,5 +94,12 @@ def install_minecraft_version(versionid,path,callback=None):
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
-            do_version_install(i,path,callback)
-            return
+            do_version_install(versionid,path,callback,url=i["url"])
+            return True
+    if not os.path.isdir(os.path.join(path,"versions")):
+        return False
+    for i in os.listdir(os.path.join(path,"versions")):
+        if i == versionid:
+            do_version_install(versionid,path,callback)
+            return True
+    return False

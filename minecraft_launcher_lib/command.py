@@ -1,4 +1,4 @@
-from minecraft_launcher_lib.helper import parseRuleList, getNatives
+from minecraft_launcher_lib.helper import parseRuleList, getNatives, inherit_json
 import platform
 import json
 import copy
@@ -35,7 +35,7 @@ def replace_arguments(argstr,versionData,path,options):
     #Replace all arguments with the needed value
     argstr = argstr.replace("${natives_directory}",options["nativesDirectory"])
     argstr = argstr.replace("${launcher_name}",options.get("launcherName","minecraft-launcher-lib"))
-    argstr = argstr.replace("${launcher_version}",options.get("launcherVersion","0.3"))
+    argstr = argstr.replace("${launcher_version}",options.get("launcherVersion","0.4"))
     argstr = argstr.replace("${classpath}",options["classpath"])
     argstr = argstr.replace("${auth_player_name}",options.get("username","{username}"))
     argstr = argstr.replace("${version_name}",versionData["id"])
@@ -79,22 +79,6 @@ def get_arguments(data,versionData,path,options):
                     v = replace_arguments(v,versionData,path,options)
                     arglist.append(v)
     return arglist
-
-def inherit_json(original_data,path):
-    #See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
-    inherit_version = original_data["inheritsFrom"]
-    with open(os.path.join(path,"versions",inherit_version,inherit_version + ".json")) as f:
-        new_data = json.load(f)
-    for key, value in original_data.items():
-        if isinstance(value,list) and isinstance(new_data.get(key,None),list):
-            new_data[key] = new_data[key] + value
-        elif isinstance(value,dict) and isinstance(new_data.get(key,None),dict):
-            for a, b in value.items():
-                if isinstance(b,list):
-                    new_data[key][a] = new_data[key][a] + b
-        else:
-            new_data[key] = value
-    return new_data
 
 def get_minecraft_command(version,path,options):
     with open(os.path.join(path,"versions",version,version + ".json")) as f:

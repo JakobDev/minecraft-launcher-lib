@@ -3,7 +3,7 @@ __pycache__/
 #setup.py
 build/
 dist/
-minecraft-launcher-lib.egg-info/
+minecraft_launcher_lib.egg-info/
 
 #doc
 doc/_build

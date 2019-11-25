@@ -1,4 +1,6 @@
 import platform
+import json
+import os
 
 def parseSingeRule(rule,options):
     #Parse a rule from the versions.json
@@ -59,3 +61,18 @@ def getNatives(data):
     else:
         return ""
 
+def inherit_json(original_data,path):
+    #See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
+    inherit_version = original_data["inheritsFrom"]
+    with open(os.path.join(path,"versions",inherit_version,inherit_version + ".json")) as f:
+        new_data = json.load(f)
+    for key, value in original_data.items():
+        if isinstance(value,list) and isinstance(new_data.get(key,None),list):
+            new_data[key] = value + new_data[key]
+        elif isinstance(value,dict) and isinstance(new_data.get(key,None),dict):
+            for a, b in value.items():
+                if isinstance(b,list):
+                    new_data[key][a] = new_data[key][a] + b
+        else:
+            new_data[key] = value
+    return new_data
