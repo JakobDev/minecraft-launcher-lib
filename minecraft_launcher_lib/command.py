@@ -1,4 +1,5 @@
-from minecraft_launcher_lib.helper import parseRuleList, getNatives, inherit_json
+from .helper import parseRuleList, getNatives, inherit_json
+from .utils import get_library_version
 import platform
 import json
 import copy
@@ -35,7 +36,7 @@ def replace_arguments(argstr,versionData,path,options):
     #Replace all arguments with the needed value
     argstr = argstr.replace("${natives_directory}",options["nativesDirectory"])
     argstr = argstr.replace("${launcher_name}",options.get("launcherName","minecraft-launcher-lib"))
-    argstr = argstr.replace("${launcher_version}",options.get("launcherVersion","0.4"))
+    argstr = argstr.replace("${launcher_version}",options.get("launcherVersion",get_library_version()))
     argstr = argstr.replace("${classpath}",options["classpath"])
     argstr = argstr.replace("${auth_player_name}",options.get("username","{username}"))
     argstr = argstr.replace("${version_name}",versionData["id"])
@@ -49,6 +50,8 @@ def replace_arguments(argstr,versionData,path,options):
     argstr = argstr.replace("${user_properties}","{}")
     argstr = argstr.replace("${resolution_width}",options.get("resolutionWidth","854"))
     argstr = argstr.replace("${resolution_height}",options.get("resolutionHeight","480"))
+    argstr = argstr.replace("${game_assets}",os.path.join(path,"assets","virtual","legacy"))
+    argstr = argstr.replace("${auth_session}",options.get("token","{token}"))
     return argstr
 
 def get_arguments_string(versionData,path,options):
@@ -56,6 +59,12 @@ def get_arguments_string(versionData,path,options):
     for v in versionData["minecraftArguments"].split(" "):
         v = replace_arguments(v,versionData,path,options)
         arglist.append(v)
+    #Custom resolution is not in the list
+    if options.get("customResolution",False):
+        arglist.append("--width")
+        arglist.append(options.get("resolutionWidth","854"))
+        arglist.append("--height")
+        arglist.append(options.get("resolutionHeight","480"))
     return arglist
 
 def get_arguments(data,versionData,path,options):

@@ -5,13 +5,14 @@ with open("README.md","r",encoding="utf-8") as f:
     description = f.read()
 
 setup(name='minecraft-launcher-lib',
-    version='0.4',
+    version='0.5',
     description=' A library for creating a custom Minecraft launcher',
     long_description=description,
     long_description_content_type='text/markdown',
     author='JakobDev',
     author_email='jakobdev@gmx.de',
     url='https://gitlab.com/JakobDev/minecraft-launcher-lib',
+    python_requires='>=3.5',
     include_package_data=True,
     install_requires=[
         'requests',

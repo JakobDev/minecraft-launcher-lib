@@ -30,3 +30,31 @@ def get_installed_versions(path):
             version_data = json.load(f)
         version_list.append({"id":version_data["id"],"type":version_data["type"]})
     return version_list
+
+def get_available_versions(path):
+    version_list = []
+    version_check = []
+    for i in get_version_list():
+        version_list.append({"id":i["id"],"type":i["type"]})
+        version_list.append(i["id"])
+    for i in get_installed_versions(path):
+        if not i["id"] in version_check:
+            version_list.append(i)
+    return version_list
+
+def get_java_executable():
+    if platform.system() == "Windows":
+        if os.path.isfile("C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"):
+            return "C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"
+        else:
+            return "java"
+    elif platform.system() == "Darwin":
+        return "java"
+    else:
+        try:
+            return os.readlink("/etc/alternatives/java")
+        except:
+            return "java"
+
+def get_library_version():
+    return "0.5"

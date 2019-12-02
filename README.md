@@ -30,10 +30,19 @@ minecraft_command = minecraft_launcher_lib.command.get_minecraft_command(latest_
 subprocess.call(minecraft_command)
 ```
 
+Features:
+- Easy installing
+- Get command to run minecraft
+- Login to mojang account
+- Forge supported
+- Old versions like alpha or beta supported
+- Documention aviable
+- OpenSource
+
 [Read the documentation](https://minecraft-launcher-lib.readthedocs.io/en/latest/index.html)
 
 [Thanks to tomsik68 who documented how a minecraft launcher works](https://github.com/tomsik68/mclauncher-api/wiki)
 
 Note:  
-This library is still beta. It might not work with all versions of minecraft yet, but the latest (1.14) is tested.
+This library is still beta. It might not work with all versions of minecraft yet.
 

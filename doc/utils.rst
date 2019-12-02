@@ -25,3 +25,21 @@ Returns a list of all versions with the type.
     get_installed_versions(path)
 
 Returns a list with all installed versions in the given path.
+
+.. code:: python
+
+    get_available_versions(path)
+
+Returns a list with all installable and only local installed (e.g. Forge) versions.
+
+.. code:: python
+
+    get_java_executable()
+
+Return the path to the java executable. This may not work on all systems correct.
+
+.. code:: python
+
+    get_library_version()
+
+Return the version of the library.

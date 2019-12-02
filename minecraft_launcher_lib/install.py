@@ -1,4 +1,5 @@
-from minecraft_launcher_lib.helper import parseRuleList, getNatives, inherit_json
+from .helper import parseRuleList, getNatives, inherit_json
+from .utils import get_library_version
 import requests
 import zipfile
 import shutil
@@ -16,7 +17,7 @@ def download_file(url,path,callback):
     except:
         pass
     callback.get("setStatus",empty)("Download " + os.path.basename(path))
-    r = requests.get(url, stream=True)
+    r = requests.get(url, stream=True, headers={"user-agent": "minecraft-launcher-lib/" + get_library_version()})
     with open(path, 'wb') as f:
         r.raw.decode_content = True
         shutil.copyfileobj(r.raw, f)
@@ -24,18 +25,23 @@ def download_file(url,path,callback):
 def install_libraries(data,path,callback):
     callback.get("setMax",empty)(len(data["libraries"]))
     for count, i in enumerate(data["libraries"]):
+        #Check, if the rules allow this lib for the current system
         if not parseRuleList(i,"rules",{}):
             continue
+        #Turn the name into a path
         currentPath = os.path.join(path,"libraries")
         libPath, name, version = i["name"].split(":")
         for l in libPath.split("."):
             currentPath = os.path.join(currentPath,l)
         currentPath = os.path.join(currentPath,name,version)
         native = getNatives(i)
+        #Check if there is a native file
         if native != "":
             jarFilenameNative = name + "-" + version + "-" + native + ".jar"
         jarFilename = name + "-" + version + ".jar"
         if not "downloads" in i:
+            if "extract" in i:
+                extract_natives(data,path,os.path.join(currentPath,jarFilenameNative),i["extract"])
             continue
         if "artifact" in i["downloads"]:
             download_file(i["downloads"]["artifact"]["url"],os.path.join(currentPath,jarFilename),callback)
@@ -60,6 +66,9 @@ def extract_natives(data,path,filename,extract_data):
         zf.extract(i,natives_path)
 
 def install_assets(data,path,callback):
+    #Old versions dosen't have this
+    if not "assetIndex" in data:
+        return
     #Download all assets
     download_file(data["assetIndex"]["url"],os.path.join(path,"assets","indexes",data["assets"] + ".json"),callback)
     with open(os.path.join(path,"assets","indexes",data["assets"] + ".json")) as f:
@@ -86,7 +95,8 @@ def do_version_install(versionid,path,callback,url=None):
     install_libraries(versiondata,path,callback)
     install_assets(versiondata,path,callback)
     #Download minecraft.jar
-    download_file(versiondata["downloads"]["client"]["url"],os.path.join(path,"versions",versiondata["id"],versiondata["id"] + ".jar"),callback)
+    if "downloads" in versiondata:
+        download_file(versiondata["downloads"]["client"]["url"],os.path.join(path,"versions",versiondata["id"],versiondata["id"] + ".jar"),callback)
 
 def install_minecraft_version(versionid,path,callback=None):
     if callback == None:
