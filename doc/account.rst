@@ -34,3 +34,15 @@ Log a user out.
     invalidate_access_token(access_token, client_token)
 
 Make a accessToken invalid.
+
+.. code:: python
+
+    upload_skin(uuid, access_token, path_to_skin.png, slim_model=False)
+
+Upload a Skin.
+
+.. code:: python
+
+    reset_skin(uuid, access_token)
+
+Reset a Skin.

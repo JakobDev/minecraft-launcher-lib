@@ -47,3 +47,21 @@ def invalidate_access_token(access_token, client_token):
     }
     response = requests.post("https://authserver.mojang.com/invalidate", json=payload)
     return response
+
+def upload_skin(uuid, access_token, path, slim=False):
+    headers = {
+        "Authorization": "Bearer " + access_token
+    }
+    files = {
+        "model": "slim" if slim else "",
+        "file": open(path,"rb")
+    }
+    response = requests.put("https://api.mojang.com/user/profile/{uuid}/skin".format(uuid=uuid), headers=headers, files=files)
+    return response
+
+def reset_skin(uuid, access_token):
+    headers = {
+        "Authorization": "Bearer " + access_token
+    }
+    response = requests.delete("https://api.mojang.com/user/profile/{uuid}/skin".format(uuid=uuid),headers=headers)
+    return response

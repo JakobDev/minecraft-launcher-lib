@@ -1,5 +1,6 @@
-from .helper import parseRuleList, getNatives, inherit_json
+from .helper import parseRuleList, inherit_json
 from .utils import get_library_version
+from .natives import get_natives
 import platform
 import json
 import copy
@@ -19,7 +20,7 @@ def get_libraries(data,path):
         for l in libPath.split("."):
             currentPath = os.path.join(currentPath,l)
         currentPath = os.path.join(currentPath,name,version)
-        native = getNatives(i)
+        native = get_natives(i)
         if native == "":
             jarFilename = name + "-" + version + ".jar"
         else:
@@ -65,6 +66,8 @@ def get_arguments_string(versionData,path,options):
         arglist.append(options.get("resolutionWidth","854"))
         arglist.append("--height")
         arglist.append(options.get("resolutionHeight","480"))
+    if options.get("demo",False):
+        arglist.append("--demo")
     return arglist
 
 def get_arguments(data,versionData,path,options):
@@ -90,11 +93,12 @@ def get_arguments(data,versionData,path,options):
     return arglist
 
 def get_minecraft_command(version,path,options):
+    options = copy.copy(options)
     with open(os.path.join(path,"versions",version,version + ".json")) as f:
         data = json.load(f)
     if "inheritsFrom" in data:
         data = inherit_json(data,path)
-    options["nativesDirectory"] = os.path.join(path,"versions",data["id"],"natives")
+    options["nativesDirectory"] = options.get("nativesDirectory",os.path.join(path,"versions",data["id"],"natives"))
     options["classpath"] = get_libraries(data,path)
     command = [options.get("executablePath","java")]
     if "jvmArguments" in options:

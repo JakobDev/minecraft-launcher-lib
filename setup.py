@@ -5,7 +5,7 @@ with open("README.md","r",encoding="utf-8") as f:
     description = f.read()
 
 setup(name='minecraft-launcher-lib',
-    version='0.5',
+    version='1.0',
     description=' A library for creating a custom Minecraft launcher',
     long_description=description,
     long_description_content_type='text/markdown',
@@ -21,7 +21,7 @@ setup(name='minecraft-launcher-lib',
     license='BSD',
     keywords=['JakobDev','Minecraft','Mojang','launcher','minecraft-launcher','java'],
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Environment :: Other Environment',
         'License :: OSI Approved :: BSD License',

@@ -29,6 +29,7 @@ options is a dict:
         "resolutionHeight": "480", #The resolution heigth
         "server": "example.com", #The ip of a server where Minecraft connect to after start
         "port": "123", #The port of a server where Minecraft connect to after start
+        "nativesDirectory": "minecraft_directory/versions/version/natives" #The natives directory
     }
 
 You can use the account module to get the needed information.

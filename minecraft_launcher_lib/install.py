@@ -1,7 +1,7 @@
-from .helper import parseRuleList, getNatives, inherit_json
+from .natives import extract_natives_file, get_natives
+from .helper import parseRuleList, inherit_json
 from .utils import get_library_version
 import requests
-import zipfile
 import shutil
 import json
 import os
@@ -34,36 +34,22 @@ def install_libraries(data,path,callback):
         for l in libPath.split("."):
             currentPath = os.path.join(currentPath,l)
         currentPath = os.path.join(currentPath,name,version)
-        native = getNatives(i)
+        native = get_natives(i)
         #Check if there is a native file
         if native != "":
             jarFilenameNative = name + "-" + version + "-" + native + ".jar"
         jarFilename = name + "-" + version + ".jar"
         if not "downloads" in i:
             if "extract" in i:
-                extract_natives(data,path,os.path.join(currentPath,jarFilenameNative),i["extract"])
+                extract_natives_file(os.path.join(currentPath,jarFilenameNative),os.path.join(path,"versions",data["id"],"natives"),i["extract"])
             continue
         if "artifact" in i["downloads"]:
             download_file(i["downloads"]["artifact"]["url"],os.path.join(currentPath,jarFilename),callback)
         if native != "":
             download_file(i["downloads"]["classifiers"][native]["url"],os.path.join(currentPath,jarFilenameNative),callback)
             if "extract" in i:
-                extract_natives(data,path,os.path.join(currentPath,jarFilenameNative),i["extract"])
+                extract_natives_file(os.path.join(currentPath,jarFilenameNative),os.path.join(path,"versions",data["id"],"natives"),i["extract"])
         callback.get("setProgress",empty)(count)
-
-def extract_natives(data,path,filename,extract_data):
-    #Unpack natives
-    natives_path = os.path.join(path,"versions",data["id"],"natives")
-    try:
-        os.mkdir(natives_path)
-    except:
-        pass
-    zf = zipfile.ZipFile(filename,"r")
-    for i in zf.namelist():
-        for e in extract_data["exclude"]:
-            if i.startswith(e):
-                continue
-        zf.extract(i,natives_path)
 
 def install_assets(data,path,callback):
     #Old versions dosen't have this

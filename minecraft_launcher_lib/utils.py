@@ -57,4 +57,4 @@ def get_java_executable():
             return "java"
 
 def get_library_version():
-    return "0.5"
+    return "1.0"
