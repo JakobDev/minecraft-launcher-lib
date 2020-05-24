@@ -86,7 +86,7 @@ def do_version_install(versionid,path,callback,url=None):
     #Need to copy jar for old forge versions
     if not os.path.isfile(os.path.join(path,"versions",versiondata["id"],versiondata["id"] + ".jar")) and "inheritsFrom" in versiondata:
         inheritsFrom = versiondata["inheritsFrom"]
-        shutil.cpyfile(os.path.join(path,"versions",versiondata["id"],versiondata["id"] + ".jar"),os.path.join(path,"versions",inheritsFrom,inheritsFrom + ".jar"))
+        shutil.copyfile(os.path.join(path,"versions",versiondata["id"],versiondata["id"] + ".jar"),os.path.join(path,"versions",inheritsFrom,inheritsFrom + ".jar"))
 
 def install_minecraft_version(versionid,path,callback=None):
     if callback == None:
