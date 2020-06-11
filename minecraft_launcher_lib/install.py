@@ -29,16 +29,24 @@ def install_libraries(data,path,callback):
         if not parseRuleList(i,"rules",{}):
             continue
         #Turn the name into a path
-        currentPath = os.path.join(path,"libraries")
+        currentPath = ""#os.path.join(path,"libraries")
         libPath, name, version = i["name"].split(":")
         for l in libPath.split("."):
             currentPath = os.path.join(currentPath,l)
         currentPath = os.path.join(currentPath,name,version)
+        downloadUrl = "https://libraries.minecraft.net/" + currentPath
+        currentPath = os.path.join(path,"libraries",currentPath)
         native = get_natives(i)
         #Check if there is a native file
         if native != "":
             jarFilenameNative = name + "-" + version + "-" + native + ".jar"
         jarFilename = name + "-" + version + ".jar"
+        downloadUrl = downloadUrl + "/" + jarFilename
+        #Try to download the lib
+        try:
+            download_file(downloadUrl,os.path.join(currentPath,jarFilename),callback)
+        except:
+            pass
         if not "downloads" in i:
             if "extract" in i:
                 extract_natives_file(os.path.join(currentPath,jarFilenameNative),os.path.join(path,"versions",data["id"],"natives"),i["extract"])

@@ -1,8 +1,5 @@
-# minecraft-launcher-lib
-
-A Python library for creating a custom minecraft launcher. This library containts functions to install and execute minecraft and interacting with mojang accounts.
-
-```python
+#!/usr/bin/env python3
+#This example shows how to simple install and launch the latest version of Minecraft.
 import minecraft_launcher_lib
 import subprocess
 
@@ -28,19 +25,4 @@ minecraft_command = minecraft_launcher_lib.command.get_minecraft_command(latest_
 
 #Start Minecraft
 subprocess.call(minecraft_command)
-```
 
-Features:
-- Easy installing
-- Get command to run minecraft
-- Login to mojang account
-- Forge supported
-- Old versions like alpha or beta supported
-- Documention aviable
-- OpenSource
-
-[View more examples](https://gitlab.com/JakobDev/minecraft-launcher-lib/-/tree/master/examples)
-
-[Read the documentation](https://minecraft-launcher-lib.readthedocs.io/en/latest/index.html)
-
-[Thanks to tomsik68 who documented how a minecraft launcher works](https://github.com/tomsik68/mclauncher-api/wiki)

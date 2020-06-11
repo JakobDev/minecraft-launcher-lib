@@ -1,3 +1,4 @@
+import distutils.spawn
 import platform
 import requests
 import pathlib
@@ -36,7 +37,7 @@ def get_available_versions(path):
     version_check = []
     for i in get_version_list():
         version_list.append({"id":i["id"],"type":i["type"]})
-        version_list.append(i["id"])
+        version_check.append(i["id"])
     for i in get_installed_versions(path):
         if not i["id"] in version_check:
             version_list.append(i)
@@ -44,17 +45,21 @@ def get_available_versions(path):
 
 def get_java_executable():
     if platform.system() == "Windows":
-        if os.path.isfile("C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"):
+        if os.getenv("JAVA_HOME"):
+            return os.path.join(os.getenv("JAVA_HOME"),"bin","java.exe")
+        elif os.path.isfile("C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"):
             return "C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"
         else:
-            return "java"
+            return distutils.spawn.find_executable("java") or "java"
+    elif os.getenv("JAVA_HOME"):
+            return os.path.join(os.getenv("JAVA_HOME"),"bin","java")
     elif platform.system() == "Darwin":
-        return "java"
+        return distutils.spawn.find_executable("java") or "java"
     else:
         try:
             return os.readlink("/etc/alternatives/java")
         except:
-            return "java"
+            return distutils.spawn.find_executable("java") or "java"
 
 def get_library_version():
-    return "1.2"
+    return "1.3"
