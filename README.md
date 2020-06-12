@@ -32,11 +32,12 @@ subprocess.call(minecraft_command)
 
 Features:
 - Easy installing
-- Get command to run minecraft
-- Login to mojang account
-- Forge supported
+- Get command to run Minecraft
+- Login to Mojang account
+- Support Forge and Liteloader
 - Old versions like alpha or beta supported
 - Documention aviable
+- Examples aviable
 - OpenSource
 
 [View more examples](https://gitlab.com/JakobDev/minecraft-launcher-lib/-/tree/master/examples)

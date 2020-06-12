@@ -18,9 +18,12 @@ def download_file(url,path,callback):
         pass
     callback.get("setStatus",empty)("Download " + os.path.basename(path))
     r = requests.get(url, stream=True, headers={"user-agent": "minecraft-launcher-lib/" + get_library_version()})
+    if r.status_code != 200:
+        return False
     with open(path, 'wb') as f:
         r.raw.decode_content = True
         shutil.copyfileobj(r.raw, f)
+    return True
 
 def install_libraries(data,path,callback):
     callback.get("setMax",empty)(len(data["libraries"]))
@@ -29,13 +32,14 @@ def install_libraries(data,path,callback):
         if not parseRuleList(i,"rules",{}):
             continue
         #Turn the name into a path
-        currentPath = ""#os.path.join(path,"libraries")
+        currentPath = os.path.join(path,"libraries")
+        downloadUrl = "https://libraries.minecraft.net"
         libPath, name, version = i["name"].split(":")
         for l in libPath.split("."):
             currentPath = os.path.join(currentPath,l)
+            downloadUrl = downloadUrl + "/" + l
+        downloadUrl = downloadUrl + "/" + name + "/" + version
         currentPath = os.path.join(currentPath,name,version)
-        downloadUrl = "https://libraries.minecraft.net/" + currentPath
-        currentPath = os.path.join(path,"libraries",currentPath)
         native = get_natives(i)
         #Check if there is a native file
         if native != "":

@@ -36,7 +36,7 @@ def main():
     password_input.grid(row=1,column=1)
 
     minecraft_directory= minecraft_launcher_lib.utils.get_minecraft_directory()
-    versions = minecraft_launcher_lib.utils.get_version_list()#minecraft_directory)
+    versions = minecraft_launcher_lib.utils.get_available_versions(minecraft_directory)
     version_list = []
 
     for i in versions:

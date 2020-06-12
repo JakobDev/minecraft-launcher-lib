@@ -62,4 +62,4 @@ def get_java_executable():
             return distutils.spawn.find_executable("java") or "java"
 
 def get_library_version():
-    return "1.3"
+    return "1.4"
