@@ -22,7 +22,7 @@ copyright = '2019-2020, JakobDev'
 author = 'JakobDev'
 
 # The full version, including alpha/beta/rc tags
-release = '1.4'
+release = '2.0'
 
 master_doc = 'index'
 

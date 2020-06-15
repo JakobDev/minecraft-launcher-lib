@@ -16,12 +16,5 @@ minecraft-launcher-lib is a easy to use Python library for creating your own Min
     natives
     account
     utils
+    forge
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

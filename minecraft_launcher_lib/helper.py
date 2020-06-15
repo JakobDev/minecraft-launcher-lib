@@ -1,4 +1,6 @@
 import platform
+import zipfile
+import hashlib
 import json
 import os
 
@@ -37,29 +39,6 @@ def parseRuleList(data,ruleString,options):
             return False
     return True
 
-def getNatives(data):
-    if platform.architecture()[0] == "32bit":
-        arch_type = "32"
-    else:
-        arch_type = "64"
-    if "natives" in data:
-        if platform.system() == 'Windows':
-            if "windows" in data["natives"]:
-                return data["natives"]["windows"].replace("${arch}",arch_type)
-            else:
-                return ""
-        elif platform.system() == 'Darwin':
-            if "osx" in data["natives"]:
-                return data["natives"]["osx"].replace("${arch}",arch_type)
-            else:
-                return ""           
-        else:
-            if "linux" in data["natives"]:
-                return data["natives"]["linux"].replace("${arch}",arch_type)
-            else:
-                return "" 
-    else:
-        return ""
 
 def inherit_json(original_data,path):
     #See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
@@ -76,3 +55,44 @@ def inherit_json(original_data,path):
         else:
             new_data[key] = value
     return new_data
+
+#Returns the path from a libname
+def get_library_path(name,path):
+    libpath = os.path.join(path,"libraries")
+    base_path, libname, version = name.split(":")
+    for i in base_path.split("."):
+        libpath = os.path.join(libpath,i)
+    try:
+        version,fileend = version.split("@")
+    except:
+        fileend = "jar"
+    libpath = os.path.join(libpath,libname,version,libname + "-" + version + "." + fileend)
+    return libpath
+
+#Returns the mainclass of a given jar
+def get_jar_mainclass(path):
+    zf = zipfile.ZipFile(path)
+    #Parse the MANIFEST.MF
+    with zf.open("META-INF/MANIFEST.MF") as f:
+        lines = f.read().decode("utf-8").splitlines()
+    zf.close()
+    content = {}
+    for i in lines:
+        try:
+            key, value = i.split(":")
+            content[key] = value[1:]
+        except:
+            pass
+    return content["Main-Class"]
+
+#Returns the sha1 hash of the given file
+def get_sha1_hash(path):
+    BUF_SIZE = 65536
+    sha1 = hashlib.sha1()
+    with open(path, 'rb') as f:
+        while True:
+            data = f.read(BUF_SIZE)
+            if not data:
+                break
+            sha1.update(data)
+    return sha1.hexdigest()
