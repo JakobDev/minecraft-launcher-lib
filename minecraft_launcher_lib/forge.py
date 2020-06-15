@@ -66,7 +66,7 @@ def install_forge_version(versionid,path,callback=None):
         callback = {}
     FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
     temp_file_path = os.path.join(tempfile.gettempdir(),"forge-" + str(random.randrange(1,100000)) + ".tmp")
-    download_file(FORGE_DOWNLOAD_URL.format(version=versionid),temp_file_path,{})
+    download_file(FORGE_DOWNLOAD_URL.format(version=versionid),temp_file_path,callback)
     zf = zipfile.ZipFile(temp_file_path,"r")
     #Read the install_profile.json
     with zf.open("install_profile.json","r") as f:
