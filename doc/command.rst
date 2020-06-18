@@ -6,7 +6,7 @@ command contains the function for creating the minecraft command.
 
     get_minecraft_command(version,path,options)
 
-Returns the command for running minecraft as list. The given command can be executed with subprocess. utils containt a function where you can get the default minecraft directory.
+Returns the command for running minecraft as list. The given command can be executed with subprocess. utils contains a function to get the default minecraft directory.
 
 options is a dict:
 

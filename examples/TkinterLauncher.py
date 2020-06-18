@@ -31,7 +31,7 @@ def main():
     Label(window,text="Username:").grid(row=0,column=0)
     username_input = Entry(window)
     username_input.grid(row=0,column=1)
-    Label(window,text="Passwort:").grid(row=1,column=0)
+    Label(window,text="Password:").grid(row=1,column=0)
     password_input = Entry(window)
     password_input.grid(row=1,column=1)
 
