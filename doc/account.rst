@@ -15,7 +15,7 @@ You should never save username and password! Only the client token.
 
     validate_access_token(username, password)
 
-Returns true, if the accessToken is valid.Else it will return false. You should check that before frunning minecraft.
+Returns true, if the accessToken is valid. Otherwise it will return false. You should check that before running minecraft.
 
 .. code:: python
 
@@ -33,7 +33,7 @@ Log a user out.
 
     invalidate_access_token(access_token, client_token)
 
-Make a accessToken invalid.
+Make an accessToken invalid.
 
 .. code:: python
 

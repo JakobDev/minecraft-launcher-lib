@@ -6,7 +6,7 @@ install allows you to install minecraft.
 
     install_minecraft_version(versionid,path,callback=None)
 
-Installs a minecraft version into the given path. e.g. install_version("1.14","/tmp/minecraft"). utils containt a function where you can get the default minecraft directory.
+Installs a minecraft version into the given path. e.g. install_version("1.14","/tmp/minecraft"). utils contains a function to get the default minecraft directory.
 
 callback is a dict with functions that are called with arguments to get the progress. You can use it to show the progress to the user.
 

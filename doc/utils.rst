@@ -36,7 +36,7 @@ Returns a list with all installable and only local installed (e.g. Forge) versio
 
     get_java_executable()
 
-Return the path to the java executable. This may not work on all systems correct.
+Return the path to the java executable. This may not work correctly on all systems.
 
 .. code:: python
 

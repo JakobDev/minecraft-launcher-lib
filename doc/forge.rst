@@ -1,7 +1,7 @@
 forge
 ==========================
 .. note::
-    Before using this modul, please read this comment from the forge developers:
+    Before using this module, please read this comment from the forge developers:
 
     .. code:: text
 

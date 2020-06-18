@@ -36,8 +36,8 @@ Features:
 - Login to Mojang account
 - Support Forge and Liteloader
 - Old versions like alpha or beta supported
-- Documention aviable
-- Examples aviable
+- Documention available
+- Examples available
 - OpenSource
 
 [View more examples](https://gitlab.com/JakobDev/minecraft-launcher-lib/-/tree/master/examples)
