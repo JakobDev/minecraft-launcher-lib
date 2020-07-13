@@ -115,6 +115,11 @@ def get_minecraft_command(version,path,options):
         command.append("-Djava.library.path=" + options["nativesDirectory"])
         command.append("-cp")
         command.append(options["classpath"])
+    #The argument for the logger file
+    if options.get("enableLoggingConfig",False):
+        if "logging" in data:
+            logger_file = os.path.join(path,"assets","log_configs",data["logging"]["client"]["file"]["id"])
+            command.append(data["logging"]["client"]["argument"].replace("${path}",logger_file))
     command.append(data["mainClass"])
     if "minecraftArguments" in data:
         #For older versions

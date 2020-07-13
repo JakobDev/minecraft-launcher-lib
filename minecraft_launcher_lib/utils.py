@@ -27,6 +27,8 @@ def get_installed_versions(path):
     dir_list = os.listdir(os.path.join(path,"versions"))
     version_list = []
     for i in dir_list:
+        if not os.path.isdir(os.path.join(path,"versions",i)):
+            continue
         with open(os.path.join(path,"versions",i,i + ".json"),"r",encoding="utf-8") as f:
             version_data = json.load(f)
         version_list.append({"id":version_data["id"],"type":version_data["type"]})
@@ -62,4 +64,4 @@ def get_java_executable():
             return distutils.spawn.find_executable("java") or "java"
 
 def get_library_version():
-    return "2.0"
+    return "2.1"

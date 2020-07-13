@@ -81,7 +81,7 @@ def install_assets(data,path,callback):
     if not "assetIndex" in data:
         return
     #Download all assets
-    download_file(data["assetIndex"]["url"],os.path.join(path,"assets","indexes",data["assets"] + ".json"),callback)
+    download_file(data["assetIndex"]["url"],os.path.join(path,"assets","indexes",data["assets"] + ".json"),callback,sha1=data["assetIndex"]["sha1"])
     with open(os.path.join(path,"assets","indexes",data["assets"] + ".json")) as f:
         assets_data = json.load(f)
     #The assets has a hash. e.g. c4dbabc820f04ba685694c63359429b22e3a62b5
@@ -105,6 +105,10 @@ def do_version_install(versionid,path,callback,url=None):
         versiondata = inherit_json(versiondata,path)
     install_libraries(versiondata,path,callback)
     install_assets(versiondata,path,callback)
+        #Download logging config
+    if "logging" in versiondata:
+        logger_file = os.path.join(path,"assets","log_configs",versiondata["logging"]["client"]["file"]["id"])
+        download_file(versiondata["logging"]["client"]["file"]["url"],logger_file,callback,sha1=versiondata["logging"]["client"]["file"]["sha1"])
     #Download minecraft.jar
     if "downloads" in versiondata:
         download_file(versiondata["downloads"]["client"]["url"],os.path.join(path,"versions",versiondata["id"],versiondata["id"] + ".jar"),callback,sha1=versiondata["downloads"]["client"]["sha1"])
