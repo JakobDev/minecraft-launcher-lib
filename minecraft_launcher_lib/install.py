@@ -120,15 +120,14 @@ def do_version_install(versionid,path,callback,url=None):
 def install_minecraft_version(versionid,path,callback=None):
     if callback == None:
         callback = {}
+    if os.path.isdir(os.path.join(path,"versions")):
+        for i in os.listdir(os.path.join(path,"versions")):
+            if i == versionid:
+                do_version_install(versionid,path,callback)
+                return True
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
             do_version_install(versionid,path,callback,url=i["url"])
-            return True
-    if not os.path.isdir(os.path.join(path,"versions")):
-        return False
-    for i in os.listdir(os.path.join(path,"versions")):
-        if i == versionid:
-            do_version_install(versionid,path,callback)
             return True
     return False
