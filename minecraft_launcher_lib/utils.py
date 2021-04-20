@@ -61,9 +61,11 @@ def get_java_executable():
     elif platform.system() == "Darwin":
         return distutils.spawn.find_executable("java") or "java"
     else:
-        try:
+        if os.path.islink("/etc/alternatives/java"):
             return os.readlink("/etc/alternatives/java")
-        except:
+        elif os.path.islink("/usr/lib/jvm/default-runtime"):
+            return os.path.join("/usr","lib","jvm",os.readlink("/usr/lib/jvm/default-runtime"),"bin","java")
+        else:
             return distutils.spawn.find_executable("java") or "java"
 
 def get_library_version():
