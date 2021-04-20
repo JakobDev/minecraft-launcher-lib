@@ -30,7 +30,7 @@ def validate_access_token(access_token: str) -> bool:
     response = requests.post("https://authserver.mojang.com/validate", json=payload)
     return response.status_code == 204
 
-def refresh_access_token(access_token: str, client_token: str) > Dict[str,Any]:
+def refresh_access_token(access_token: str, client_token: str) -> Dict[str,Any]:
     """
     Get a new access and client token
     """
