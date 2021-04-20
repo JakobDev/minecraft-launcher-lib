@@ -38,7 +38,13 @@ def install_libraries(data,path,callback):
             continue
         #Turn the name into a path
         currentPath = os.path.join(path,"libraries")
-        downloadUrl = "https://libraries.minecraft.net"
+        if "url" in i:
+            if i["url"].endswith("/"):
+                downloadUrl = i["url"][:-1]
+            else:
+                downloadUrl = i["url"]
+        else:
+            downloadUrl = "https://libraries.minecraft.net"
         try:
             libPath, name, version = i["name"].split(":")
         except:
