@@ -1,7 +1,10 @@
+from typing import Dict
 import distutils.spawn
 import platform
 import requests
+import random
 import pathlib
+import uuid
 import json
 import os
 
@@ -65,3 +68,13 @@ def get_java_executable():
 
 def get_library_version():
     return "2.1"
+
+def generate_test_options() -> Dict[str,str]:
+    """
+    Generates options to launch minecraft. Useful for testing. Do not use in production
+    """
+    return {
+        "username": f"Player{random.randrange(100,1000)}",
+        "uuid": str(uuid.uuid4()),
+        "token": ""
+    }

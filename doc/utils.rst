@@ -43,3 +43,9 @@ Return the path to the java executable. This may not work correctly on all syste
     get_library_version()
 
 Return the version of the library.
+
+.. code:: python
+
+    generate_test_options()
+
+Generates test options for get_minecraft_command(). Use this function to test launching without logging in. This should not be used in production.
