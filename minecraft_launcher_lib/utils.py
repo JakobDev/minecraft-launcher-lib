@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 import distutils.spawn
 import platform
 import requests
@@ -8,7 +8,10 @@ import uuid
 import json
 import os
 
-def get_minecraft_directory():
+def get_minecraft_directory() -> str:
+    """
+    Returns the default path to the .minecraft directory
+    """
     if platform.system() == "Windows":
         return os.path.join(os.getenv('APPDATA'), ".minecraft")
     elif platform.system() == "Darwin":
@@ -16,17 +19,26 @@ def get_minecraft_directory():
     else:
         return os.path.join(str(pathlib.Path.home()), ".minecraft")
 
-def get_latest_version():
+def get_latest_version() -> str:
+    """
+    Returns the latest version of Minecraft
+    """
     return requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()["latest"]
 
-def get_version_list():
+def get_version_list() -> List[Dict[str,str]]:
+    """
+    Returns all versions that Mojang offers to download
+    """
     vlist = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
     returnlist = []
     for i in vlist["versions"]:
         returnlist.append({"id":i["id"],"type":i["type"]})
     return returnlist
 
-def get_installed_versions(path):
+def get_installed_versions(path: str)  -> List[Dict[str,str]]:
+    """
+    Returns all installed versions
+    """
     dir_list = os.listdir(os.path.join(path,"versions"))
     version_list = []
     for i in dir_list:
@@ -37,7 +49,10 @@ def get_installed_versions(path):
         version_list.append({"id":version_data["id"],"type":version_data["type"]})
     return version_list
 
-def get_available_versions(path):
+def get_available_versions(path: str) -> List[Dict[str,str]]:
+    """
+    Returns all installed versions and all versions that Mojang offers to download
+    """
     version_list = []
     version_check = []
     for i in get_version_list():
@@ -48,7 +63,10 @@ def get_available_versions(path):
             version_list.append(i)
     return version_list
 
-def get_java_executable():
+def get_java_executable() -> str:
+    """
+    Tries the find out the path to the default java executable
+    """
     if platform.system() == "Windows":
         if os.getenv("JAVA_HOME"):
             return os.path.join(os.getenv("JAVA_HOME"),"bin","java.exe")
@@ -68,12 +86,15 @@ def get_java_executable():
         else:
             return distutils.spawn.find_executable("java") or "java"
 
-def get_library_version():
+def get_library_version() -> str:
+    """
+    Returns the version of minecraft-launcher-lib
+    """
     return "2.1"
 
 def generate_test_options() -> Dict[str,str]:
     """
-    Generates options to launch minecraft. Useful for testing. Do not use in production
+    Generates options to launch minecraft. Useful for testing. Do not use in production.
     """
     return {
         "username": f"Player{random.randrange(100,1000)}",

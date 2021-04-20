@@ -1,11 +1,14 @@
+from typing import List, Dict, Any
 import platform
 import zipfile
 import hashlib
 import json
 import os
 
-def parseSingeRule(rule,options):
-    #Parse a rule from the versions.json
+def parse_single_rule(rule: Dict[str,Any],options: Dict[str,Any]) -> bool:
+    """
+    Parse a single rule from the versions.json
+    """
     if rule["action"] == "allow":
         returnvalue = False
     elif rule["action"] == "disallow":
@@ -30,18 +33,23 @@ def parseSingeRule(rule,options):
                 return returnvalue
     return not returnvalue
 
-def parseRuleList(data,ruleString,options):
-    #Parse a rule list
-    if not ruleString in data:
+def parse_rule_list(data: Dict[str,Any],rule_string: str,options: dict[str,Any]) -> bool:
+    """
+    Parse a list of rules
+    """
+    if not rule_string in data:
         return True
-    for i in data[ruleString]:
-        if not parseSingeRule(i,options):
+    for i in data[rule_string]:
+        if not parse_single_rule(i,options):
             return False
     return True
 
 
-def inherit_json(original_data,path):
-    #See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
+def inherit_json(original_data: Dict[str,Any],path: str) -> Dict[str,Any]:
+    """
+    Implement the inheritsFrom function
+    See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
+    """
     inherit_version = original_data["inheritsFrom"]
     with open(os.path.join(path,"versions",inherit_version,inherit_version + ".json")) as f:
         new_data = json.load(f)
@@ -56,8 +64,10 @@ def inherit_json(original_data,path):
             new_data[key] = value
     return new_data
 
-#Returns the path from a libname
-def get_library_path(name,path):
+def get_library_path(name: str,path: str) -> str:
+    """
+    Returns the path from a libname
+    """
     libpath = os.path.join(path,"libraries")
     base_path, libname, version = name.split(":")
     for i in base_path.split("."):
@@ -69,8 +79,10 @@ def get_library_path(name,path):
     libpath = os.path.join(libpath,libname,version,libname + "-" + version + "." + fileend)
     return libpath
 
-#Returns the mainclass of a given jar
-def get_jar_mainclass(path):
+def get_jar_mainclass(path: str) -> str:
+    """
+    Returns the mainclass of a given jar
+    """
     zf = zipfile.ZipFile(path)
     #Parse the MANIFEST.MF
     with zf.open("META-INF/MANIFEST.MF") as f:
@@ -85,8 +97,11 @@ def get_jar_mainclass(path):
             pass
     return content["Main-Class"]
 
-#Returns the sha1 hash of the given file
-def get_sha1_hash(path):
+def get_sha1_hash(path: str) -> str:
+    """
+    Calculate the sha1 checksum of a file
+    Source: https://stackoverflow.com/questions/22058048/hashing-a-file-in-python
+    """
     BUF_SIZE = 65536
     sha1 = hashlib.sha1()
     with open(path, 'rb') as f:

@@ -1,15 +1,22 @@
+from .helper import parse_rule_list, inherit_json, get_sha1_hash
 from .natives import extract_natives_file, get_natives
-from .helper import parseRuleList, inherit_json, get_sha1_hash
+from typing import Any, Callable, Dict
 from .utils import get_library_version
 import requests
 import shutil
 import json
 import os
 
-def empty(arg):
+def empty(arg: Any):
+    """
+    This function is just a placeholder
+    """
     pass
 
-def download_file(url,path,callback,sha1=None):
+def download_file(url: str,path: str,callback: Dict[str,Callable],sha1: str=None) -> bool:
+    """
+    Downloads a file into the given path. Check sha1 if given.
+    """
     if os.path.isfile(path):
         if sha1 == None:
             return False
@@ -30,11 +37,14 @@ def download_file(url,path,callback,sha1=None):
         shutil.copyfileobj(r.raw, f)
     return True
 
-def install_libraries(data,path,callback):
+def install_libraries(data: Dict[str,Any],path: str,callback: Dict[str,Callable]):
+    """
+    Install all libraries
+    """
     callback.get("setMax",empty)(len(data["libraries"]))
     for count, i in enumerate(data["libraries"]):
         #Check, if the rules allow this lib for the current system
-        if not parseRuleList(i,"rules",{}):
+        if not parse_rule_list(i,"rules",{}):
             continue
         #Turn the name into a path
         currentPath = os.path.join(path,"libraries")
@@ -82,7 +92,10 @@ def install_libraries(data,path,callback):
                 extract_natives_file(os.path.join(currentPath,jarFilenameNative),os.path.join(path,"versions",data["id"],"natives"),i["extract"])
         callback.get("setProgress",empty)(count)
 
-def install_assets(data,path,callback):
+def install_assets(data: Dict[str,Any],path: str,callback: Dict[str,Callable]):
+    """
+    Install all assets
+    """
     #Old versions dosen't have this
     if not "assetIndex" in data:
         return
@@ -100,7 +113,10 @@ def install_assets(data,path,callback):
         count += 1
         callback.get("setProgress",empty)(count)
 
-def do_version_install(versionid,path,callback,url=None):
+def do_version_install(versionid: str,path: str,callback: Dict[str,Callable],url: str=None):
+    """
+    Install the given version
+    """
     #Download and read versions.json
     if url:
         download_file(url,os.path.join(path,"versions",versionid,versionid + ".json"),callback)
@@ -123,7 +139,10 @@ def do_version_install(versionid,path,callback,url=None):
         inheritsFrom = versiondata["inheritsFrom"]
         shutil.copyfile(os.path.join(path,"versions",versiondata["id"],versiondata["id"] + ".jar"),os.path.join(path,"versions",inheritsFrom,inheritsFrom + ".jar"))
 
-def install_minecraft_version(versionid,path,callback=None):
+def install_minecraft_version(versionid: str,path: str,callback: Dict[str,Callable]=None):
+    """
+    Install a Minecraft Version. Fore more Information take a look at the documentation"
+    """
     if callback == None:
         callback = {}
     if os.path.isdir(os.path.join(path,"versions")):

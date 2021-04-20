@@ -1,19 +1,23 @@
-from .helper import parseRuleList, inherit_json
+from .helper import parse_rule_list, inherit_json
 from .utils import get_library_version
+from typing import Dict, List,  Any
 from .natives import get_natives
 import platform
 import json
 import copy
 import os
 
-def get_libraries(data,path):
+def get_libraries(data: Dict[str,Any],path: str) -> str:
+    """
+    Returns the argument with all libs that come after -cp
+    """
     if platform.system() == "Windows":
         classpath_seperator = ";"
     else:
         classpath_seperator = ":"
     libstr = ""
     for i in data["libraries"]:
-        if not parseRuleList(i,"rules",{}):
+        if not parse_rule_list(i,"rules",{}):
             continue
         currentPath = os.path.join(path,"libraries")
         libPath, name, version = i["name"].split(":")
@@ -33,8 +37,10 @@ def get_libraries(data,path):
         libstr = libstr + os.path.join(path,"versions",data["id"],data["id"] + ".jar")
     return libstr
 
-def replace_arguments(argstr,versionData,path,options):
-    #Replace all arguments with the needed value
+def replace_arguments(argstr: str,versionData: Dict[str,Any],path: str,options: Dict[str,Any]) -> str:
+    """
+    Replace all placeholder in arguments with the needed value
+    """
     argstr = argstr.replace("${natives_directory}",options["nativesDirectory"])
     argstr = argstr.replace("${launcher_name}",options.get("launcherName","minecraft-launcher-lib"))
     argstr = argstr.replace("${launcher_version}",options.get("launcherVersion",get_library_version()))
@@ -55,7 +61,10 @@ def replace_arguments(argstr,versionData,path,options):
     argstr = argstr.replace("${auth_session}",options.get("token","{token}"))
     return argstr
 
-def get_arguments_string(versionData,path,options):
+def get_arguments_string(versionData: Dict[str,Any],path: str,options: Dict[str,Any]) -> List[str]:
+    """
+    Turns the argument string from the version.json into a list
+    """
     arglist = []
     for v in versionData["minecraftArguments"].split(" "):
         v = replace_arguments(v,versionData,path,options)
@@ -70,13 +79,16 @@ def get_arguments_string(versionData,path,options):
         arglist.append("--demo")
     return arglist
 
-def get_arguments(data,versionData,path,options):
+def get_arguments(data: Dict[str,Any],versionData: Dict[str,Any],path: str,options: Dict[str,Any]) -> List[str]:
+    """
+    Returns all arguments from the version.json
+    """
     arglist = []
     for i in data:
         #Rules might has 2 different names in different versions.json
-        if not parseRuleList(i,"compatibilityRules",options):
+        if not parse_rule_list(i,"compatibilityRules",options):
             continue
-        if not parseRuleList(i,"rules",options):
+        if not parse_rule_list(i,"rules",options):
             continue
         #i could be the argument
         if isinstance(i,str):
@@ -92,7 +104,10 @@ def get_arguments(data,versionData,path,options):
                     arglist.append(v)
     return arglist
 
-def get_minecraft_command(version,path,options):
+def get_minecraft_command(version: str,path: str,options: Dict[str,Any]) -> List[str]:
+    """
+    Returns a command for launching Minecraft. More more information take a look at the documentation.
+    """
     options = copy.copy(options)
     with open(os.path.join(path,"versions",version,version + ".json")) as f:
         data = json.load(f)

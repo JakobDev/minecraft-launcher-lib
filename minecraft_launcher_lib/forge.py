@@ -1,5 +1,6 @@
 from .install import download_file, install_minecraft_version, install_libraries
 from .helper import get_library_path, get_jar_mainclass
+from typing import Dict, List, Any, Callable
 from xml.dom import minidom
 import subprocess
 import platform
@@ -10,7 +11,10 @@ import random
 import json
 import os
 
-def extract_file( handler, zip_path, extract_path):
+def extract_file(handler: zipfile.ZipFile, zip_path: str, extract_path: str):
+    """
+    Extract a file from a zip handler into the given path
+    """
     try:
         os.makedirs(os.path.dirname(extract_path))
     except:
@@ -19,7 +23,10 @@ def extract_file( handler, zip_path, extract_path):
         with open(extract_path,"wb") as w:
             w.write(f.read())
 
-def get_data_library_path(libname,path):
+def get_data_library_path(libname: str,path: str) -> str:
+    """
+    Turns the libname into a path
+    """
     #Remove the []
     libname = libname[1:-1]
     libpath = os.path.join(path,"libraries")
@@ -33,7 +40,10 @@ def get_data_library_path(libname,path):
     libpath = os.path.join(libpath,libname,version,libname + "-" + version + "-" + extra + "." + fileend)
     return libpath
 
-def forge_processors(data,path,lzma_path):
+def forge_processors(data: Dict[str,Any],path: str,lzma_path:str):
+    """
+    Run the processors of the install_profile.json
+    """
     argument_vars = {"{MINECRAFT_JAR}":os.path.join(path,"versions",data["minecraft"],data["minecraft"] + ".jar")}
     for key,value in data["data"].items():
         if value["client"].startswith("[") and value["client"].endswith("]"):
@@ -61,7 +71,10 @@ def forge_processors(data,path,lzma_path):
                 command.append(var)
         subprocess.call(command)
 
-def install_forge_version(versionid,path,callback=None):
+def install_forge_version(versionid: str,path: str,callback: Dict[str,Callable]=None):
+    """
+    Installs a forge version. Fore more information look at the documentation.
+    """
     if callback == None:
         callback = {}
     FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
@@ -89,20 +102,26 @@ def install_forge_version(versionid,path,callback=None):
     extract_file(zf,"data/client.lzma",lzma_path)
     zf.close()
     os.remove(temp_file_path)
-    #Install the rst with the vanilla function
+    #Install the rest with the vanilla function
     install_minecraft_version(forge_version_id,path,callback=callback)
     #Run the processors
     forge_processors(version_data,path,lzma_path)
     os.remove(lzma_path)
 
-def run_forge_installer(version):
+def run_forge_installer(version: str):
+    """
+    Run the forge installer of the given forge version
+    """
     FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
     temp_file_path = os.path.join(tempfile.gettempdir(),"forge-" + str(random.randrange(1,100000)) + ".tmp")
     download_file(FORGE_DOWNLOAD_URL.format(version=version),temp_file_path,{})
     subprocess.call(["java","-jar",temp_file_path])
     os.remove(temp_file_path)
 
-def list_forge_versions():
+def list_forge_versions() -> List[str]:
+    """
+    Returns a list of all forge versions
+    """
     MAVEN_METADATA_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/maven-metadata.xml"
     r = requests.get(MAVEN_METADATA_URL).text
     xml_data = minidom.parseString(r)
@@ -111,7 +130,10 @@ def list_forge_versions():
         version_list.append(i.childNodes[0].wholeText)
     return version_list
 
-def find_forge_version(vanilla_version):
+def find_forge_version(vanilla_version: str) -> str:
+    """
+    Find the latest forge version that is compatible to the given vanilla version
+    """
     version_list = list_forge_versions()
     version_list.reverse()
     for i in version_list:

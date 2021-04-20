@@ -1,8 +1,12 @@
 #Thanks to https://github.com/Polyr/mojang-api/blob/master/mojang_api/servers/authserver.py
+from typing import Dict, Any
 import requests
 import uuid
 
-def login_user(username, password):
+def login_user(username: str, password: str) -> Dict[str,Any]:
+    """
+    Logs a user in
+    """
     payload = {
         "agent": {
             "name": "Minecraft",
@@ -16,14 +20,20 @@ def login_user(username, password):
     response = requests.post("https://authserver.mojang.com/authenticate", json=payload)
     return response.json()
 
-def validate_access_token(access_token):
+def validate_access_token(access_token: str) -> bool:
+    """
+    Check if a access token is valid
+    """
     payload = {
         "accessToken": access_token,
     }
     response = requests.post("https://authserver.mojang.com/validate", json=payload)
     return response.status_code == 204
 
-def refresh_access_token(access_token, client_token):
+def refresh_access_token(access_token: str, client_token: str) > Dict[str,Any]:
+    """
+    Get a new access and client token
+    """
     payload = {
         'accessToken': access_token,
         'clientToken': client_token
@@ -32,7 +42,10 @@ def refresh_access_token(access_token, client_token):
     response = requests.post("https://authserver.mojang.com/refresh", json=payload)
     return response.json()
 
-def logout_user(username, password):
+def logout_user(username: str, password: str) -> bool:
+    """
+    Logs a user out
+    """
     payload = {
         'username': username,
         'password': password
@@ -40,7 +53,10 @@ def logout_user(username, password):
     response = requests.post("https://authserver.mojang.com/signout", json=payload)
     return  response.status_code == 204
 
-def invalidate_access_token(access_token, client_token):
+def invalidate_access_token(access_token: str, client_token: str) -> Any:
+    """
+    Makes a access token invalid
+    """
     payload = {
         'accessToken': access_token,
         'clientToken': client_token
@@ -48,7 +64,10 @@ def invalidate_access_token(access_token, client_token):
     response = requests.post("https://authserver.mojang.com/invalidate", json=payload)
     return response
 
-def upload_skin(uuid, access_token, path, slim=False):
+def upload_skin(uuid: str, access_token: str, path: str, slim: bool=False) -> Any:
+    """
+    Upload a skin
+    """
     headers = {
         "Authorization": "Bearer " + access_token
     }
@@ -59,7 +78,10 @@ def upload_skin(uuid, access_token, path, slim=False):
     response = requests.put("https://api.mojang.com/user/profile/{uuid}/skin".format(uuid=uuid), headers=headers, files=files)
     return response
 
-def reset_skin(uuid, access_token):
+def reset_skin(uuid: str, access_token: str) -> Any:
+    """
+    Reset the skin to the default skin
+    """
     headers = {
         "Authorization": "Bearer " + access_token
     }
