@@ -19,7 +19,7 @@ def get_minecraft_directory() -> str:
     else:
         return os.path.join(str(pathlib.Path.home()), ".minecraft")
 
-def get_latest_version() -> str:
+def get_latest_version() -> Dict[str,str]:
     """
     Returns the latest version of Minecraft
     """
