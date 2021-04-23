@@ -7,6 +7,8 @@ import json
 import copy
 import os
 
+__all__ = ["get_minecraft_command"]
+
 def get_libraries(data: Dict[str,Any],path: str) -> str:
     """
     Returns the argument with all libs that come after -cp

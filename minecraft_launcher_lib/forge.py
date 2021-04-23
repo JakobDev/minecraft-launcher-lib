@@ -11,6 +11,8 @@ import random
 import json
 import os
 
+__all__ = [" install_forge_version","run_forge_installer","list_forge_versions","find_forge_version"]
+
 def extract_file(handler: zipfile.ZipFile, zip_path: str, extract_path: str):
     """
     Extract a file from a zip handler into the given path

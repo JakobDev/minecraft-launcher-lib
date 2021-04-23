@@ -6,6 +6,8 @@ import shutil
 import json
 import os
 
+__all__ = [" install_minecraft_version"]
+
 def install_libraries(data: Dict[str,Any],path: str,callback: Dict[str,Callable]):
     """
     Install all libraries
