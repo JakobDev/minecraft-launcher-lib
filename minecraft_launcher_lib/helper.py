@@ -1,4 +1,5 @@
 from typing import List, Dict, Any, Callable
+from .utils import get_library_version
 import requests
 import platform
 import hashlib
@@ -7,7 +8,13 @@ import shutil
 import json
 import os
 
-def download_file(url: str,path: str,callback: Dict[str,Callable],sha1: str=None) -> bool:
+def empty(arg: Any):
+    """
+    This function is just a placeholder
+    """
+    pass
+
+def download_file(url: str,path: str,callback: Dict[str,Callable]={},sha1: str=None) -> bool:
     """
     Downloads a file into the given path. Check sha1 if given.
     """

@@ -1,1 +1,1 @@
-from . import command, install, account, utils, forge
+from . import command, install, account, utils, forge, fabric

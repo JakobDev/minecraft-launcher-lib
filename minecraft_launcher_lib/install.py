@@ -1,17 +1,10 @@
-from .helper import download_file, parse_rule_list, inherit_json
+from .helper import download_file, parse_rule_list, inherit_json, empty
 from .natives import extract_natives_file, get_natives
 from typing import Any, Callable, Dict
-from .utils import get_library_version
 import requests
 import shutil
 import json
 import os
-
-def empty(arg: Any):
-    """
-    This function is just a placeholder
-    """
-    pass
 
 def install_libraries(data: Dict[str,Any],path: str,callback: Dict[str,Callable]):
     """
