@@ -1,9 +1,35 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Callable
+import requests
 import platform
-import zipfile
 import hashlib
+import zipfile
+import shutil
 import json
 import os
+
+def download_file(url: str,path: str,callback: Dict[str,Callable],sha1: str=None) -> bool:
+    """
+    Downloads a file into the given path. Check sha1 if given.
+    """
+    if os.path.isfile(path):
+        if sha1 == None:
+            return False
+        elif get_sha1_hash(path) == sha1:
+            return False
+    try:
+        os.makedirs(os.path.dirname(path))
+    except:
+        pass
+    if not url.startswith("http"):
+        return False
+    callback.get("setStatus",empty)("Download " + os.path.basename(path))
+    r = requests.get(url, stream=True, headers={"user-agent": "minecraft-launcher-lib/" + get_library_version()})
+    if r.status_code != 200:
+        return False
+    with open(path, 'wb') as f:
+        r.raw.decode_content = True
+        shutil.copyfileobj(r.raw, f)
+    return True
 
 def parse_single_rule(rule: Dict[str,Any],options: Dict[str,Any]) -> bool:
     """

@@ -1,4 +1,4 @@
-from .helper import parse_rule_list, inherit_json, get_sha1_hash
+from .helper import download_file, parse_rule_list, inherit_json
 from .natives import extract_natives_file, get_natives
 from typing import Any, Callable, Dict
 from .utils import get_library_version
@@ -12,30 +12,6 @@ def empty(arg: Any):
     This function is just a placeholder
     """
     pass
-
-def download_file(url: str,path: str,callback: Dict[str,Callable],sha1: str=None) -> bool:
-    """
-    Downloads a file into the given path. Check sha1 if given.
-    """
-    if os.path.isfile(path):
-        if sha1 == None:
-            return False
-        elif get_sha1_hash(path) == sha1:
-            return False
-    try:
-        os.makedirs(os.path.dirname(path))
-    except:
-        pass
-    if not url.startswith("http"):
-        return False
-    callback.get("setStatus",empty)("Download " + os.path.basename(path))
-    r = requests.get(url, stream=True, headers={"user-agent": "minecraft-launcher-lib/" + get_library_version()})
-    if r.status_code != 200:
-        return False
-    with open(path, 'wb') as f:
-        r.raw.decode_content = True
-        shutil.copyfileobj(r.raw, f)
-    return True
 
 def install_libraries(data: Dict[str,Any],path: str,callback: Dict[str,Callable]):
     """

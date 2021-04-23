@@ -1,5 +1,5 @@
-from .install import download_file, install_minecraft_version, install_libraries
-from .helper import get_library_path, get_jar_mainclass
+from .helper import download_file, get_library_path, get_jar_mainclass
+from .install import install_minecraft_version, install_libraries
 from typing import Dict, List, Any, Callable
 from xml.dom import minidom
 import subprocess
