@@ -101,3 +101,15 @@ def generate_test_options() -> Dict[str,str]:
         "uuid": str(uuid.uuid4()),
         "token": ""
     }
+
+def is_version_valid(version: str,path: str) -> bool:
+    """
+    Checks if the given version exists
+    """
+    if os.path.isdir(os.path.join(path,"versions",version)):
+        return True
+    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
+    for i in version_list["versions"]:
+        if i["id"] == version:
+            return True
+    return False

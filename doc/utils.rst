@@ -49,3 +49,9 @@ Return the version of the library.
     generate_test_options()
 
 Generates test options for get_minecraft_command(). Use this function to test launching without logging in. This should not be used in production.
+
+.. code:: python
+
+    is_version_valid(version: str,path: str) -> bool
+
+Checks if the given version exists
