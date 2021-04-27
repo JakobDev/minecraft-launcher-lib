@@ -14,6 +14,10 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import os
+import sys
+sys.path.insert(0,os.path.abspath('..'))
+from minecraft_launcher_lib.utils import get_library_version
 
 # -- Project information -----------------------------------------------------
 
@@ -22,7 +26,7 @@ copyright = '2019-2020, JakobDev'
 author = 'JakobDev'
 
 # The full version, including alpha/beta/rc tags
-release = '2.1'
+release = get_library_version()
 
 master_doc = 'index'
 
