@@ -34,9 +34,10 @@ Features:
 - Easy installing
 - Get command to run Minecraft
 - Login to Mojang account
-- Support Forge and Liteloader
+- Support Forge, Fabric and Liteloader
 - Old versions like alpha or beta supported
-- Documention available
+- All functions have type annotations and docstrings
+- Full Documention online available
 - Examples available
 - OpenSource
 
