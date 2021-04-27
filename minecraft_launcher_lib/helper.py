@@ -6,6 +6,8 @@ import hashlib
 import zipfile
 import shutil
 import json
+import sys
+import re
 import os
 
 def empty(arg: Any):
@@ -57,6 +59,9 @@ def parse_single_rule(rule: Dict[str,Any],options: Dict[str,Any]) -> bool:
                     return returnvalue
             elif key == "arch":
                 if value == "x86" and platform.architecture()[0] != "32bit":
+                    return returnvalue
+            elif key == "version":
+                if not re.match(value,get_os_version()):
                     return returnvalue
     if "features" in rule:
         for key, value in rule["features"].items():
@@ -144,3 +149,16 @@ def get_sha1_hash(path: str) -> str:
                 break
             sha1.update(data)
     return sha1.hexdigest()
+
+def get_os_version() -> str:
+    """
+    Try to implement System.getProperty("os.version") from Java for use in rules
+    This doesn't work on mac yet
+    """
+    if platform.system() == "Windows":
+        ver = sys.getwindowsversion()
+        return f"{ver.major}.{ver.minor}"
+    elif platform.system == "Darwin":
+        return ""
+    else:
+        return platform.uname().release
