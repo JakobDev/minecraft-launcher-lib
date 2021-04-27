@@ -22,7 +22,7 @@ from minecraft_launcher_lib.utils import get_library_version
 # -- Project information -----------------------------------------------------
 
 project = 'minecraft-launcher-lib'
-copyright = '2019-2020, JakobDev'
+copyright = '2019-2021, JakobDev'
 author = 'JakobDev'
 
 # The full version, including alpha/beta/rc tags
