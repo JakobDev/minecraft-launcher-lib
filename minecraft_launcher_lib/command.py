@@ -1,4 +1,5 @@
 from .helper import parse_rule_list, inherit_json
+from .exceptions import VersionNotFound
 from .utils import get_library_version
 from typing import Dict, List,  Any
 from .natives import get_natives
@@ -110,6 +111,8 @@ def get_minecraft_command(version: str,path: str,options: Dict[str,Any]) -> List
     """
     Returns a command for launching Minecraft. More more information take a look at the documentation.
     """
+    if not os.path.isdir(os.path.join(path,"versions",version)):
+        raise VersionNotFound(version)
     options = copy.copy(options)
     with open(os.path.join(path,"versions",version,version + ".json")) as f:
         data = json.load(f)

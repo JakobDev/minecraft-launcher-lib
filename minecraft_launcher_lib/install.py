@@ -1,5 +1,6 @@
 from .helper import download_file, parse_rule_list, inherit_json, empty
 from .natives import extract_natives_file, get_natives
+from .exceptions import VersionNotFound
 from typing import Any, Callable, Dict
 import requests
 import shutil
@@ -120,10 +121,8 @@ def install_minecraft_version(versionid: str,path: str,callback: Dict[str,Callab
         for i in os.listdir(os.path.join(path,"versions")):
             if i == versionid:
                 do_version_install(versionid,path,callback)
-                return True
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
             do_version_install(versionid,path,callback,url=i["url"])
-            return True
-    return False
+    raise VersionNotFound(versionid)
