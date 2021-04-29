@@ -109,7 +109,7 @@ def get_arguments(data: Dict[str,Any],versionData: Dict[str,Any],path: str,optio
 
 def get_minecraft_command(version: str,path: str,options: Dict[str,Any]) -> List[str]:
     """
-    Returns a command for launching Minecraft. More more information take a look at the documentation.
+    Returns a command for launching Minecraft. For more information take a look at the documentation.
     """
     if not os.path.isdir(os.path.join(path,"versions",version)):
         raise VersionNotFound(version)
