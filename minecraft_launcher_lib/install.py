@@ -121,8 +121,10 @@ def install_minecraft_version(versionid: str,path: str,callback: Dict[str,Callab
         for i in os.listdir(os.path.join(path,"versions")):
             if i == versionid:
                 do_version_install(versionid,path,callback)
+                return
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
             do_version_install(versionid,path,callback,url=i["url"])
+            return
     raise VersionNotFound(versionid)
