@@ -1,4 +1,4 @@
-from .helper import download_file, get_library_path, get_jar_mainclass
+from .helper import download_file, get_library_path, get_jar_mainclass, get_user_agent
 from .install import install_minecraft_version, install_libraries
 from typing import Dict, List, Any, Callable
 from xml.dom import minidom
@@ -125,7 +125,7 @@ def list_forge_versions() -> List[str]:
     Returns a list of all forge versions
     """
     MAVEN_METADATA_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/maven-metadata.xml"
-    r = requests.get(MAVEN_METADATA_URL).text
+    r = requests.get(MAVEN_METADATA_URL,headers={"user-agent": get_user_agent()}).text
     xml_data = minidom.parseString(r)
     version_list = []
     for i in xml_data.getElementsByTagName("version"):

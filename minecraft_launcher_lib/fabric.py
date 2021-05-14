@@ -1,6 +1,6 @@
+from .helper import download_file, get_user_agent
 from .install import install_minecraft_version
 from typing import List, Dict, Union
-from .helper import download_file
 from xml.dom import minidom
 import subprocess
 import requests
@@ -13,7 +13,7 @@ def get_all_minecraft_versions() -> List[Dict[str,Union[str,bool]]]:
     Returns all available Minecraft Versions for fabric
     """
     FABRIC_MINECARFT_VERSIONS_URL = "https://meta.fabricmc.net/v2/versions/game"
-    return requests.get(FABRIC_MINECARFT_VERSIONS_URL).json()
+    return requests.get(FABRIC_MINECARFT_VERSIONS_URL,headers={"user-agent": get_user_agent()}).json()
 
 def get_stable_minecraft_versions() -> List[str]:
     """
@@ -55,7 +55,7 @@ def get_all_loader_versions() ->  List[Dict[str,Union[str,bool,int]]]:
     Returns all loader versions
     """
     FABRIC_LOADER_VERSIONS_URL = "https://meta.fabricmc.net/v2/versions/loader"
-    return requests.get(FABRIC_LOADER_VERSIONS_URL).json()
+    return requests.get(FABRIC_LOADER_VERSIONS_URL,headers={"user-agent": get_user_agent()}).json()
 
 def get_latest_loader_version() -> str:
     """
@@ -69,7 +69,7 @@ def get_latest_installer_version() -> str:
     Returns the latest installer version
     """
     FABRIC_INSTALLER_MAVEN_URL = "https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml"
-    r = requests.get(FABRIC_INSTALLER_MAVEN_URL)
+    r = requests.get(FABRIC_INSTALLER_MAVEN_URL,headers={"user-agent": get_user_agent()})
     xml_data = minidom.parseString(r.text)
     release = xml_data.getElementsByTagName("release")
     return release.item(0).lastChild.data

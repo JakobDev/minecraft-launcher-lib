@@ -23,13 +23,13 @@ def get_latest_version() -> Dict[str,str]:
     """
     Returns the latest version of Minecraft
     """
-    return requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()["latest"]
+    return requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json",headers={"user-agent": f"minecraft-launcher-lib/{get_library_version()}"}).json()["latest"]
 
 def get_version_list() -> List[Dict[str,str]]:
     """
     Returns all versions that Mojang offers to download
     """
-    vlist = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
+    vlist = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json",headers={"user-agent": f"minecraft-launcher-lib/{get_library_version()}"}).json()
     returnlist = []
     for i in vlist["versions"]:
         returnlist.append({"id":i["id"],"type":i["type"]})
@@ -108,7 +108,7 @@ def is_version_valid(version: str,path: str) -> bool:
     """
     if os.path.isdir(os.path.join(path,"versions",version)):
         return True
-    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
+    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json",headers={"user-agent": f"minecraft-launcher-lib/{get_library_version()}"}).json()
     for i in version_list["versions"]:
         if i["id"] == version:
             return True

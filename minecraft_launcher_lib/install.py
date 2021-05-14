@@ -1,4 +1,4 @@
-from .helper import download_file, parse_rule_list, inherit_json, empty
+from .helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
 from .natives import extract_natives_file, get_natives
 from .exceptions import VersionNotFound
 from typing import Any, Callable, Dict
@@ -122,7 +122,7 @@ def install_minecraft_version(versionid: str,path: str,callback: Dict[str,Callab
             if i == versionid:
                 do_version_install(versionid,path,callback)
                 return
-    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
+    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json",headers={"user-agent": get_user_agent()}).json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
             do_version_install(versionid,path,callback,url=i["url"])

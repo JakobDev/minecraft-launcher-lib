@@ -32,7 +32,7 @@ def download_file(url: str,path: str,callback: Dict[str,Callable]={},sha1: str=N
     if not url.startswith("http"):
         return False
     callback.get("setStatus",empty)("Download " + os.path.basename(path))
-    r = requests.get(url, stream=True, headers={"user-agent": "minecraft-launcher-lib/" + get_library_version()})
+    r = requests.get(url, stream=True, headers={"user-agent": get_user_agent()})
     if r.status_code != 200:
         return False
     with open(path, 'wb') as f:
@@ -162,3 +162,9 @@ def get_os_version() -> str:
         return ""
     else:
         return platform.uname().release
+
+def get_user_agent() -> str:
+    """
+    Returns the user agent of minecraft-launcher-lib
+    """
+    return f"minecraft-launcher-lib/{get_library_version()}"
