@@ -71,7 +71,7 @@ def parse_single_rule(rule: Dict[str,Any],options: Dict[str,Any]) -> bool:
                 return returnvalue
     return not returnvalue
 
-def parse_rule_list(data: Dict[str,Any],rule_string: str,options: dict[str,Any]) -> bool:
+def parse_rule_list(data: Dict[str,Any],rule_string: str,options: Dict[str,Any]) -> bool:
     """
     Parse a list of rules
     """
