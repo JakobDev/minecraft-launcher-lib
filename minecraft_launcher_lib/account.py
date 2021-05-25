@@ -1,10 +1,11 @@
-#Thanks to https://github.com/Polyr/mojang-api/blob/master/mojang_api/servers/authserver.py
+# Thanks to https://github.com/Polyr/mojang-api/blob/master/mojang_api/servers/authserver.py
 from .helper import get_user_agent
 from typing import Dict, Any
 import requests
 import uuid
 
-def login_user(username: str, password: str) -> Dict[str,Any]:
+
+def login_user(username: str, password: str) -> Dict[str, Any]:
     """
     Logs a user in
     """
@@ -18,8 +19,9 @@ def login_user(username: str, password: str) -> Dict[str,Any]:
         "clientToken": uuid.uuid4().hex
     }
 
-    response = requests.post("https://authserver.mojang.com/authenticate", json=payload,headers={"user-agent": get_user_agent()})
+    response = requests.post("https://authserver.mojang.com/authenticate", json=payload, headers={"user-agent": get_user_agent()})
     return response.json()
+
 
 def validate_access_token(access_token: str) -> bool:
     """
@@ -28,10 +30,11 @@ def validate_access_token(access_token: str) -> bool:
     payload = {
         "accessToken": access_token,
     }
-    response = requests.post("https://authserver.mojang.com/validate", json=payload,headers={"user-agent": get_user_agent()})
+    response = requests.post("https://authserver.mojang.com/validate", json=payload, headers={"user-agent": get_user_agent()})
     return response.status_code == 204
 
-def refresh_access_token(access_token: str, client_token: str) -> Dict[str,Any]:
+
+def refresh_access_token(access_token: str, client_token: str) -> Dict[str, Any]:
     """
     Get a new access and client token
     """
@@ -40,8 +43,9 @@ def refresh_access_token(access_token: str, client_token: str) -> Dict[str,Any]:
         'clientToken': client_token
     }
 
-    response = requests.post("https://authserver.mojang.com/refresh", json=payload,headers={"user-agent": get_user_agent()})
+    response = requests.post("https://authserver.mojang.com/refresh", json=payload, headers={"user-agent": get_user_agent()})
     return response.json()
+
 
 def logout_user(username: str, password: str) -> bool:
     """
@@ -51,8 +55,9 @@ def logout_user(username: str, password: str) -> bool:
         'username': username,
         'password': password
     }
-    response = requests.post("https://authserver.mojang.com/signout", json=payload,headers={"user-agent": get_user_agent()})
-    return  response.status_code == 204
+    response = requests.post("https://authserver.mojang.com/signout", json=payload, headers={"user-agent": get_user_agent()})
+    return response.status_code == 204
+
 
 def invalidate_access_token(access_token: str, client_token: str) -> Any:
     """
@@ -62,10 +67,11 @@ def invalidate_access_token(access_token: str, client_token: str) -> Any:
         'accessToken': access_token,
         'clientToken': client_token
     }
-    response = requests.post("https://authserver.mojang.com/invalidate", json=payload,headers={"user-agent": get_user_agent()})
+    response = requests.post("https://authserver.mojang.com/invalidate", json=payload, headers={"user-agent": get_user_agent()})
     return response
 
-def upload_skin(uuid: str, access_token: str, path: str, slim: bool=False) -> Any:
+
+def upload_skin(uuid: str, access_token: str, path: str, slim: bool = False) -> Any:
     """
     Upload a skin
     """
@@ -75,10 +81,11 @@ def upload_skin(uuid: str, access_token: str, path: str, slim: bool=False) -> An
     }
     files = {
         "model": "slim" if slim else "",
-        "file": open(path,"rb")
+        "file": open(path, "rb")
     }
     response = requests.put("https://api.mojang.com/user/profile/{uuid}/skin".format(uuid=uuid), headers=headers, files=files)
     return response
+
 
 def reset_skin(uuid: str, access_token: str) -> Any:
     """
@@ -88,5 +95,5 @@ def reset_skin(uuid: str, access_token: str) -> Any:
         "Authorization": "Bearer " + access_token,
         "user-agent": get_user_agent()
     }
-    response = requests.delete("https://api.mojang.com/user/profile/{uuid}/skin".format(uuid=uuid),headers=headers)
+    response = requests.delete("https://api.mojang.com/user/profile/{uuid}/skin".format(uuid=uuid), headers=headers)
     return response

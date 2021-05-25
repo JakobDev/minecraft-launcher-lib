@@ -5,7 +5,8 @@ import zipfile
 import json
 import os
 
-def get_natives(data: Dict[str,Any]) -> str:
+
+def get_natives(data: Dict[str, Any]) -> str:
     """
     Returns the native part from the json data
     """
@@ -16,23 +17,24 @@ def get_natives(data: Dict[str,Any]) -> str:
     if "natives" in data:
         if platform.system() == 'Windows':
             if "windows" in data["natives"]:
-                return data["natives"]["windows"].replace("${arch}",arch_type)
+                return data["natives"]["windows"].replace("${arch}", arch_type)
             else:
                 return ""
         elif platform.system() == 'Darwin':
             if "osx" in data["natives"]:
-                return data["natives"]["osx"].replace("${arch}",arch_type)
+                return data["natives"]["osx"].replace("${arch}", arch_type)
             else:
-                return ""           
+                return ""
         else:
             if "linux" in data["natives"]:
-                return data["natives"]["linux"].replace("${arch}",arch_type)
+                return data["natives"]["linux"].replace("${arch}", arch_type)
             else:
-                return "" 
+                return ""
     else:
         return ""
 
-def extract_natives_file(filename: str,extract_path: str,extract_data: Dict[str,Any]):
+
+def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[str, Any]):
     """
     Unpack natives
     """
@@ -40,31 +42,32 @@ def extract_natives_file(filename: str,extract_path: str,extract_data: Dict[str,
         os.mkdir(extract_path)
     except:
         pass
-    zf = zipfile.ZipFile(filename,"r")
+    zf = zipfile.ZipFile(filename, "r")
     for i in zf.namelist():
         for e in extract_data["exclude"]:
             if i.startswith(e):
                 continue
-        zf.extract(i,extract_path)
+        zf.extract(i, extract_path)
 
-def extract_natives(versionid: str,path: str,extract_path: str):
+
+def extract_natives(versionid: str, path: str, extract_path: str):
     """
     Extract natives into the givrn path. For more information look at the documentation.
     """
-    with open(os.path.join(path,"versions",versionid,versionid + ".json")) as f:
+    with open(os.path.join(path, "versions", versionid, versionid + ".json")) as f:
         data = json.load(f)
     for count, i in enumerate(data["libraries"]):
-        #Check, if the rules allow this lib for the current system
-        if not parse_rule_list(i,"rules",{}):
+        # Check, if the rules allow this lib for the current system
+        if not parse_rule_list(i, "rules", {}):
             continue
-        currentPath = os.path.join(path,"libraries")
-        libPath, name, version = i["name"].split(":")
-        for l in libPath.split("."):
-            currentPath = os.path.join(currentPath,l)
-        currentPath = os.path.join(currentPath,name,version)
+        current_path = os.path.join(path, "libraries")
+        lib_path, name, version = i["name"].split(":")
+        for lib_part in lib_path.split("."):
+            current_path = os.path.join(current_path, lib_part)
+        current_path = os.path.join(current_path, name, version)
         native = get_natives(i)
         if native == "":
             continue
-        jarFilenameNative = name + "-" + version + "-" + native + ".jar"
+        jar_filename_native = name + "-" + version + "-" + native + ".jar"
         if "extract" in i:
-            extract_natives_file(os.path.join(currentPath,jarFilenameNative),extract_path,i["extract"])
+            extract_natives_file(os.path.join(current_path, jar_filename_native), extract_path, i["extract"])
