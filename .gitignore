@@ -11,3 +11,6 @@ doc/_static
 
 #logs
 logs/
+
+#tests
+.pytest_cache/
