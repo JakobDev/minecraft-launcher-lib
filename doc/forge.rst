@@ -26,6 +26,7 @@ This function does not work for minecraft versions older than 1.13.
     run_forge_installer(version: str)
 
 Download and execute the forge installer of the given forge version.
+
 .. code:: python
 
     list_forge_versions() -> List[str]
