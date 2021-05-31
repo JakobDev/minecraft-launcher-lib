@@ -1,5 +1,6 @@
 import minecraft_launcher_lib
 import requests
+import pytest
 import shutil
 import os
 
@@ -17,3 +18,9 @@ def test_get_minecraft_command(tmpdir):
     command = minecraft_launcher_lib.command.get_minecraft_command(version_id, str(tmpdir), {})
     for i in command:
         assert isinstance(i, str)
+
+
+def test_get_minecraft_command_invalid_version(tmpdir):
+    # Checks if the VersionNotFound exception raised
+    with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
+        minecraft_launcher_lib.command.get_minecraft_command("InvalidVersion", str(tmpdir), {})
