@@ -1,3 +1,4 @@
+from .exceptions import VersionNotFound
 from .helper import parse_rule_list
 from typing import Dict, Any
 import platform
@@ -54,6 +55,8 @@ def extract_natives(versionid: str, path: str, extract_path: str):
     """
     Extract natives into the givrn path. For more information look at the documentation.
     """
+    if not os.path.isfile(os.path.join(path, "versions", versionid, versionid + ".json")):
+        raise VersionNotFound(versionid)
     with open(os.path.join(path, "versions", versionid, versionid + ".json")) as f:
         data = json.load(f)
     for count, i in enumerate(data["libraries"]):
