@@ -1,4 +1,4 @@
-from .helper import download_file, get_library_path, get_jar_mainclass, get_user_agent
+from .helper import download_file, get_library_path, get_jar_mainclass, get_user_agent, empty
 from .install import install_minecraft_version, install_libraries
 from typing import Dict, List, Any, Callable
 from xml.dom import minidom
@@ -45,7 +45,7 @@ def get_data_library_path(libname: str, path: str) -> str:
     return libpath
 
 
-def forge_processors(data: Dict[str, Any], path: str, lzma_path: str):
+def forge_processors(data: Dict[str, Any], path: str, lzma_path: str, callback: Dict[str, Callable]):
     """
     Run the processors of the install_profile.json
     """
@@ -60,7 +60,9 @@ def forge_processors(data: Dict[str, Any], path: str, lzma_path: str):
         classpath_seperator = ";"
     else:
         classpath_seperator = ":"
-    for i in data["processors"]:
+    callback.get("setMax", empty)(len(data["processors"]))
+    for count, i in enumerate(data["processors"]):
+        callback.get("setStatus", empty)("Running processor " + i["jar"])
         # Get the classpath
         classpath = ""
         for c in i["classpath"]:
@@ -75,6 +77,7 @@ def forge_processors(data: Dict[str, Any], path: str, lzma_path: str):
             else:
                 command.append(var)
         subprocess.call(command)
+        callback.get("setProgress", empty)(count)
 
 
 def install_forge_version(versionid: str, path: str, callback: Dict[str, Callable] = None):
@@ -111,7 +114,7 @@ def install_forge_version(versionid: str, path: str, callback: Dict[str, Callabl
     # Install the rest with the vanilla function
     install_minecraft_version(forge_version_id, path, callback=callback)
     # Run the processors
-    forge_processors(version_data, path, lzma_path)
+    forge_processors(version_data, path, lzma_path, callback)
     os.remove(lzma_path)
 
 
