@@ -1,5 +1,5 @@
+from .exceptions import UnsupportedVersion, ExternalProgramError
 from .helper import download_file, get_user_agent, empty
-from .exceptions import ExternalProgramError
 from .install import install_minecraft_version
 from typing import List, Dict, Union, Callable
 from xml.dom import minidom
@@ -95,6 +95,9 @@ def install_fabric(minecraft_version: str, path: str, loader_version: str = None
         loader_version = get_latest_loader_version()
     # Make sure the Minecraft version is installed
     install_minecraft_version(minecraft_version, path, callback=callback)
+    # Check if the given Minecraft version supported
+    if not is_minecraft_version_supported(minecraft_version):
+        raise UnsupportedVersion(minecraft_version)
     # Get installer version
     installer_version = get_latest_installer_version()
     installer_download_url = f"https://maven.fabricmc.net/net/fabricmc/fabric-installer/{installer_version}/fabric-installer-{installer_version}.jar"
