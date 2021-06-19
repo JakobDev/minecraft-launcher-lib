@@ -1,4 +1,5 @@
 from .helper import download_file, get_user_agent
+from .exceptions import ExternalProgramError
 from .install import install_minecraft_version
 from typing import List, Dict, Union
 from xml.dom import minidom
@@ -100,7 +101,10 @@ def install_fabric(minecraft_version: str, path: str, loader_version: str = None
     # Download the installer
     download_file(installer_download_url, installer_path)
     # Run the installer see https://fabricmc.net/wiki/install#cli_installation
-    subprocess.run(["java", "-jar", installer_path, "client", "-dir", path, "-mcversion", minecraft_version, "-loader", loader_version, "-noprofile", "-snapshot"])
+    command = ["java", "-jar", installer_path, "client", "-dir", path, "-mcversion", minecraft_version, "-loader", loader_version, "-noprofile", "-snapshot"]
+    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if result.returncode != 0:
+        raise ExternalProgramError(command, result.stdout, result.stderr)
     # Delete the installer we don't need them anymore
     os.remove(installer_path)
     # Install all libs of fabric
