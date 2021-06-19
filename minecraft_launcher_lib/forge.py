@@ -11,7 +11,7 @@ import random
 import json
 import os
 
-__all__ = ["install_forge_version", "run_forge_installer", "list_forge_versions", "find_forge_version"]
+__all__ = ["install_forge_version", "run_forge_installer", "list_forge_versions", "find_forge_version", "is_forge_version_valid", "supports_automatic_install"]
 
 
 def extract_file(handler: zipfile.ZipFile, zip_path: str, extract_path: str):
@@ -153,3 +153,27 @@ def find_forge_version(vanilla_version: str) -> str:
         if version_split[0] == vanilla_version:
             return i
     return None
+
+
+def is_forge_version_valid(forge_version: str) -> bool:
+    """
+    Checks if a forge version is valid
+    """
+    forge_version_list = list_forge_versions()
+    return forge_version in forge_version_list
+
+
+def supports_automatic_install(forge_version: str) -> bool:
+    """
+    Checks if install_forge_version() supports the given forge version
+    """
+    try:
+        vanilla_version, forge = forge_version.split("-")
+        version_split = vanilla_version.split(".")
+        version_number = int(version_split[1])
+        if version_number >= 13:
+            return True
+        else:
+            return False
+    except:
+        return False

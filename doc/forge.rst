@@ -38,3 +38,15 @@ Returns a list with all forge versions.
     find_forge_version(vanilla_version: str) -> str
 
 Returns the newest forge version for the given vanilla version. Returns None, if the given vanilla version has no forge version.
+
+.. code:: python
+
+    is_forge_version_valid(forge_version: str) -> bool
+
+Checks if a forge version is valid.
+
+.. code:: python
+
+    supports_automatic_install(forge_version: str) -> bool
+
+Checks if install_forge_version() supports the given forge version.
