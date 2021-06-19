@@ -83,7 +83,7 @@ def get_latest_installer_version() -> str:
     return release.item(0).lastChild.data
 
 
-def install_fabric(path: str, minecraft_version: str, loader_version: str = None):
+def install_fabric(minecraft_version: str, path: str, loader_version: str = None):
     """
     Install a fabric version
     """
@@ -91,7 +91,7 @@ def install_fabric(path: str, minecraft_version: str, loader_version: str = None
     if not loader_version:
         loader_version = get_latest_loader_version()
     # Make sure the Minecraft version is installed
-    install_minecraft_version(path, minecraft_version)
+    install_minecraft_version(minecraft_version, path)
     # Get installer version
     installer_version = get_latest_installer_version()
     installer_download_url = f"https://maven.fabricmc.net/net/fabricmc/fabric-installer/{installer_version}/fabric-installer-{installer_version}.jar"
@@ -105,4 +105,4 @@ def install_fabric(path: str, minecraft_version: str, loader_version: str = None
     os.remove(installer_path)
     # Install all libs of fabric
     fabric_minecraft_version = f"fabric-loader-{loader_version}-{minecraft_version}"
-    install_minecraft_version(path, fabric_minecraft_version)
+    install_minecraft_version(fabric_minecraft_version, path)

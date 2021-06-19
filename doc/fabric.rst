@@ -4,7 +4,7 @@ fabric contains functions for dealing with the fabric modloader
 
 .. code:: python
 
-    install_fabric(path: str, minecraft_version: str,loader_version: str=None)
+    install_fabric(minecraft_version: str, path: str, loader_version: str = None)
 
 Installs the fabric modloader. path is the path to your Minecraft directory. minecraft_version is a vanilla version that is supported by fabric. loader_version is the loader version. If not given it will use the latest.
 
