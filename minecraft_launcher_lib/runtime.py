@@ -44,7 +44,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: str, callback: Di
     manifest_data = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
     platform_string = _get_jvm_platform_string()
     # Check if the jvm version exists
-    if not jvm_version in manifest_data[platform_string]:
+    if jvm_version not in manifest_data[platform_string]:
         raise VersionNotFound(jvm_version)
     # Check if there is a platform manifest
     if len(manifest_data[platform_string][jvm_version]) == 0:
