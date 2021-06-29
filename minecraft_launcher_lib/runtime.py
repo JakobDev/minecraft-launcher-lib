@@ -39,6 +39,9 @@ def get_jvm_runtimes() -> List[str]:
 
 
 def install_jvm_runtime(jvm_version: str, minecraft_directory: str, callback: Dict[str, Callable] = None):
+    """
+    Installs the given jvm runtime. callback is the same dict as in the install module.
+    """
     if callback is None:
         callback = {}
     manifest_data = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
