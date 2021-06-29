@@ -1,4 +1,5 @@
 from .helper import parse_rule_list, inherit_json
+from .runtime import _get_jvm_platform_string
 from .exceptions import VersionNotFound
 from .utils import get_library_version
 from typing import Dict, List, Any
@@ -125,7 +126,18 @@ def get_minecraft_command(version: str, path: str, options: Dict[str, Any]) -> L
         data = inherit_json(data, path)
     options["nativesDirectory"] = options.get("nativesDirectory", os.path.join(path, "versions", data["id"], "natives"))
     options["classpath"] = get_libraries(data, path)
-    command = [options.get("executablePath", "java")]
+    command = []
+    # Add Java executable
+    if "executablePath" in options:
+        command.append(options["executablePath"])
+    else:
+        if "javaVersion" in data:
+            if os.path.isdir(os.path.join(path, "runtime", data["javaVersion"]["component"])):
+                command.append(os.path.join(path, "runtime", data["javaVersion"]["component"], _get_jvm_platform_string(), data["javaVersion"]["component"], "bin", "java"))
+            else:
+                command.append("java")
+        else:
+            command.append("java")
     if "jvmArguments" in options:
         command = command + options["jvmArguments"]
     # Newer Versions have jvmArguments in version.json

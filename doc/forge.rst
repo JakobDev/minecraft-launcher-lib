@@ -17,7 +17,7 @@ forge allows you to install forge.
 
     install_forge_version(versionid: str,path: str,callback: Dict[str,Callable]=None
 
-Installs the given forge version in the given path. versionid must be one of the ids you get with list_forge_versions(). callback is the same dict as in the install modul.
+Installs the given forge version in the given path. versionid must be one of the ids you get with list_forge_versions(). callback is the same dict as in the install module.
 
 This function does not work for minecraft versions older than 1.13.
 

@@ -1,6 +1,7 @@
 from .helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
 from .natives import extract_natives_file, get_natives
 from .exceptions import VersionNotFound
+from .runtime import install_jvm_runtime
 from typing import Any, Callable, Dict
 import requests
 import shutil
@@ -113,6 +114,10 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
     if not os.path.isfile(os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar")) and "inheritsFrom" in versiondata:
         inheritsFrom = versiondata["inheritsFrom"]
         shutil.copyfile(os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar"), os.path.join(path, "versions", inheritsFrom, inheritsFrom + ".jar"))
+    # Install java runtime if needed
+    if "javaVersion" in versiondata:
+        callback.get("setStatus", empty)("Install java runtime")
+        install_jvm_runtime(versiondata["javaVersion"]["component"], path, callback=callback)
 
 
 def install_minecraft_version(versionid: str, path: str, callback: Dict[str, Callable] = None):

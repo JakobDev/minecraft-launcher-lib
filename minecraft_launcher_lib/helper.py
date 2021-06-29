@@ -5,6 +5,7 @@ import platform
 import hashlib
 import zipfile
 import shutil
+import lzma
 import json
 import sys
 import re
@@ -18,7 +19,7 @@ def empty(arg: Any):
     pass
 
 
-def download_file(url: str, path: str, callback: Dict[str, Callable] = {}, sha1: str = None) -> bool:
+def download_file(url: str, path: str, callback: Dict[str, Callable] = {}, sha1: str = None, lzma_compressed: bool = False) -> bool:
     """
     Downloads a file into the given path. Check sha1 if given.
     """
@@ -39,7 +40,10 @@ def download_file(url: str, path: str, callback: Dict[str, Callable] = {}, sha1:
         return False
     with open(path, 'wb') as f:
         r.raw.decode_content = True
-        shutil.copyfileobj(r.raw, f)
+        if lzma_compressed:
+            f.write(lzma.decompress(r.content))
+        else:
+            shutil.copyfileobj(r.raw, f)
     return True
 
 
