@@ -105,8 +105,9 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
     install_assets(versiondata, path, callback)
     # Download logging config
     if "logging" in versiondata:
-        logger_file = os.path.join(path, "assets", "log_configs", versiondata["logging"]["client"]["file"]["id"])
-        download_file(versiondata["logging"]["client"]["file"]["url"], logger_file, callback, sha1=versiondata["logging"]["client"]["file"]["sha1"])
+        if len(versiondata["logging"]) != 0:
+            logger_file = os.path.join(path, "assets", "log_configs", versiondata["logging"]["client"]["file"]["id"])
+            download_file(versiondata["logging"]["client"]["file"]["url"], logger_file, callback, sha1=versiondata["logging"]["client"]["file"]["sha1"])
     # Download minecraft.jar
     if "downloads" in versiondata:
         download_file(versiondata["downloads"]["client"]["url"], os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar"), callback, sha1=versiondata["downloads"]["client"]["sha1"])

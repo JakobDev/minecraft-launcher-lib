@@ -155,8 +155,9 @@ def get_minecraft_command(version: str, path: str, options: Dict[str, Any]) -> L
     # The argument for the logger file
     if options.get("enableLoggingConfig", False):
         if "logging" in data:
-            logger_file = os.path.join(path, "assets", "log_configs", data["logging"]["client"]["file"]["id"])
-            command.append(data["logging"]["client"]["argument"].replace("${path}", logger_file))
+            if len(data["logging"]) != 0:
+                logger_file = os.path.join(path, "assets", "log_configs", data["logging"]["client"]["file"]["id"])
+                command.append(data["logging"]["client"]["argument"].replace("${path}", logger_file))
     command.append(data["mainClass"])
     if "minecraftArguments" in data:
         # For older versions
