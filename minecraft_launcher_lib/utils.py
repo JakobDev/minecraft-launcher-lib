@@ -97,7 +97,7 @@ def get_library_version() -> str:
     """
     Returns the version of minecraft-launcher-lib
     """
-    return "3.4"
+    return "3.5"
 
 
 def generate_test_options() -> Dict[str, str]:
