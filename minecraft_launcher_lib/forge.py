@@ -7,8 +7,9 @@ import subprocess
 import platform
 import requests
 import tempfile
-import zipfile
 import random
+import zipfile
+import shutil
 import json
 import os
 
@@ -46,7 +47,7 @@ def get_data_library_path(libname: str, path: str) -> str:
     return libpath
 
 
-def forge_processors(data: Dict[str, Any], path: str, lzma_path: str, callback: Dict[str, Callable]):
+def forge_processors(data: Dict[str, Any], path: str, lzma_path: str, installer_path: str, callback: Dict[str, Callable]):
     """
     Run the processors of the install_profile.json
     """
@@ -56,7 +57,11 @@ def forge_processors(data: Dict[str, Any], path: str, lzma_path: str, callback: 
             argument_vars["{" + key + "}"] = get_data_library_path(value["client"], path)
         else:
             argument_vars["{" + key + "}"] = value["client"]
+    root_path = os.path.join(tempfile.gettempdir(), "forge-root-" + str(random.randrange(1, 100000)))
+    argument_vars["{INSTALLER}"] = installer_path
     argument_vars["{BINPATCH}"] = lzma_path
+    argument_vars["{ROOT}"] = root_path
+    argument_vars["{SIDE}"] = "client"
     if platform.system() == "Windows":
         classpath_seperator = ";"
     else:
@@ -77,8 +82,12 @@ def forge_processors(data: Dict[str, Any], path: str, lzma_path: str, callback: 
                 command.append(get_library_path(var[1:-1], path))
             else:
                 command.append(var)
+        for key, value in argument_vars.items():
+            for i in range(len(command)):
+                command[i] = command[i].replace(key, value)
         subprocess.call(command)
         callback.get("setProgress", empty)(count)
+    shutil.rmtree(root_path)
 
 
 def install_forge_version(versionid: str, path: str, callback: Dict[str, Callable] = None):
@@ -88,7 +97,7 @@ def install_forge_version(versionid: str, path: str, callback: Dict[str, Callabl
     if callback is None:
         callback = {}
     FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
-    temp_file_path = os.path.join(tempfile.gettempdir(), "forge-" + str(random.randrange(1, 100000)) + ".tmp")
+    temp_file_path = os.path.join(tempfile.gettempdir(), "forge-installer-" + str(random.randrange(1, 100000)) + ".tmp")
     if not download_file(FORGE_DOWNLOAD_URL.format(version=versionid), temp_file_path, callback):
         raise VersionNotFound(versionid)
     zf = zipfile.ZipFile(temp_file_path, "r")
@@ -115,11 +124,12 @@ def install_forge_version(versionid: str, path: str, callback: Dict[str, Callabl
     lzma_path = os.path.join(tempfile.gettempdir(), "lzma-" + str(random.randrange(1, 100000)) + ".tmp")
     extract_file(zf, "data/client.lzma", lzma_path)
     zf.close()
-    os.remove(temp_file_path)
     # Install the rest with the vanilla function
     install_minecraft_version(forge_version_id, path, callback=callback)
     # Run the processors
-    forge_processors(version_data, path, lzma_path, callback)
+    forge_processors(version_data, path, lzma_path, temp_file_path, callback)
+    # Delete the temporary files
+    os.remove(temp_file_path)
     os.remove(lzma_path)
 
 
