@@ -87,7 +87,8 @@ def forge_processors(data: Dict[str, Any], path: str, lzma_path: str, installer_
                 command[i] = command[i].replace(key, value)
         subprocess.call(command)
         callback.get("setProgress", empty)(count)
-    shutil.rmtree(root_path)
+    if os.path.exists(root_path):
+        shutil.rmtree(root_path)
 
 
 def install_forge_version(versionid: str, path: str, callback: Dict[str, Callable] = None):
