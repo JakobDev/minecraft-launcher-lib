@@ -1,6 +1,7 @@
 image: "python:latest"
 
 stages:
+    - test
     - deploy
 
 pip_deploy:
@@ -11,3 +12,15 @@ pip_deploy:
         - twine upload -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD" dist/*
     only:
         - tags
+
+pytest:
+    stage: test
+    script:
+        - pip install pytest
+        - pytest
+
+flake8:
+    stage: test
+    script:
+        - pip install flake8
+        - flake8
