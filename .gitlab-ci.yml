@@ -16,7 +16,7 @@ pip_deploy:
 pytest:
     stage: test
     script:
-        - pip install pytest
+        - pip install requests pytest
         - pytest
 
 flake8:
