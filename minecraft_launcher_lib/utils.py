@@ -46,7 +46,7 @@ def get_installed_versions(path: str) -> List[Dict[str, str]]:
     dir_list = os.listdir(os.path.join(path, "versions"))
     version_list = []
     for i in dir_list:
-        if not os.path.isdir(os.path.join(path, "versions", i)):
+        if not os.path.isfile(os.path.join(path, "versions", i, i + ".json")):
             continue
         with open(os.path.join(path, "versions", i, i + ".json"), "r", encoding="utf-8") as f:
             version_data = json.load(f)
