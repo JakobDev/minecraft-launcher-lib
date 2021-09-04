@@ -29,3 +29,10 @@ class ExternalProgramError(Exception):
         self.command = command
         self.stdout = stdout
         self.stderr = stderr
+
+
+class InvalidRefreshToken(ValueError):
+    """
+    Raised when complete_refresh() is called with a invalid refresh token
+    """
+    pass

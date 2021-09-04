@@ -10,3 +10,6 @@ UnsupportedVersion
 
 ExternalProgramError
     Raised when a external program fails to execute
+
+InvalidRefreshToken
+    Raised when complete_refresh() is called with a invalid refresh token

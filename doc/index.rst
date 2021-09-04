@@ -15,6 +15,7 @@ minecraft-launcher-lib is a easy to use Python library for creating your own Min
     install
     natives
     account
+    microsoft_account
     utils
     forge
     fabric
