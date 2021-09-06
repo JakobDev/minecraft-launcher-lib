@@ -51,7 +51,7 @@ subprocess.call(minecraft_command)
 Features:
 - Easy installing
 - Get command to run Minecraft
-- Login to Mojang account
+- Login to Microsoft account
 - Support Forge, Fabric and Liteloader
 - Old versions like alpha or beta supported
 - All functions have type annotations and docstrings
