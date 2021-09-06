@@ -1,8 +1,8 @@
 from .helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
 from .natives import extract_natives_file, get_natives
+from typing import Any, Callable, Dict, Union
 from .exceptions import VersionNotFound
 from .runtime import install_jvm_runtime
-from typing import Any, Callable, Dict
 import requests
 import shutil
 import json
@@ -121,20 +121,22 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
         install_jvm_runtime(versiondata["javaVersion"]["component"], path, callback=callback)
 
 
-def install_minecraft_version(versionid: str, path: str, callback: Dict[str, Callable] = None):
+def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None):
     """
     Install a Minecraft Version. Fore more Information take a look at the documentation"
     """
+    if isinstance(minecraft_directory, os.PathLike):
+        minecraft_directory = str(minecraft_directory)
     if callback is None:
         callback = {}
-    if os.path.isdir(os.path.join(path, "versions")):
-        for i in os.listdir(os.path.join(path, "versions")):
+    if os.path.isdir(os.path.join(minecraft_directory, "versions")):
+        for i in os.listdir(os.path.join(minecraft_directory, "versions")):
             if i == versionid:
-                do_version_install(versionid, path, callback)
+                do_version_install(versionid, minecraft_directory, callback)
                 return
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", headers={"user-agent": get_user_agent()}).json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
-            do_version_install(versionid, path, callback, url=i["url"])
+            do_version_install(versionid, minecraft_directory, callback, url=i["url"])
             return
     raise VersionNotFound(versionid)

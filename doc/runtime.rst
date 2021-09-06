@@ -4,7 +4,7 @@ runtime allows to install the java runtime. This module is used by install_minec
 
 .. code:: python
 
-     install_jvm_runtime(jvm_version: str, minecraft_directory: str, callback: Dict[str, Callable] = None)
+     install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None)
 
 Installs the given jvm runtime.  callback is the same dict as in the install module.
 

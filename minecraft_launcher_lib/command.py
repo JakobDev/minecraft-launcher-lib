@@ -1,8 +1,8 @@
 from .helper import parse_rule_list, inherit_json
 from .runtime import _get_jvm_platform_string
 from .exceptions import VersionNotFound
+from typing import Dict, List, Any, Union
 from .utils import get_library_version
-from typing import Dict, List, Any
 from .natives import get_natives
 import platform
 import json
@@ -113,10 +113,11 @@ def get_arguments(data: Dict[str, Any], versionData: Dict[str, Any], path: str, 
     return arglist
 
 
-def get_minecraft_command(version: str, path: str, options: Dict[str, Any]) -> List[str]:
+def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathLike], options: Dict[str, Any]) -> List[str]:
     """
     Returns a command for launching Minecraft. For more information take a look at the documentation.
     """
+    path = str(minecraft_directory)
     if not os.path.isdir(os.path.join(path, "versions", version)):
         raise VersionNotFound(version)
     options = copy.copy(options)

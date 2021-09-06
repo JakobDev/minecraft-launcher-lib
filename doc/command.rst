@@ -4,7 +4,7 @@ command contains the function for creating the minecraft command.
 
 .. code:: python
 
-    get_minecraft_command(version: str,path: str,options: Dict[str,Any]) -> List[str]
+    get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathLike]: str,options: Dict[str,Any]) -> List[str]
 
 Returns the command for running minecraft as list. The given command can be executed with subprocess. utils contains a function to get the default minecraft directory.
 

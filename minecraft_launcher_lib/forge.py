@@ -1,6 +1,6 @@
 from .helper import download_file, get_library_path, get_jar_mainclass, get_user_agent, empty
 from .install import install_minecraft_version, install_libraries
-from typing import Dict, List, Any, Callable
+from typing import Dict, List, Any, Callable, Union
 from .exceptions import VersionNotFound
 from xml.dom import minidom
 import subprocess
@@ -47,10 +47,11 @@ def get_data_library_path(libname: str, path: str) -> str:
     return libpath
 
 
-def forge_processors(data: Dict[str, Any], path: str, lzma_path: str, installer_path: str, callback: Dict[str, Callable]):
+def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: Dict[str, Callable]):
     """
     Run the processors of the install_profile.json
     """
+    path = str(minecraft_directory)
     argument_vars = {"{MINECRAFT_JAR}": os.path.join(path, "versions", data["minecraft"], data["minecraft"] + ".jar")}
     for key, value in data["data"].items():
         if value["client"].startswith("[") and value["client"].endswith("]"):

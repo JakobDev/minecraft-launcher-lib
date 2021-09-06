@@ -120,3 +120,9 @@ def test_get_minecraft_command_invalid_version(tmpdir):
     # Checks if the VersionNotFound exception raised
     with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
         minecraft_launcher_lib.command.get_minecraft_command("InvalidVersion", str(tmpdir), {})
+
+
+def test_get_minecraft_command_with_pazh(tmpdir):
+    version_id = download_test_version(tmpdir)
+    # Test if get_minecraft_command works with os.PathLike
+    minecraft_launcher_lib.command.get_minecraft_command(version_id, tmpdir, {})

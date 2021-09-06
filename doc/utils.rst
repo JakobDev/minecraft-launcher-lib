@@ -22,13 +22,13 @@ Returns a list of all versions with the type.
 
 .. code:: python
 
-    get_installed_versions(path: str)  -> List[Dict[str,str]]
+    get_installed_versions(minecraft_directory: Union[str, os.PathLike])  -> List[Dict[str,str]]
 
 Returns a list with all installed versions in the given path.
 
 .. code:: python
 
-    get_available_versions(path: str) -> List[Dict[str,str]]
+    get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List[Dict[str,str]]
 
 Returns a list with all installable and only local installed (e.g. Forge) versions.
 
@@ -52,6 +52,6 @@ Generates test options for get_minecraft_command(). Use this function to test la
 
 .. code:: python
 
-    is_version_valid(version: str,path: str) -> bool
+    is_version_valid(version: str,minecraft_directory: Union[str, os.PathLike]) -> bool
 
 Checks if the given version exists

@@ -30,6 +30,7 @@ def test_get_version_list():
 
 def test_get_installed_versions(tmpdir):
     create_test_version_file(tmpdir)
+    version_list = minecraft_launcher_lib.utils. get_installed_versions(tmpdir)
     version_list = minecraft_launcher_lib.utils. get_installed_versions(str(tmpdir))
     assert version_list[0]["id"] == "utilstest"
     assert version_list[0]["type"] == "release"
@@ -37,6 +38,7 @@ def test_get_installed_versions(tmpdir):
 
 def test_get_available_versions(tmpdir):
     create_test_version_file(tmpdir)
+    version_list = minecraft_launcher_lib.utils.get_available_versions(tmpdir)
     version_list = minecraft_launcher_lib.utils.get_available_versions(str(tmpdir))
     assert "type" in version_list[0]
     assert "id" in version_list[0]
@@ -59,6 +61,9 @@ def test_generate_test_options():
 
 def test_is_version_valid(tmpdir):
     create_test_version_file(tmpdir)
+    assert minecraft_launcher_lib.utils.is_version_valid("1.16", tmpdir) is True
     assert minecraft_launcher_lib.utils.is_version_valid("1.16", str(tmpdir)) is True
+    assert minecraft_launcher_lib.utils.is_version_valid("utilstest", tmpdir) is True
     assert minecraft_launcher_lib.utils.is_version_valid("utilstest", str(tmpdir)) is True
     assert minecraft_launcher_lib.utils.is_version_valid("Test123", str(tmpdir)) is False
+    assert minecraft_launcher_lib.utils.is_version_valid("Test123", tmpdir) is False

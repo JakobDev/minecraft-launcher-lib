@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 import distutils.spawn
 import platform
 import requests
@@ -39,22 +39,22 @@ def get_version_list() -> List[Dict[str, str]]:
     return returnlist
 
 
-def get_installed_versions(path: str) -> List[Dict[str, str]]:
+def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List[Dict[str, str]]:
     """
     Returns all installed versions
     """
-    dir_list = os.listdir(os.path.join(path, "versions"))
+    dir_list = os.listdir(os.path.join(minecraft_directory, "versions"))
     version_list = []
     for i in dir_list:
-        if not os.path.isfile(os.path.join(path, "versions", i, i + ".json")):
+        if not os.path.isfile(os.path.join(minecraft_directory, "versions", i, i + ".json")):
             continue
-        with open(os.path.join(path, "versions", i, i + ".json"), "r", encoding="utf-8") as f:
+        with open(os.path.join(minecraft_directory, "versions", i, i + ".json"), "r", encoding="utf-8") as f:
             version_data = json.load(f)
         version_list.append({"id": version_data["id"], "type": version_data["type"]})
     return version_list
 
 
-def get_available_versions(path: str) -> List[Dict[str, str]]:
+def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List[Dict[str, str]]:
     """
     Returns all installed versions and all versions that Mojang offers to download
     """
@@ -63,7 +63,7 @@ def get_available_versions(path: str) -> List[Dict[str, str]]:
     for i in get_version_list():
         version_list.append({"id": i["id"], "type": i["type"]})
         version_check.append(i["id"])
-    for i in get_installed_versions(path):
+    for i in get_installed_versions(minecraft_directory):
         if not i["id"] in version_check:
             version_list.append(i)
     return version_list
@@ -111,11 +111,11 @@ def generate_test_options() -> Dict[str, str]:
     }
 
 
-def is_version_valid(version: str, path: str) -> bool:
+def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike]) -> bool:
     """
     Checks if the given version exists
     """
-    if os.path.isdir(os.path.join(path, "versions", version)):
+    if os.path.isdir(os.path.join(minecraft_directory, "versions", version)):
         return True
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", headers={"user-agent": f"minecraft-launcher-lib/{get_library_version()}"}).json()
     for i in version_list["versions"]:

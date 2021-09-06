@@ -84,10 +84,11 @@ def get_latest_installer_version() -> str:
     return release.item(0).lastChild.data
 
 
-def install_fabric(minecraft_version: str, path: str, loader_version: str = None, callback: Dict[str, Callable] = None):
+def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: str = None, callback: Dict[str, Callable] = None):
     """
     Install a fabric version
     """
+    path = str(minecraft_directory)
     if not callback:
         callback = {}
     # Get latest loader version if not given
