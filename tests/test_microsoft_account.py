@@ -1,4 +1,5 @@
 import minecraft_launcher_lib
+import pytest
 
 
 def test_get_login_url():
@@ -12,3 +13,8 @@ def test_url_contains_auth_code():
 
 def test_get_auth_code_from_url():
     assert minecraft_launcher_lib.microsoft_account.get_auth_code_from_url("https://login.live.com/oauth20_desktop.srf?code=testcode&lc=test") == "testcode"
+
+
+def test_complete_refresh_invalid_token():
+    with pytest.raises(minecraft_launcher_lib.exceptions.InvalidRefreshToken):
+        minecraft_launcher_lib.microsoft_account.complete_refresh("clientid", "secret", "url", "token")
