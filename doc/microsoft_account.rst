@@ -47,7 +47,7 @@ Do the complete login process. It returns the following:
 
     complete_refresh(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str) -> Dict[str, Union[List[Dict[str, str]]]]
 
-Do the comple login process with a refresh token. It returns the same as complete_login().
+Do the complete login process with a refresh token. It returns the same as complete_login().
 
 .. code:: python
 

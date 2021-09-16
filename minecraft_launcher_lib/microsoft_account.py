@@ -153,7 +153,7 @@ def get_profile(token: str) -> Dict[str, Union[List[Dict[str, str]]]]:
 
 def complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> Dict[str, Union[List[Dict[str, str]]]]:
     """
-    Do the comple login process
+    Do the complete login process
     """
     token_request = get_authorization_token(client_id, client_secret, redirect_uri, auth_code)
     token = token_request["access_token"]
@@ -178,7 +178,7 @@ def complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_c
 
 def complete_refresh(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str) -> Dict[str, Union[List[Dict[str, str]]]]:
     """
-    Do the comple login process with a refresh token
+    Do the complete login process with a refresh token
     """
     token_request = refresh_authorization_token(client_id, client_secret, redirect_uri, refresh_token)
 
