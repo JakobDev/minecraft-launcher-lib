@@ -8,6 +8,7 @@ import uuid
 import json
 import os
 
+__version__ = "4.0"
 
 def get_minecraft_directory() -> str:
     """
@@ -97,7 +98,7 @@ def get_library_version() -> str:
     """
     Returns the version of minecraft-launcher-lib
     """
-    return "4.0"
+    return __version__
 
 
 def generate_test_options() -> Dict[str, str]:
