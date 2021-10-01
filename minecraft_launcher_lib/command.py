@@ -137,9 +137,8 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
                 java_path = os.path.join(path, "runtime", data["javaVersion"]["component"], _get_jvm_platform_string(),
                                          data["javaVersion"]["component"], "bin", "java")
                 if not os.path.exists(java_path):
-                    java_path = os.path.join(path, "runtime", data["javaVersion"]["component"],
-                                             _get_jvm_platform_string(), data["javaVersion"]["component"], "jre.bundle",
-                                             "Contents", "Home", "bin", "java")
+                    java_path = java_path.replace(os.path.join("bin", "java"),
+                                                  os.path.join("jre.bundle", "Contents", "Home", "bin", "java"))
                 if not os.path.exists(java_path):
                     java_path = "java"
             else:
