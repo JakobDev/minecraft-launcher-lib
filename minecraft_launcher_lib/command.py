@@ -134,11 +134,19 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
     else:
         if "javaVersion" in data:
             if os.path.isdir(os.path.join(path, "runtime", data["javaVersion"]["component"])):
-                command.append(os.path.join(path, "runtime", data["javaVersion"]["component"], _get_jvm_platform_string(), data["javaVersion"]["component"], "bin", "java"))
+                java_path = os.path.join(path, "runtime", data["javaVersion"]["component"], _get_jvm_platform_string(),
+                                         data["javaVersion"]["component"], "bin", "java")
+                if not os.path.exists(java_path):
+                    java_path = os.path.join(path, "runtime", data["javaVersion"]["component"],
+                                             _get_jvm_platform_string(), data["javaVersion"]["component"], "jre.bundle",
+                                             "Contents", "Home", "bin", "java")
+                if not os.path.exists(java_path):
+                    java_path = "java"
             else:
-                command.append("java")
+                java_path = "java"
         else:
-            command.append("java")
+            java_path = "java"
+        command.append(java_path)
     if "jvmArguments" in options:
         command = command + options["jvmArguments"]
     # Newer Versions have jvmArguments in version.json
