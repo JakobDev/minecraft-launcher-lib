@@ -4,7 +4,7 @@ install allows you to install minecraft.
 
 .. code:: python
 
-    install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike],callback: Dict[str,Callable]=None)
+    install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike],callback: Dict[str,Callable]=None) -> NoReturn
 
 Installs a minecraft version into the given path. e.g. install_version("1.14","/tmp/minecraft"). utils contains a function to get the default minecraft directory.
 

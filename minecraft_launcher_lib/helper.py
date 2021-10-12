@@ -1,4 +1,4 @@
-from typing import Dict, Any, Callable
+from typing import NoReturn, Dict, Any, Callable
 from .utils import get_library_version
 import requests
 import platform
@@ -12,7 +12,7 @@ import re
 import os
 
 
-def empty(arg: Any):
+def empty(arg: Any) -> NoReturn:
     """
     This function is just a placeholder
     """

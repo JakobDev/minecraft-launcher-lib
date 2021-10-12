@@ -15,7 +15,7 @@ forge allows you to install forge.
 
 .. code:: python
 
-    install_forge_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str,Callable]=None
+    install_forge_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str,Callable]=None) -> NoReturn
 
 Installs the given forge version in the given path. versionid must be one of the ids you get with list_forge_versions(). callback is the same dict as in the install module.
 
@@ -23,7 +23,7 @@ This function does not work for minecraft versions older than 1.13.
 
 .. code:: python
 
-    run_forge_installer(version: str)
+    run_forge_installer(version: str) -> NoReturn
 
 Download and execute the forge installer of the given forge version.
 

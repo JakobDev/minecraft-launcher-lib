@@ -40,7 +40,7 @@ Return the path to the java executable. This may not work correctly on all syste
 
 .. code:: python
 
-    get_library_version()
+    get_library_version() -> str
 
 Return the version of the library.
 
