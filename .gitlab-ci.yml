@@ -22,5 +22,5 @@ pytest:
 flake8:
     stage: test
     script:
-        - pip install flake8
+        - pip install flake8 flake8-type-annotations
         - flake8
