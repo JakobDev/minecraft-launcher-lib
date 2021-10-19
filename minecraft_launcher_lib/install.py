@@ -129,11 +129,9 @@ def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os
         minecraft_directory = str(minecraft_directory)
     if callback is None:
         callback = {}
-    if os.path.isdir(os.path.join(minecraft_directory, "versions")):
-        for i in os.listdir(os.path.join(minecraft_directory, "versions")):
-            if i == versionid:
-                do_version_install(versionid, minecraft_directory, callback)
-                return
+    if os.path.isfile(os.path.join(minecraft_directory, "versions", versionid, f"{versionid}.json")):
+        do_version_install(versionid, minecraft_directory, callback)
+        return
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", headers={"user-agent": get_user_agent()}).json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
