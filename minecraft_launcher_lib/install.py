@@ -15,6 +15,7 @@ def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Calla
     """
     Install all libraries
     """
+    callback.get("setStatus", empty)("Download Libraries")
     callback.get("setMax", empty)(len(data["libraries"]))
     for count, i in enumerate(data["libraries"]):
         # Check, if the rules allow this lib for the current system
@@ -74,6 +75,7 @@ def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable
     # Old versions dosen't have this
     if "assetIndex" not in data:
         return
+    callback.get("setStatus", empty)("Download Assets")
     # Download all assets
     download_file(data["assetIndex"]["url"], os.path.join(path, "assets", "indexes", data["assets"] + ".json"), callback, sha1=data["assetIndex"]["sha1"])
     with open(os.path.join(path, "assets", "indexes", data["assets"] + ".json")) as f:
