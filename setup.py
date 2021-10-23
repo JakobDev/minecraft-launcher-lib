@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from minecraft_launcher_lib.utils import get_library_version
-from setuptools import find_packages, setup
+from setuptools import setup
 
 with open("README.md", "r", encoding="utf-8") as f:
     description = f.read()
@@ -18,7 +18,7 @@ setup(name="minecraft-launcher-lib",
       install_requires=[
           "requests",
       ],
-      packages=find_packages(),
+      packages=["minecraft_launcher_lib"],
       license="BSD",
       keywords=["JakobDev", "Minecraft", "Mojang", "launcher", "minecraft-launcher", "java"],
       project_urls={
