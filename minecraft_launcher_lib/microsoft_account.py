@@ -1,6 +1,7 @@
 from .exceptions import InvalidRefreshToken
 from .helper import get_user_agent
 from typing import List, Dict, Union
+import urllib.parse
 import requests
 
 
@@ -15,18 +16,18 @@ def url_contains_auth_code(url: str) -> bool:
     """
     Checks if the given url contains a authorization code
     """
-    return url.count("code=") == 1
+    parsed = urllib.parse.urlparse(url)
+    qs = urllib.parse.parse_qs(parsed.query)
+    return "code" in qs
 
 
 def get_auth_code_from_url(url: str) -> str:
     """
     Get the authorization code from the url
     """
-    domain, parameters = url.split("?")
-    parameterList = parameters.split("&")
-    for i in parameterList:
-        if i.startswith("code="):
-            return i[5:]
+    parsed = urllib.parse.urlparse(url)
+    qs = urllib.parse.parse_qs(parsed.query)
+    return qs["code"][0]
 
 
 def get_authorization_token(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> Dict[str, str]:
