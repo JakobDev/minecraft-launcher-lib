@@ -31,7 +31,7 @@ master_doc = 'index'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx_reredirects"
+    "sphinx_reredirects",
     "notfound.extension"
 ]
 
