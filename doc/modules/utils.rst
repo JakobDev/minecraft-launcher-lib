@@ -55,3 +55,9 @@ Generates test options for get_minecraft_command(). Use this function to test la
     is_version_valid(version: str,minecraft_directory: Union[str, os.PathLike]) -> bool
 
 Checks if the given version exists
+
+.. code:: python
+
+    get_minecraft_news(page_size: int = 20) -> Dict
+
+Get the news from minecraft.net
