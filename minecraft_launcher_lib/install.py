@@ -1,6 +1,6 @@
 from .helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
+from typing import NoReturn, Any, Callable, Dict, Union
 from .natives import extract_natives_file, get_natives
-from typing import Any, Callable, Dict, Union
 from .exceptions import VersionNotFound
 from .runtime import install_jvm_runtime
 import requests
@@ -11,10 +11,11 @@ import os
 __all__ = ["install_minecraft_version"]
 
 
-def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Callable]):
+def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Callable]) -> NoReturn:
     """
     Install all libraries
     """
+    callback.get("setStatus", empty)("Download Libraries")
     callback.get("setMax", empty)(len(data["libraries"]))
     for count, i in enumerate(data["libraries"]):
         # Check, if the rules allow this lib for the current system
@@ -67,13 +68,14 @@ def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Calla
         callback.get("setProgress", empty)(count)
 
 
-def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable]):
+def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable]) -> NoReturn:
     """
     Install all assets
     """
     # Old versions dosen't have this
     if "assetIndex" not in data:
         return
+    callback.get("setStatus", empty)("Download Assets")
     # Download all assets
     download_file(data["assetIndex"]["url"], os.path.join(path, "assets", "indexes", data["assets"] + ".json"), callback, sha1=data["assetIndex"]["sha1"])
     with open(os.path.join(path, "assets", "indexes", data["assets"] + ".json")) as f:
@@ -89,7 +91,7 @@ def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable
         callback.get("setProgress", empty)(count)
 
 
-def do_version_install(versionid: str, path: str, callback: Dict[str, Callable], url: str = None):
+def do_version_install(versionid: str, path: str, callback: Dict[str, Callable], url: str = None) -> NoReturn:
     """
     Install the given version
     """
@@ -121,7 +123,7 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
         install_jvm_runtime(versiondata["javaVersion"]["component"], path, callback=callback)
 
 
-def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None):
+def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None) -> NoReturn:
     """
     Install a Minecraft Version. Fore more Information take a look at the documentation"
     """
@@ -129,11 +131,9 @@ def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os
         minecraft_directory = str(minecraft_directory)
     if callback is None:
         callback = {}
-    if os.path.isdir(os.path.join(minecraft_directory, "versions")):
-        for i in os.listdir(os.path.join(minecraft_directory, "versions")):
-            if i == versionid:
-                do_version_install(versionid, minecraft_directory, callback)
-                return
+    if os.path.isfile(os.path.join(minecraft_directory, "versions", versionid, f"{versionid}.json")):
+        do_version_install(versionid, minecraft_directory, callback)
+        return
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", headers={"user-agent": get_user_agent()}).json()
     for i in version_list["versions"]:
         if i["id"] == versionid:

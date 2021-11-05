@@ -1,6 +1,6 @@
 from .helper import download_file, get_library_path, get_jar_mainclass, get_user_agent, empty
 from .install import install_minecraft_version, install_libraries
-from typing import Dict, List, Any, Callable, Union
+from typing import NoReturn, Dict, List, Any, Callable, Union
 from .exceptions import VersionNotFound
 from xml.dom import minidom
 import subprocess
@@ -16,7 +16,7 @@ import os
 __all__ = ["install_forge_version", "run_forge_installer", "list_forge_versions", "find_forge_version", "is_forge_version_valid", "supports_automatic_install"]
 
 
-def extract_file(handler: zipfile.ZipFile, zip_path: str, extract_path: str):
+def extract_file(handler: zipfile.ZipFile, zip_path: str, extract_path: str) -> NoReturn:
     """
     Extract a file from a zip handler into the given path
     """
@@ -47,7 +47,7 @@ def get_data_library_path(libname: str, path: str) -> str:
     return libpath
 
 
-def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: Dict[str, Callable], java=None):
+def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: Dict[str, Callable], java: str = None) -> NoReturn:
     """
     Run the processors of the install_profile.json
     """
@@ -92,7 +92,7 @@ def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.Pa
         shutil.rmtree(root_path)
 
 
-def install_forge_version(versionid: str, path: str, callback: Dict[str, Callable] = None, java=None):
+def install_forge_version(versionid: str, path: str, callback: Dict[str, Callable] = None, java: str = None) -> NoReturn:
     """
     Installs a forge version. Fore more information look at the documentation.
     """
@@ -135,7 +135,7 @@ def install_forge_version(versionid: str, path: str, callback: Dict[str, Callabl
     os.remove(lzma_path)
 
 
-def run_forge_installer(version: str, java=None):
+def run_forge_installer(version: str, java: str = None) -> NoReturn:
     """
     Run the forge installer of the given forge version
     """
@@ -164,6 +164,7 @@ def find_forge_version(vanilla_version: str) -> str:
     Find the latest forge version that is compatible to the given vanilla version
     """
     version_list = list_forge_versions()
+    version_list.reverse()
     for i in version_list:
         version_split = i.split("-")
         if version_split[0] == vanilla_version:

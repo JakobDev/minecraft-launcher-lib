@@ -67,3 +67,8 @@ def test_is_version_valid(tmpdir):
     assert minecraft_launcher_lib.utils.is_version_valid("utilstest", str(tmpdir)) is True
     assert minecraft_launcher_lib.utils.is_version_valid("Test123", str(tmpdir)) is False
     assert minecraft_launcher_lib.utils.is_version_valid("Test123", tmpdir) is False
+
+
+def test_get_minecraft_news():
+    assert len(minecraft_launcher_lib.utils.get_minecraft_news()["article_grid"]) == 20
+    assert len(minecraft_launcher_lib.utils.get_minecraft_news(page_size=50)["article_grid"]) == 50

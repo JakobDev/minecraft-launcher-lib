@@ -1,5 +1,5 @@
+from typing import NoReturn, Dict, Any, Union
 from .exceptions import VersionNotFound
-from typing import Dict, Any, Union
 from .helper import parse_rule_list
 import platform
 import zipfile
@@ -35,7 +35,7 @@ def get_natives(data: Dict[str, Any]) -> str:
         return ""
 
 
-def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[str, Any]):
+def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[str, Any]) -> NoReturn:
     """
     Unpack natives
     """
@@ -51,7 +51,7 @@ def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[st
         zf.extract(i, extract_path)
 
 
-def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path: str):
+def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path: str) -> NoReturn:
     """
     Extract natives into the givrn path. For more information look at the documentation.
     """

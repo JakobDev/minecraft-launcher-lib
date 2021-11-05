@@ -11,13 +11,9 @@ minecraft-launcher-lib is a easy to use Python library for creating your own Min
 .. toctree::
     :maxdepth: 2
 
-    command
-    install
-    natives
-    account
-    microsoft_account
-    utils
-    forge
-    fabric
-    runtime
-    exceptions
+    installation
+    tutorial/index
+    modules/index
+    faq
+    troubleshooting
+    showcase

@@ -26,7 +26,7 @@ print(f"Please open {minecraft_launcher_lib.microsoft_account.get_login_url(CLIE
 code_url = input()
 
 # Check if the url contains a code
-if not minecraft_launcher_lib.microsoft_account. url_contains_auth_code(code_url):
+if not minecraft_launcher_lib.microsoft_account.url_contains_auth_code(code_url):
     print("The url is not valid")
     sys.exit(1)
 

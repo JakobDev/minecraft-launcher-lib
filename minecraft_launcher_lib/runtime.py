@@ -1,5 +1,5 @@
 from .helper import get_user_agent, download_file, empty
-from typing import List, Dict, Callable, Union
+from typing import NoReturn, List, Dict, Callable, Union
 from .exceptions import VersionNotFound
 import subprocess
 import requests
@@ -38,7 +38,7 @@ def get_jvm_runtimes() -> List[str]:
     return jvm_list
 
 
-def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None):
+def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None) -> NoReturn:
     """
     Installs the given jvm runtime. callback is the same dict as in the install module.
     """

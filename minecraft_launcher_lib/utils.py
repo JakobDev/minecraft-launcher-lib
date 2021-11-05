@@ -123,3 +123,16 @@ def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike])
         if i["id"] == version:
             return True
     return False
+
+
+def get_minecraft_news(page_size: int = 20) -> Dict:
+    """
+    Get the news from minecraft.net
+    """
+    parameters = {
+        "pageSize": page_size
+    }
+    header = {
+        "user-agent": f"minecraft-launcher-lib/{get_library_version()}"
+    }
+    return requests.get("https://www.minecraft.net/content/minecraft-net/_jcr_content.articles.grid", params=parameters, headers=header).json()
