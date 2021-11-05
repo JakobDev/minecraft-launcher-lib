@@ -164,7 +164,6 @@ def find_forge_version(vanilla_version: str) -> str:
     Find the latest forge version that is compatible to the given vanilla version
     """
     version_list = list_forge_versions()
-    version_list.reverse()
     for i in version_list:
         version_split = i.split("-")
         if version_split[0] == vanilla_version:
