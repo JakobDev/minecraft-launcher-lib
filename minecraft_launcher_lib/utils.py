@@ -10,6 +10,7 @@ import os
 
 __version__ = "4.0"
 
+
 def get_minecraft_directory() -> str:
     """
     Returns the default path to the .minecraft directory
