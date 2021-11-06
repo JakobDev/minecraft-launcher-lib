@@ -22,7 +22,7 @@ minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
 minecraft_launcher_lib.install.install_minecraft_version(latest_version, minecraft_directory)
 
 # Login
-print(f"Please open {minecraft_launcher_lib.microsoft_account.get_login_url(CLIENT_ID, REDIRECT_URL) } in your browser and copy the url you are redirected into the prompt below.")
+print(f"Please open {minecraft_launcher_lib.microsoft_account.get_login_url(CLIENT_ID, REDIRECT_URL)} in your browser and copy the url you are redirected into the prompt below.")
 code_url = input()
 
 # Check if the url contains a code
@@ -55,7 +55,9 @@ Features:
 - Support Forge, Fabric and Liteloader
 - Old versions like alpha or beta supported
 - All functions have type annotations and docstrings
-- Full Documention online available
+- Only depents on [requests](https://pypi.org/project/requests)
+- Supports [PyPy](https://www.pypy.org)
+- Full Documention with tutorial online available
 - Examples available
 - OpenSource
 
