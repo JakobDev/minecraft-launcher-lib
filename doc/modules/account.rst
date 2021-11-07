@@ -1,5 +1,10 @@
 account
 ==========================
+
+.. warning::
+
+    Minecraft has moved to Microsoft Accounts, so this module is now deprecated
+
 account contains functions for interacting with your mojang account.
 
 .. code:: python
