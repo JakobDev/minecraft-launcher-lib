@@ -9,12 +9,12 @@ Before you install Forge, you need to know what Forge version you need. Use find
 
 .. code:: python
 
-    forge_version = minecraft_launcher_lib.forge.find_forge_version("1.17")
+    forge_version = minecraft_launcher_lib.forge.find_forge_version("1.17.1")
     if forge_version is None:
         print("This Minecraft Version is not supported by Forge")
         return
 
-In this case we get the latest Forge version for 1.17.
+In this case we get the latest Forge version for 1.17.1.
 
 -------------------------
 Install Forge Version
