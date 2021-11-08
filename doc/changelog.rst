@@ -9,7 +9,7 @@ Changelog
 - Add support for using a custom Java runtime in different functions (`BobDotCom <https://github.com/BobDotCom>`_)
 - Fix Forge for 1.12.2
 - Fix find_forge_version() (`BobDotCom <https://github.com/BobDotCom>`_)
-- Packages can now be built wothout requests being installed (`BobDotCom <https://github.com/BobDotCom>`_)
+- Packages can now be built without requests being installed (`BobDotCom <https://github.com/BobDotCom>`_)
 - Fix finding Java runtime on Mac (`BobDotCom <https://github.com/BobDotCom>`_)
 
 -------------------------
