@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-from minecraft_launcher_lib.utils import get_library_version
+import re
 from setuptools import setup
+
+
+with open('minecraft_launcher_lib/utils.py') as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1) or ''
 
 with open("README.md", "r", encoding="utf-8") as f:
     description = f.read()
 
 setup(name="minecraft-launcher-lib",
-      version=get_library_version(),
+      version=version,
       description="A library for creating a custom Minecraft launcher",
       long_description=description,
       long_description_content_type="text/markdown",

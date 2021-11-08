@@ -85,7 +85,7 @@ def get_latest_installer_version() -> str:
     return release.item(0).lastChild.data
 
 
-def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: str = None, callback: Dict[str, Callable] = None) -> NoReturn:
+def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: str = None, callback: Dict[str, Callable] = None, java: str = None) -> NoReturn:
     """
     Install a fabric version
     """
@@ -112,7 +112,7 @@ def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.Pa
     download_file(installer_download_url, installer_path, callback=callback)
     # Run the installer see https://fabricmc.net/wiki/install#cli_installation
     callback.get("setStatus", empty)("Running fabric installer")
-    command = ["java", "-jar", installer_path, "client", "-dir", path, "-mcversion", minecraft_version, "-loader", loader_version, "-noprofile", "-snapshot"]
+    command = [java or "java", "-jar", installer_path, "client", "-dir", path, "-mcversion", minecraft_version, "-loader", loader_version, "-noprofile", "-snapshot"]
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode != 0:
         raise ExternalProgramError(command, result.stdout, result.stderr)
