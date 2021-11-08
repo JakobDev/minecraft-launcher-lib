@@ -124,7 +124,10 @@ def install_forge_version(versionid: str, path: str, callback: Dict[str, Callabl
         pass
     # Extract the client.lzma
     lzma_path = os.path.join(tempfile.gettempdir(), "lzma-" + str(random.randrange(1, 100000)) + ".tmp")
-    extract_file(zf, "data/client.lzma", lzma_path)
+    try:
+        extract_file(zf, "data/client.lzma", lzma_path)
+    except KeyError:
+        pass
     zf.close()
     # Install the rest with the vanilla function
     install_minecraft_version(forge_version_id, path, callback=callback)
@@ -132,7 +135,8 @@ def install_forge_version(versionid: str, path: str, callback: Dict[str, Callabl
     forge_processors(version_data, path, lzma_path, temp_file_path, callback)
     # Delete the temporary files
     os.remove(temp_file_path)
-    os.remove(lzma_path)
+    if os.path.isfile(lzma_path):
+        os.remove(lzma_path)
 
 
 def run_forge_installer(version: str) -> NoReturn:
