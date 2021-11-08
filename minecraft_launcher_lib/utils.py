@@ -1,9 +1,9 @@
 from typing import Dict, List, Union
-import distutils.spawn
 import platform
 import requests
 import random
 import pathlib
+import shutil
 import uuid
 import json
 import os
@@ -79,18 +79,18 @@ def get_java_executable() -> str:
         elif os.path.isfile(r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"):
             return r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"
         else:
-            return distutils.spawn.find_executable("java") or "java"
+            return shutil.which("java") or "java"
     elif os.getenv("JAVA_HOME"):
         return os.path.join(os.getenv("JAVA_HOME"), "bin", "java")
     elif platform.system() == "Darwin":
-        return distutils.spawn.find_executable("java") or "java"
+        return shutil.which("java") or "java"
     else:
         if os.path.islink("/etc/alternatives/java"):
             return os.readlink("/etc/alternatives/java")
         elif os.path.islink("/usr/lib/jvm/default-runtime"):
             return os.path.join("/usr", "lib", "jvm", os.readlink("/usr/lib/jvm/default-runtime"), "bin", "java")
         else:
-            return distutils.spawn.find_executable("java") or "java"
+            return shutil.which("java") or "java"
 
 
 def get_library_version() -> str:
