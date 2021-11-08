@@ -2,6 +2,17 @@ Changelog
 ==================================================
 
 -------------------------
+4.1
+-------------------------
+- Add get_minecraft_news()
+- Replace deprecated distutils.spawn.find_executable() with shutil.which()
+- Add support for using a custom Java runtime in different functions (`BobDotCom <https://github.com/BobDotCom>`_)
+- Fix Forge for 1.12.2
+- Fix find_forge_version() (`BobDotCom <https://github.com/BobDotCom>`_)
+- Packages can now be built wothout requests being installed (`BobDotCom <https://github.com/BobDotCom>`_)
+- Fix finding Java runtime on Mac (`BobDotCom <https://github.com/BobDotCom>`_)
+
+-------------------------
 4.0
 -------------------------
 - Add Support for Microsoft Accounts
