@@ -121,6 +121,7 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
     if "javaVersion" in versiondata:
         callback.get("setStatus", empty)("Install java runtime")
         install_jvm_runtime(versiondata["javaVersion"]["component"], path, callback=callback)
+    callback.get("setStatus", empty)("Installation complete")
 
 
 def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None) -> NoReturn:
