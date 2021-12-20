@@ -181,3 +181,13 @@ def get_user_agent() -> str:
     Returns the user agent of minecraft-launcher-lib
     """
     return f"minecraft-launcher-lib/{get_library_version()}"
+
+
+def get_classpath_separator() -> str:
+    """
+    Returns the classpath seperator for the current os
+    """
+    if platform.system() == "Windows":
+        return ";"
+    else:
+        return ":"

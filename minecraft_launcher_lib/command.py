@@ -1,4 +1,4 @@
-from .helper import parse_rule_list, inherit_json
+from .helper import parse_rule_list, inherit_json, get_classpath_separator
 from .runtime import _get_jvm_platform_string
 from .exceptions import VersionNotFound
 from typing import Dict, List, Any, Union
@@ -65,6 +65,8 @@ def replace_arguments(argstr: str, versionData: Dict[str, Any], path: str, optio
     argstr = argstr.replace("${resolution_height}", options.get("resolutionHeight", "480"))
     argstr = argstr.replace("${game_assets}", os.path.join(path, "assets", "virtual", "legacy"))
     argstr = argstr.replace("${auth_session}", options.get("token", "{token}"))
+    argstr = argstr.replace("${library_directory}", os.path.join(path, "libraries"))
+    argstr = argstr.replace("${classpath_separator}", get_classpath_separator())
     return argstr
 
 
