@@ -1,5 +1,5 @@
 from .helper import parse_rule_list, inherit_json, get_classpath_separator
-from .runtime import _get_jvm_platform_string
+from .runtime import get_executable_path
 from .exceptions import VersionNotFound
 from typing import Dict, List, Any, Union
 from .utils import get_library_version
@@ -133,21 +133,13 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
     # Add Java executable
     if "executablePath" in options:
         command.append(options["executablePath"])
-    else:
-        if "javaVersion" in data:
-            if os.path.isdir(os.path.join(path, "runtime", data["javaVersion"]["component"])):
-                java_path = os.path.join(path, "runtime", data["javaVersion"]["component"], _get_jvm_platform_string(),
-                                         data["javaVersion"]["component"], "bin", "java")
-                if not os.path.exists(java_path):
-                    java_path = java_path.replace(os.path.join("bin", "java"),
-                                                  os.path.join("jre.bundle", "Contents", "Home", "bin", "java"))
-                if not os.path.exists(java_path):
-                    java_path = "java"
-            else:
-                java_path = "java"
-        else:
+    elif "javaVersion" in data:
+        java_path = get_executable_path(data["javaVersion"]["component"], path)
+        if java_path is None:
             java_path = "java"
-        command.append(java_path)
+    else:
+        java_path = "java"
+    command.append(java_path)
     if "jvmArguments" in options:
         command = command + options["jvmArguments"]
     # Newer Versions have jvmArguments in version.json

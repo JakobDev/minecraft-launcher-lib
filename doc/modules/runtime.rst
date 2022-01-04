@@ -13,3 +13,9 @@ Installs the given jvm runtime.  callback is the same dict as in the install mod
     get_jvm_runtimes() -> List[str]
 
 Returns a list of all available runtimes.
+
+.. code:: python
+
+    get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[str]
+
+Returns the path to the executable. Returns None if none is found.

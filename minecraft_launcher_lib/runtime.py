@@ -1,5 +1,5 @@
+from typing import NoReturn, List, Dict, Callable, Union, Optional
 from .helper import get_user_agent, download_file, empty
-from typing import NoReturn, List, Dict, Callable, Union
 from .exceptions import VersionNotFound
 import subprocess
 import requests
@@ -81,3 +81,19 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     # Create the .version file
     with open(os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, ".version"), "w", encoding="utf-8") as f:
         f.write(manifest_data[platform_string][jvm_version][0]["version"]["name"])
+
+
+def get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[str]:
+    """
+    Returns the path to the executable. Returns None if none is found.
+    """
+    java_path = os.path.join(minecraft_directory, "runtime", jvm_version, _get_jvm_platform_string(), jvm_version, "bin", "java")
+    if os.path.isfile(java_path):
+        return java_path
+    elif os.path.isfile(java_path + ".exe"):
+        return java_path + ".exe"
+    java_path = java_path.replace(os.path.join("bin", "java"), os.path.join("jre.bundle", "Contents", "Home", "bin", "java"))
+    if os.path.isfile(java_path):
+        return java_path
+    else:
+        return None
