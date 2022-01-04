@@ -140,7 +140,7 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
         else:
             command.append(java_path)
     else:
-        command.append(java)
+        command.append("java")
     if "jvmArguments" in options:
         command = command + options["jvmArguments"]
     # Newer Versions have jvmArguments in version.json
