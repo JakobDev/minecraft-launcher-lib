@@ -136,10 +136,11 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
     elif "javaVersion" in data:
         java_path = get_executable_path(data["javaVersion"]["component"], path)
         if java_path is None:
-            java_path = "java"
+            command.append("java")
+        else:
+            command.append(java_path)
     else:
-        java_path = "java"
-    command.append(java_path)
+        command.append(java)
     if "jvmArguments" in options:
         command = command + options["jvmArguments"]
     # Newer Versions have jvmArguments in version.json
