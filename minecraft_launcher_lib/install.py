@@ -31,7 +31,7 @@ def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Calla
         else:
             downloadUrl = "https://libraries.minecraft.net"
         try:
-            libPath, name, version = i["name"].split(":")
+            libPath, name, version = i["name"].split(":")[0:3]
         except:
             continue
         for libPart in libPath.split("."):
@@ -60,7 +60,7 @@ def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Calla
                 extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", data["id"], "natives"), i["extract"])
             continue
         if "artifact" in i["downloads"]:
-            download_file(i["downloads"]["artifact"]["url"], os.path.join(currentPath, jarFilename), callback, sha1=i["downloads"]["artifact"]["sha1"])
+            download_file(i["downloads"]["artifact"]["url"],  os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"])
         if native != "":
             download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(currentPath, jarFilenameNative), callback, sha1=i["downloads"]["classifiers"][native]["sha1"])
             if "extract" in i:

@@ -69,6 +69,9 @@ def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.Pa
         classpath_seperator = ":"
     callback.get("setMax", empty)(len(data["processors"]))
     for count, i in enumerate(data["processors"]):
+        if "client" not in i.get("sides", ["client"]):
+            # Skip server side only processors
+            continue
         callback.get("setStatus", empty)("Running processor " + i["jar"])
         # Get the classpath
         classpath = ""

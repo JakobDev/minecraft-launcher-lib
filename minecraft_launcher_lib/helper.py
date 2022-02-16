@@ -116,7 +116,7 @@ def get_library_path(name: str, path: str) -> str:
     Returns the path from a libname
     """
     libpath = os.path.join(path, "libraries")
-    base_path, libname, version = name.split(":")
+    base_path, libname, version = name.split(":")[0:3]
     for i in base_path.split("."):
         libpath = os.path.join(libpath, i)
     try:
@@ -131,6 +131,8 @@ def get_jar_mainclass(path: str) -> str:
     """
     Returns the mainclass of a given jar
     """
+    if path == "":
+        return ""
     zf = zipfile.ZipFile(path)
     # Parse the MANIFEST.MF
     with zf.open("META-INF/MANIFEST.MF") as f:
