@@ -2,6 +2,13 @@ Changelog
 ==================================================
 
 -------------------------
+4.4
+-------------------------
+- Fix Forge installation for 1.18
+- Do not use bare except
+- Add DeprecationWarning to the account module
+
+-------------------------
 4.3
 -------------------------
 - Add get_executable_path()
