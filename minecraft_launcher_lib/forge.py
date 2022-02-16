@@ -22,7 +22,7 @@ def extract_file(handler: zipfile.ZipFile, zip_path: str, extract_path: str) -> 
     """
     try:
         os.makedirs(os.path.dirname(extract_path))
-    except:
+    except Exception:
         pass
     with handler.open(zip_path, "r") as f:
         with open(extract_path, "wb") as w:
@@ -41,7 +41,7 @@ def get_data_library_path(libname: str, path: str) -> str:
         libpath = os.path.join(libpath, i)
     try:
         extra, fileend = extra.split("@")
-    except:
+    except ValueError:
         fileend = "jar"
     libpath = os.path.join(libpath, libname, version, libname + "-" + version + "-" + extra + "." + fileend)
     return libpath
@@ -198,5 +198,5 @@ def supports_automatic_install(forge_version: str) -> bool:
             return True
         else:
             return False
-    except:
+    except Exception:
         return False

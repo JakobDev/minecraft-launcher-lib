@@ -30,7 +30,7 @@ def download_file(url: str, path: str, callback: Dict[str, Callable] = {}, sha1:
             return False
     try:
         os.makedirs(os.path.dirname(path))
-    except:
+    except Exception:
         pass
     if not url.startswith("http"):
         return False
@@ -121,7 +121,7 @@ def get_library_path(name: str, path: str) -> str:
         libpath = os.path.join(libpath, i)
     try:
         version, fileend = version.split("@")
-    except:
+    except ValueError:
         fileend = "jar"
     libpath = os.path.join(libpath, libname, version, libname + "-" + version + "." + fileend)
     return libpath
@@ -131,8 +131,6 @@ def get_jar_mainclass(path: str) -> str:
     """
     Returns the mainclass of a given jar
     """
-    if path == "":
-        return ""
     zf = zipfile.ZipFile(path)
     # Parse the MANIFEST.MF
     with zf.open("META-INF/MANIFEST.MF") as f:
@@ -143,7 +141,7 @@ def get_jar_mainclass(path: str) -> str:
         try:
             key, value = i.split(":")
             content[key] = value[1:]
-        except:
+        except Exception:
             pass
     return content["Main-Class"]
 

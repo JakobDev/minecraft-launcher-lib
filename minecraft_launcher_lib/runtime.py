@@ -74,7 +74,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
         elif value["type"] == "directory":
             try:
                 os.makedirs(current_path)
-            except:
+            except Exception:
                 pass
         callback.get("setProgress", empty)(count)
         count += 1

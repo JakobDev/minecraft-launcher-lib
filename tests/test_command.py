@@ -10,11 +10,11 @@ def check_argument(command: List[str], argument: str, value: str) -> bool:
     # Checks if a argument has the given value
     try:
         index = command.index(argument)
-    except:
+    except Exception:
         return False
     try:
         return command[index + 1] == value
-    except:
+    except Exception:
         return False
 
 

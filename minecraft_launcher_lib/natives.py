@@ -41,7 +41,7 @@ def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[st
     """
     try:
         os.mkdir(extract_path)
-    except:
+    except Exception:
         pass
     zf = zipfile.ZipFile(filename, "r")
     for i in zf.namelist():
