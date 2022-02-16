@@ -15,6 +15,7 @@ minecraft-launcher-lib is a easy to use Python library for creating your own Min
     tutorial/index
     modules/index
     faq
+    examples/index
     troubleshooting
     showcase
     changelog

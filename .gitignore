@@ -8,6 +8,7 @@ minecraft_launcher_lib.egg-info/
 #doc
 doc/_build
 doc/_static
+doc/examples
 
 #logs
 logs/

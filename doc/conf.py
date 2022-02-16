@@ -14,6 +14,8 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 import importlib
+import pathlib
+import os
 
 # -- Project information -----------------------------------------------------
 
@@ -78,3 +80,33 @@ redirects = {
     "runtime": "modules/runtime.html",
     "utils": "modules/utils.html",
 }
+
+
+def write_examples_file(in_path: pathlib.Path, out_dir: pathlib.Path):
+    with open(in_path, "r", encoding="utf-8") as f:
+        file_content = f.read()
+    with open(os.path.join(out_dir, in_path.name[:-3] + ".rst"), "w", encoding="utf-8") as f:
+        f.write(in_path.name[:-3] + "\n")
+        f.write("==========================\n")
+        f.write("\n.. code:: python\n\n")
+        for i in file_content.splitlines():
+            f.write("    " + i + "\n")
+        f.write(f"\n\n`View this example at GitLab <https://gitlab.com/JakobDev/minecraft-launcher-lib/-/blob/master/examples/{in_path.name}>`_")
+
+
+examples_path = pathlib.Path(__file__).parent.parent / "examples"
+examples_doc_dir = pathlib.Path(__file__).parent / "examples"
+
+try:
+    os.mkdir(examples_doc_dir)
+except FileExistsError:
+    pass
+
+with open(os.path.join(examples_doc_dir, "index.rst"), "w", encoding="utf-8") as f:
+    f.write("Examples\n==================================================\n\n")
+    f.write(".. toctree::\n    :maxdepth: 2\n\n")
+    for i in examples_path.iterdir():
+        if not i.name.endswith(".py"):
+            continue
+        write_examples_file(i, examples_doc_dir)
+        f.write("    " + i.name[:-3] + "\n")
