@@ -116,14 +116,18 @@ def get_library_path(name: str, path: str) -> str:
     Returns the path from a libname
     """
     libpath = os.path.join(path, "libraries")
-    base_path, libname, version = name.split(":")[0:3]
+    parts = name.split(":")
+    base_path, libname, version = parts[0:3]
     for i in base_path.split("."):
         libpath = os.path.join(libpath, i)
     try:
         version, fileend = version.split("@")
     except ValueError:
         fileend = "jar"
-    libpath = os.path.join(libpath, libname, version, libname + "-" + version + "." + fileend)
+    
+    # construct a filename with the remaining parts
+    filename = f"{libname}-{version}{''.join(map(lambda p: f'-{p}', parts[3:]))}.{fileend}"
+    libpath = os.path.join(libpath, libname, version, filename)
     return libpath
 
 
