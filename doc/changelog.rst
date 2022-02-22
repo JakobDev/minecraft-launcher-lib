@@ -2,6 +2,11 @@ Changelog
 ==================================================
 
 -------------------------
+4.5
+-------------------------
+- Fix Forge installation for 1.18 again (`Σcatnip <https://gitlab.com/sum-catnip>`_)
+
+-------------------------
 4.4
 -------------------------
 - Fix Forge installation for 1.18
