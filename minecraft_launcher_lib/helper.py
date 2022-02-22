@@ -124,7 +124,7 @@ def get_library_path(name: str, path: str) -> str:
         version, fileend = version.split("@")
     except ValueError:
         fileend = "jar"
-    
+
     # construct a filename with the remaining parts
     filename = f"{libname}-{version}{''.join(map(lambda p: f'-{p}', parts[3:]))}.{fileend}"
     libpath = os.path.join(libpath, libname, version, filename)
