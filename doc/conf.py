@@ -56,6 +56,8 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
 
+default_dark_mode = False
+
 
 def add_optional_extension(name: str):
     try:
@@ -67,6 +69,7 @@ def add_optional_extension(name: str):
 
 add_optional_extension("sphinx_reredirects")
 add_optional_extension("notfound.extension")
+add_optional_extension("sphinx_rtd_dark_mode")
 
 redirects = {
     "account": "modules/account.html",
