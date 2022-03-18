@@ -1,5 +1,12 @@
 # minecraft-launcher-lib
 
+![PyPI](https://img.shields.io/pypi/v/minecraft-launcher-lib)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/minecraft-launcher-lib)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/minecraft-launcher-lib)
+![PyPI - License](https://img.shields.io/pypi/l/minecraft-launcher-lib)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/minecraft-launcher-lib)
+![Read the Docs](https://img.shields.io/readthedocs/minecraft-launcher-lib)
+
 A Python library for creating a custom minecraft launcher. This library containts functions to install and execute minecraft and interacting with mojang accounts.
 
 ```python
