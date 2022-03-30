@@ -102,6 +102,10 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
         versiondata = json.load(f)
     # For Forge
     if "inheritsFrom" in versiondata:
+        try:
+            install_minecraft_version(versiondata["inheritsFrom"], path, callback=callback)
+        except VersionNotFound:
+            pass
         versiondata = inherit_json(versiondata, path)
     install_libraries(versiondata, path, callback)
     install_assets(versiondata, path, callback)
