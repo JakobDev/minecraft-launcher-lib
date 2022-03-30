@@ -1,5 +1,5 @@
 [flake8]
-ignore = E124 E501 E722 ANN101
+ignore = E124 E501 E722 ANN101 ANN401
 
 per-file-ignores =
     examples/* tests/* doc/* setup.py: ANN001 ANN201 ANN204
