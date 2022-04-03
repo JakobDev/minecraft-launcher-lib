@@ -3,6 +3,7 @@ from typing import NoReturn, Any, Callable, Dict, Union
 from .natives import extract_natives_file, get_natives
 from .exceptions import VersionNotFound
 from .runtime import install_jvm_runtime
+from multiprocessing.pool import Pool
 import requests
 import shutil
 import json
@@ -11,64 +12,90 @@ import os
 __all__ = ["install_minecraft_version"]
 
 
-def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Callable]) -> NoReturn:
+def _install_single_librariy(i: Dict, path: str, callback:  Dict[str, Callable], version_id: str, count: int):
+    # Check, if the rules allow this lib for the current system
+    if not parse_rule_list(i, "rules", {}):
+        return
+    # Turn the name into a path
+    currentPath = os.path.join(path, "libraries")
+    if "url" in i:
+        if i["url"].endswith("/"):
+            downloadUrl = i["url"][:-1]
+        else:
+            downloadUrl = i["url"]
+    else:
+        downloadUrl = "https://libraries.minecraft.net"
+    try:
+        libPath, name, version = i["name"].split(":")[0:3]
+    except ValueError:
+        return
+    for libPart in libPath.split("."):
+        currentPath = os.path.join(currentPath, libPart)
+        downloadUrl = downloadUrl + "/" + libPart
+    try:
+        version, fileend = version.split("@")
+    except ValueError:
+        fileend = "jar"
+    jarFilename = name + "-" + version + "." + fileend
+    downloadUrl = downloadUrl + "/" + name + "/" + version
+    currentPath = os.path.join(currentPath, name, version)
+    native = get_natives(i)
+    # Check if there is a native file
+    if native != "":
+        jarFilenameNative = name + "-" + version + "-" + native + ".jar"
+    jarFilename = name + "-" + version + "." + fileend
+    downloadUrl = downloadUrl + "/" + jarFilename
+    # Try to download the lib
+    try:
+        download_file(downloadUrl, os.path.join(currentPath, jarFilename), callback)
+    except Exception:
+        pass
+    if "downloads" not in i:
+        if "extract" in i:
+            extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", version_id, "natives"), i["extract"])
+        return
+    if "artifact" in i["downloads"]:
+        download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"])
+    if native != "":
+        download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(currentPath, jarFilenameNative), callback, sha1=i["downloads"]["classifiers"][native]["sha1"])
+        if "extract" in i:
+            extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", version_id, "natives"), i["extract"])
+    callback.get("setProgress", empty)(count)
+
+
+def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Callable], options: Dict[str, str]) -> NoReturn:
     """
     Install all libraries
     """
     callback.get("setStatus", empty)("Download Libraries")
     callback.get("setMax", empty)(len(data["libraries"]))
+    library_list = []
+    path_list = []
+    callback_list = []
+    version_id_list = []
+    count_list = []
     for count, i in enumerate(data["libraries"]):
-        # Check, if the rules allow this lib for the current system
-        if not parse_rule_list(i, "rules", {}):
-            continue
-        # Turn the name into a path
-        currentPath = os.path.join(path, "libraries")
-        if "url" in i:
-            if i["url"].endswith("/"):
-                downloadUrl = i["url"][:-1]
-            else:
-                downloadUrl = i["url"]
-        else:
-            downloadUrl = "https://libraries.minecraft.net"
-        try:
-            libPath, name, version = i["name"].split(":")[0:3]
-        except ValueError:
-            continue
-        for libPart in libPath.split("."):
-            currentPath = os.path.join(currentPath, libPart)
-            downloadUrl = downloadUrl + "/" + libPart
-        try:
-            version, fileend = version.split("@")
-        except ValueError:
-            fileend = "jar"
-        jarFilename = name + "-" + version + "." + fileend
-        downloadUrl = downloadUrl + "/" + name + "/" + version
-        currentPath = os.path.join(currentPath, name, version)
-        native = get_natives(i)
-        # Check if there is a native file
-        if native != "":
-            jarFilenameNative = name + "-" + version + "-" + native + ".jar"
-        jarFilename = name + "-" + version + "." + fileend
-        downloadUrl = downloadUrl + "/" + jarFilename
-        # Try to download the lib
-        try:
-            download_file(downloadUrl, os.path.join(currentPath, jarFilename), callback)
-        except Exception:
-            pass
-        if "downloads" not in i:
-            if "extract" in i:
-                extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", data["id"], "natives"), i["extract"])
-            continue
-        if "artifact" in i["downloads"]:
-            download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"])
-        if native != "":
-            download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(currentPath, jarFilenameNative), callback, sha1=i["downloads"]["classifiers"][native]["sha1"])
-            if "extract" in i:
-                extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", data["id"], "natives"), i["extract"])
-        callback.get("setProgress", empty)(count)
+        library_list.append(i)
+        path_list.append(path)
+        callback_list.append(callback)
+        version_id_list.append(data["id"])
+        count_list.append(count)
+    if options.get("enableParallelDownloads", False):
+        pool = Pool(options.get("maxParallelDownloads", 10))
+        pool.starmap(_install_single_librariy, zip(library_list, path_list, callback_list, version_id_list, count_list))
+        pool.close()
+        pool.join()
+    else:
+        for count, i in enumerate(library_list):
+            _install_single_librariy(i, path, callback, count)
 
 
-def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable]) -> NoReturn:
+def _install_single_asset(assest_hash: str, path: str,  callback: Dict[str, Callable], count: int):
+    download_file("https://resources.download.minecraft.net/" + assest_hash[:2] + "/" + assest_hash, os.path.join(path, "assets", "objects", assest_hash[:2], assest_hash), callback, sha1=assest_hash)
+    callback.get("setProgress", empty)(count)
+
+
+def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable], options: Dict[str, str]) -> NoReturn:
     """
     Install all assets
     """
@@ -85,13 +112,27 @@ def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable
     # And saved at assets/objects/c4/c4dbabc820f04ba685694c63359429b22e3a62b5
     callback.get("setMax", empty)(len(assets_data["objects"]))
     count = 0
+    hash_list = []
+    path_list = []
+    callback_list = []
+    count_list = []
     for key, value in assets_data["objects"].items():
-        download_file("https://resources.download.minecraft.net/" + value["hash"][:2] + "/" + value["hash"], os.path.join(path, "assets", "objects", value["hash"][:2], value["hash"]), callback, sha1=value["hash"])
+        hash_list.append(value["hash"])
+        path_list.append(path)
+        callback_list.append(callback)
+        count_list.append(count)
         count += 1
-        callback.get("setProgress", empty)(count)
+    if options.get("enableParallelDownloads", False):
+        pool = Pool(options.get("maxParallelDownloads", 10))
+        pool.starmap(_install_single_asset, zip(hash_list, path_list, callback_list, count_list))
+        pool.close()
+        pool.join()
+    else:
+        for i in range(len(hash_list)):
+            _install_single_asset(hash_list[i], path_list[i], callback_list[i], count_list[i])
 
 
-def do_version_install(versionid: str, path: str, callback: Dict[str, Callable], url: str = None) -> NoReturn:
+def do_version_install(versionid: str, path: str, callback: Dict[str, Callable], options: Dict[str, str], url: str = None) -> NoReturn:
     """
     Install the given version
     """
@@ -103,12 +144,12 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
     # For Forge
     if "inheritsFrom" in versiondata:
         try:
-            install_minecraft_version(versiondata["inheritsFrom"], path, callback=callback)
+            install_minecraft_version(versiondata["inheritsFrom"], path, callback=callback, options=options)
         except VersionNotFound:
             pass
         versiondata = inherit_json(versiondata, path)
-    install_libraries(versiondata, path, callback)
-    install_assets(versiondata, path, callback)
+    install_libraries(versiondata, path, callback, options)
+    install_assets(versiondata, path, callback, options)
     # Download logging config
     if "logging" in versiondata:
         if len(versiondata["logging"]) != 0:
@@ -128,7 +169,7 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
     callback.get("setStatus", empty)("Installation complete")
 
 
-def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None) -> NoReturn:
+def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None, options: Dict[str, str] = {}) -> NoReturn:
     """
     Install a Minecraft Version. Fore more Information take a look at the documentation"
     """
@@ -136,12 +177,14 @@ def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os
         minecraft_directory = str(minecraft_directory)
     if callback is None:
         callback = {}
+    if options is None:
+        callback = {}
     if os.path.isfile(os.path.join(minecraft_directory, "versions", versionid, f"{versionid}.json")):
-        do_version_install(versionid, minecraft_directory, callback)
+        do_version_install(versionid, minecraft_directory, callback, options)
         return
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", headers={"user-agent": get_user_agent()}).json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
-            do_version_install(versionid, minecraft_directory, callback, url=i["url"])
+            do_version_install(versionid, minecraft_directory, callback, options, url=i["url"])
             return
     raise VersionNotFound(versionid)
