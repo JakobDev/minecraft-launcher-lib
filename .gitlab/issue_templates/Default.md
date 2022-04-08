@@ -1,0 +1,1 @@
+<!-- Before opening a Issue, read the documentation at https://minecraft-launcher-lib.readthedocs.io and make sure nobody else have opened the same Issue. If you want to report a Bug, please use the the Bug template (select it in the Dropdown menu above this edit box). You can remove this text. -->
