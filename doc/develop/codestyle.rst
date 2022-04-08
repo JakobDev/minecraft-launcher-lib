@@ -9,7 +9,7 @@ minecraft-launcher-lib uses `PEP8 <https://https://pep8.org/>`_ as it's codestyl
 -------------------------
 Check the Codestyle
 -------------------------
-minecraft-launcher-lib uses `flake8 <https://flake8.pycqa.org>`_ along with the `flake8-annotation plugin <https://pypi.org/project/flake8-annotations/>`_ to do a automatic style check. To get started, install it:
+minecraft-launcher-lib uses `flake8 <https://flake8.pycqa.org>`_ along with the `flake8-annotation <https://pypi.org/project/flake8-annotations/>`_ and the `flake8-docstring-checker <https://pypi.org/project/flake8-docstring-checker/>`_  plugin to do a automatic style check. To get started, install it:
 
 .. code::
 

@@ -8,7 +8,7 @@ stages:
 flake8:
     stage: lint
     script:
-        - pip install flake8 flake8-annotations
+        - pip install flake8 flake8-annotations flake8-docstring-checker
         - flake8
 
 .pytest:
