@@ -13,4 +13,4 @@ jobs:
     steps:
       - uses: dessant/repo-lockdown@v2
         with:
-          issue-comment: 'This Repo is just a mirror of the [GitLab Repo](https://gitlab.com/JakobDev/minecraft-launcher-lib). PRs arrent acceptet here. Please make a MR against the GitLab Repo. It works the same Way as in GitHub. You can use your GitHub Account to login into GitLab.'
+          pr-comment: 'This Repo is just a mirror of the [GitLab Repo](https://gitlab.com/JakobDev/minecraft-launcher-lib). PRs arrent acceptet here. Please make a MR against the GitLab Repo. It works the same Way as in GitHub. You can use your GitHub Account to login into GitLab.'
