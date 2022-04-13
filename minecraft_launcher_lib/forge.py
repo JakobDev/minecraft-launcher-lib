@@ -1,6 +1,6 @@
 from .helper import download_file, get_library_path, get_jar_mainclass, get_user_agent, empty
 from .install import install_minecraft_version, install_libraries
-from typing import NoReturn, Dict, List, Any, Callable, Union
+from typing import NoReturn, Dict, List, Any, Callable, Union, Optional
 from .exceptions import VersionNotFound
 from xml.dom import minidom
 import subprocess
@@ -166,7 +166,7 @@ def list_forge_versions() -> List[str]:
     return version_list
 
 
-def find_forge_version(vanilla_version: str) -> str:
+def find_forge_version(vanilla_version: str) -> Optional[str]:
     """
     Find the latest forge version that is compatible to the given vanilla version
     """

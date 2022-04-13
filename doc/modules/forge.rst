@@ -35,7 +35,7 @@ Returns a list with all forge versions.
 
 .. code:: python
 
-    find_forge_version(vanilla_version: str) -> str
+    find_forge_version(vanilla_version: str) -> Optional[str]
 
 Returns the newest forge version for the given vanilla version. Returns None, if the given vanilla version has no forge version.
 
