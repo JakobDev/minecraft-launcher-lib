@@ -1,11 +1,11 @@
-from typing import NoReturn, List
+from typing import List
 
 
 class VersionNotFound(ValueError):
     """
     The given version does not exists
     """
-    def __init__(self, version: str) -> NoReturn:
+    def __init__(self, version: str) -> None:
         self.version = version
         self.msg = f"Version {version} was not found"
         ValueError.__init__(self, self.msg)
@@ -15,7 +15,7 @@ class UnsupportedVersion(ValueError):
     """
     This Exception is raised when you try to run install_fabric() with a unsupported version
     """
-    def __init__(self, version: str) -> NoReturn:
+    def __init__(self, version: str) -> None:
         self.version = version
         self.msg = f"Version {version} is not supported"
         ValueError.__init__(self, self.msg)
@@ -25,7 +25,7 @@ class ExternalProgramError(Exception):
     """
     This Exception is raised when a external program failed
     """
-    def __init__(self, command: List[str], stdout: str, stderr: str) -> NoReturn:
+    def __init__(self, command: List[str], stdout: str, stderr: str) -> None:
         self.command = command
         self.stdout = stdout
         self.stderr = stderr

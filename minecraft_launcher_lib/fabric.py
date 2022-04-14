@@ -1,6 +1,6 @@
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
 from .helper import download_file, get_user_agent, empty
-from typing import NoReturn, List, Dict, Union, Callable
+from typing import List, Dict, Union, Callable
 from .install import install_minecraft_version
 from .utils import is_version_valid
 from xml.dom import minidom
@@ -85,7 +85,7 @@ def get_latest_installer_version() -> str:
     return release.item(0).lastChild.data
 
 
-def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: str = None, callback: Dict[str, Callable] = None, java: str = None) -> NoReturn:
+def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: str = None, callback: Dict[str, Callable] = None, java: str = None) -> None:
     """
     Install a fabric version
     """

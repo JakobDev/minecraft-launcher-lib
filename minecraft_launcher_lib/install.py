@@ -1,6 +1,6 @@
 from .helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
-from typing import NoReturn, Any, Callable, Dict, Union
 from .natives import extract_natives_file, get_natives
+from typing import Any, Callable, Dict, Union
 from .exceptions import VersionNotFound
 from .runtime import install_jvm_runtime
 import requests
@@ -11,7 +11,7 @@ import os
 __all__ = ["install_minecraft_version"]
 
 
-def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Callable]) -> NoReturn:
+def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Callable]) -> None:
     """
     Install all libraries
     """
@@ -68,7 +68,7 @@ def install_libraries(data: Dict[str, Any], path: str, callback: Dict[str, Calla
         callback.get("setProgress", empty)(count)
 
 
-def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable]) -> NoReturn:
+def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable]) -> None:
     """
     Install all assets
     """
@@ -91,7 +91,7 @@ def install_assets(data: Dict[str, Any], path: str, callback: Dict[str, Callable
         callback.get("setProgress", empty)(count)
 
 
-def do_version_install(versionid: str, path: str, callback: Dict[str, Callable], url: str = None) -> NoReturn:
+def do_version_install(versionid: str, path: str, callback: Dict[str, Callable], url: str = None) -> None:
     """
     Install the given version
     """
@@ -128,7 +128,7 @@ def do_version_install(versionid: str, path: str, callback: Dict[str, Callable],
     callback.get("setStatus", empty)("Installation complete")
 
 
-def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None) -> NoReturn:
+def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str, Callable] = None) -> None:
     """
     Install a Minecraft Version. Fore more Information take a look at the documentation"
     """

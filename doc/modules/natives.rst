@@ -4,7 +4,7 @@ natives contains a function for extracting natives libraries to a specific folde
 
 .. code:: python
 
-    extract_natives(versionid: str,path: Union[str, os.PathLike],extract_path: str) -> NoReturn
+    extract_natives(versionid: str,path: Union[str, os.PathLike],extract_path: str) -> None
 
 Extract all native libraries from a version into the given directory. The directory will be created, if it does not exist.
 
