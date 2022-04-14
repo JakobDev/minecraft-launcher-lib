@@ -25,7 +25,7 @@ class ExternalProgramError(Exception):
     """
     This Exception is raised when a external program failed
     """
-    def __init__(self, command: List[str], stdout: str, stderr: str) -> None:
+    def __init__(self, command: List[str], stdout: bytes, stderr: bytes) -> None:
         self.command = command
         self.stdout = stdout
         self.stderr = stderr
