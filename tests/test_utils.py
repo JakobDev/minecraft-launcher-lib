@@ -72,3 +72,8 @@ def test_is_version_valid(tmpdir):
 def test_get_minecraft_news():
     assert len(minecraft_launcher_lib.utils.get_minecraft_news()["article_grid"]) == 20
     assert len(minecraft_launcher_lib.utils.get_minecraft_news(page_size=50)["article_grid"]) == 50
+
+
+def test_is_vanilla_version():
+    assert minecraft_launcher_lib.utils.is_vanilla_version("1.18") == True
+    assert minecraft_launcher_lib.utils.is_vanilla_version("test") == False

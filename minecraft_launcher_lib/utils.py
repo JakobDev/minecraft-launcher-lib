@@ -144,3 +144,13 @@ def get_minecraft_news(page_size: int = 20) -> Dict:
         "user-agent": f"minecraft-launcher-lib/{get_library_version()}"
     }
     return requests.get("https://www.minecraft.net/content/minecraft-net/_jcr_content.articles.grid", params=parameters, headers=header).json()
+
+
+def is_vanilla_version(version: str) -> bool:
+    """
+    Checks if the given version is a vanilla version
+    """
+    for i in get_version_list():
+        if i["id"] == version:
+            return True
+    return False

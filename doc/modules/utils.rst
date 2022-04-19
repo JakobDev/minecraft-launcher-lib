@@ -61,3 +61,9 @@ Checks if the given version exists
     get_minecraft_news(page_size: int = 20) -> Dict
 
 Get the news from minecraft.net
+
+.. code:: python
+
+    is_vanilla_version(version: str) -> bool
+
+Checks if the given version is a vanilla version
