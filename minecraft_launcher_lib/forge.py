@@ -4,7 +4,6 @@ from typing import Dict, List, Any, Callable, Union, Optional
 from .exceptions import VersionNotFound
 import subprocess
 import platform
-import requests
 import tempfile
 import random
 import zipfile

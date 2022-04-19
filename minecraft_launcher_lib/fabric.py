@@ -3,9 +3,7 @@ from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramErro
 from typing import List, Dict, Union, Callable
 from .install import install_minecraft_version
 from .utils import is_version_valid
-from xml.dom import minidom
 import subprocess
-import requests
 import tempfile
 import random
 import os
