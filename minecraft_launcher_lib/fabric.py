@@ -1,5 +1,5 @@
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
-from .helper import download_file, get_user_agent, empty
+from .helper import download_file, get_user_agent, get_requests_response_cache, empty
 from typing import List, Dict, Union, Callable
 from .install import install_minecraft_version
 from .utils import is_version_valid
@@ -16,7 +16,7 @@ def get_all_minecraft_versions() -> List[Dict[str, Union[str, bool]]]:
     Returns all available Minecraft Versions for fabric
     """
     FABRIC_MINECARFT_VERSIONS_URL = "https://meta.fabricmc.net/v2/versions/game"
-    return requests.get(FABRIC_MINECARFT_VERSIONS_URL, headers={"user-agent": get_user_agent()}).json()
+    return get_requests_response_cache(FABRIC_MINECARFT_VERSIONS_URL).json()
 
 
 def get_stable_minecraft_versions() -> List[str]:
@@ -63,7 +63,7 @@ def get_all_loader_versions() -> List[Dict[str, Union[str, bool, int]]]:
     Returns all loader versions
     """
     FABRIC_LOADER_VERSIONS_URL = "https://meta.fabricmc.net/v2/versions/loader"
-    return requests.get(FABRIC_LOADER_VERSIONS_URL, headers={"user-agent": get_user_agent()}).json()
+    return get_requests_response_cache(FABRIC_LOADER_VERSIONS_URL).json()
 
 
 def get_latest_loader_version() -> str:
