@@ -1,5 +1,5 @@
+from .helper import download_file, get_requests_response_cache, parse_maven_metadata, empty
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
-from .helper import download_file, get_user_agent, get_requests_response_cache, empty
 from typing import List, Dict, Union, Callable
 from .install import install_minecraft_version
 from .utils import is_version_valid
@@ -79,10 +79,7 @@ def get_latest_installer_version() -> str:
     Returns the latest installer version
     """
     FABRIC_INSTALLER_MAVEN_URL = "https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml"
-    r = requests.get(FABRIC_INSTALLER_MAVEN_URL, headers={"user-agent": get_user_agent()})
-    xml_data = minidom.parseString(r.text)
-    release = xml_data.getElementsByTagName("release")
-    return release.item(0).lastChild.data
+    return parse_maven_metadata(FABRIC_INSTALLER_MAVEN_URL)["latest"]
 
 
 def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: str = None, callback: Dict[str, Callable] = None, java: str = None) -> None:

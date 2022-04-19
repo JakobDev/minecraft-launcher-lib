@@ -1,4 +1,4 @@
-from typing import Dict, Any, Callable
+from typing import List, Dict, Union, Any, Callable
 import datetime
 import requests
 import platform
@@ -223,3 +223,16 @@ def get_requests_response_cache(url: str) -> requests.models.Response:
         return r
     else:
         return _requests_response_cache[url]["response"]
+
+
+def parse_maven_metadata(url: str) -> Dict[str, Union[str, List[str]]]:
+    """
+    Parses a maven metadata file
+    """
+    r = get_requests_response_cache(url)
+    data = {}
+    # The structure of the metadata file is simple. So you don't need a XML parser. It can be parsed using RegEx.
+    data["release"] = re.search("(?<=<release>).*?(?=</release>)", r.text, re.MULTILINE).group()
+    data["latest"] = re.search("(?<=<latest>).*?(?=</latest>)", r.text, re.MULTILINE).group()
+    data["versions"] = re.findall("(?<=<version>).*?(?=</version>)", r.text, re.MULTILINE)
+    return data
