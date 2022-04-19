@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-import re
 from setuptools import setup
+from pathlib import Path
 
 
-with open('minecraft_launcher_lib/utils.py') as f:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1) or ''
+with open(Path(__file__).parent / "minecraft_launcher_lib" / "version.txt", "r", encoding="utf-8") as f:
+    version = f.read().strip()
 
 with open("README.md", "r", encoding="utf-8") as f:
     description = f.read()

@@ -24,7 +24,8 @@ copyright = '2019-2022, JakobDev'
 author = 'JakobDev'
 
 # The full version, including alpha/beta/rc tags
-release = "4.5"
+with open(pathlib.Path(__file__).parent.parent / "minecraft_launcher_lib" / "version.txt", "r", encoding="utf-8") as f:
+    release = f.read().strip()
 
 master_doc = 'index'
 

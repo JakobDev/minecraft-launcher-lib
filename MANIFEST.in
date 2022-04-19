@@ -1,2 +1,3 @@
+include minecraft_launcher_lib/version.txt
 include README.md
 include LICENSE

@@ -1,5 +1,4 @@
 from typing import Dict, Any, Callable
-from .utils import get_library_version
 import requests
 import platform
 import hashlib
@@ -180,11 +179,20 @@ def get_os_version() -> str:
         return platform.uname().release
 
 
+_user_agent_cache = None
+
+
 def get_user_agent() -> str:
     """
     Returns the user agent of minecraft-launcher-lib
     """
-    return f"minecraft-launcher-lib/{get_library_version()}"
+    global _user_agent_cache
+    if _user_agent_cache is not None:
+        return _user_agent_cache
+    else:
+        with open(os.path.join(os.path.dirname(__file__), "version.txt"), "r", encoding="utf-8") as f:
+            _user_agent_cache = "minecraft-launcher-lib/" + f.read().strip()
+            return _user_agent_cache
 
 
 def get_classpath_separator() -> str:

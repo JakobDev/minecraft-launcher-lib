@@ -8,8 +8,6 @@ import uuid
 import json
 import os
 
-__version__ = "4.5"
-
 
 def get_minecraft_directory() -> str:
     """
@@ -95,11 +93,20 @@ def get_java_executable() -> str:
             return shutil.which("java") or "java"
 
 
+_version_cache = None
+
+
 def get_library_version() -> str:
     """
     Returns the version of minecraft-launcher-lib
     """
-    return __version__
+    global _version_cache
+    if _version_cache is not None:
+        return _version_cache
+    else:
+        with open(os.path.join(os.path.dirname(__file__), "version.txt"), "r", encoding="utf-8") as f:
+            _version_cache = f.read().strip()
+            return _version_cache
 
 
 def generate_test_options() -> Dict[str, str]:
