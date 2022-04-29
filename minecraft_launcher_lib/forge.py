@@ -85,8 +85,8 @@ def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.Pa
             else:
                 command.append(var)
         for key, value in argument_vars.items():
-            for i in range(len(command)):
-                command[i] = command[i].replace(key, value)
+            for pos in range(len(command)):
+                command[pos] = command[pos].replace(key, value)
         subprocess.call(command)
         callback.get("setProgress", empty)(count)
     if os.path.exists(root_path):
