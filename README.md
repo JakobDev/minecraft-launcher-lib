@@ -75,3 +75,5 @@ Features:
 [Read the documentation](https://minecraft-launcher-lib.readthedocs.io/en/latest/index.html)
 
 [Thanks to tomsik68 who documented how a minecraft launcher works](https://github.com/tomsik68/mclauncher-api/wiki)
+
+[Buy me a coffe](https://ko-fi.com/jakobdev)

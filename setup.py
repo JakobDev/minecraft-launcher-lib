@@ -27,7 +27,8 @@ setup(name="minecraft-launcher-lib",
       keywords=["JakobDev", "Minecraft", "Mojang", "launcher", "minecraft-launcher", "java"],
       project_urls={
           "Issue tracker": "https://gitlab.com/JakobDev/minecraft-launcher-lib/-/issues",
-          "Documentation": "https://minecraft-launcher-lib.readthedocs.io/en/latest/index.html"
+          "Documentation": "https://minecraft-launcher-lib.readthedocs.io/en/latest/index.html",
+          "Donation": "https://ko-fi.com/jakobdev"
       },
       classifiers=[
           "Development Status :: 5 - Production/Stable",
