@@ -1,10 +1,9 @@
-from .helper import parse_rule_list, inherit_json, get_classpath_separator
+from .helper import parse_rule_list, inherit_json, get_classpath_separator, get_library_path
 from .runtime import get_executable_path
 from .exceptions import VersionNotFound
 from typing import Dict, List, Any, Union
 from .utils import get_library_version
 from .natives import get_natives
-import platform
 import json
 import copy
 import os
@@ -16,26 +15,15 @@ def get_libraries(data: Dict[str, Any], path: str) -> str:
     """
     Returns the argument with all libs that come after -cp
     """
-    if platform.system() == "Windows":
-        classpath_seperator = ";"
-    else:
-        classpath_seperator = ":"
+    classpath_seperator = get_classpath_separator()
     libstr = ""
     for i in data["libraries"]:
         if not parse_rule_list(i, "rules", {}):
             continue
-        current_path = os.path.join(path, "libraries")
-        lib_path, name, version = i["name"].split(":")
-        for lib_part in lib_path.split("."):
-            current_path = os.path.join(current_path, lib_part)
-        current_path = os.path.join(current_path, name, version)
+        libstr += get_library_path(i["name"], path) + classpath_seperator
         native = get_natives(i)
-        if native == "":
-            jar_filename = name + "-" + version + ".jar"
-        else:
-            jar_filename = name + "-" + version + "-" + native + ".jar"
-        current_path = os.path.join(current_path, jar_filename)
-        libstr = libstr + current_path + classpath_seperator
+        if native != "":
+            libstr += os.path.join(path, "libraries", i["downloads"]["classifiers"][native]["path"]) + classpath_seperator
     if "jar" in data:
         libstr = libstr + os.path.join(path, "versions", data["jar"], data["jar"] + ".jar")
     else:
