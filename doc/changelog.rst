@@ -2,6 +2,16 @@ Changelog
 ==================================================
 
 -------------------------
+4.6
+-------------------------
+- Add is_vanilla_version()
+- Install version that is inherited from
+- Fix command for 1.19-pre1
+- Fix type annotations
+- Cache requests
+- Rewrite Maven parsing
+
+-------------------------
 4.5
 -------------------------
 - Fix Forge installation for 1.18 again (`Σcatnip <https://gitlab.com/sum-catnip>`_)
