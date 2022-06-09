@@ -46,7 +46,10 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     """
     Returns all installed versions
     """
-    dir_list = os.listdir(os.path.join(minecraft_directory, "versions"))
+    try:
+        dir_list = os.listdir(os.path.join(minecraft_directory, "versions"))
+    except FileNotFoundError:
+        return []
     version_list = []
     for i in dir_list:
         if not os.path.isfile(os.path.join(minecraft_directory, "versions", i, i + ".json")):

@@ -40,6 +40,7 @@ def test_get_installed_versions(tmpdir):
         assert isinstance(i["id"], str)
         assert isinstance(i["type"], str)
         assert isinstance(i["releaseTime"], datetime.datetime)
+    assert len(minecraft_launcher_lib.utils.get_installed_versions("not_existing_directory")) == 0
 
 
 def test_get_available_versions(tmpdir):
@@ -50,6 +51,7 @@ def test_get_available_versions(tmpdir):
         assert isinstance(i["id"], str)
         assert isinstance(i["type"], str)
         assert isinstance(i["releaseTime"], datetime.datetime)
+    assert isinstance(minecraft_launcher_lib.utils.get_available_versions("not_existing_directory"), list)
 
 
 def test_get_java_executable():
