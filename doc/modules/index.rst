@@ -14,3 +14,4 @@ Modules
     fabric
     runtime
     exceptions
+    types

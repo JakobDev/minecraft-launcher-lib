@@ -1,7 +1,8 @@
 from .helper import download_file, get_requests_response_cache, parse_maven_metadata, empty
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
-from typing import List, Dict, Union, Callable
+from .types import FabricMinecraftVersion, FabricLoader, CallbackDict
 from .install import install_minecraft_version
+from typing import List, Optional, Union
 from .utils import is_version_valid
 import subprocess
 import tempfile
@@ -9,7 +10,7 @@ import random
 import os
 
 
-def get_all_minecraft_versions() -> List[Dict[str, Union[str, bool]]]:
+def get_all_minecraft_versions() -> List[FabricMinecraftVersion]:
     """
     Returns all available Minecraft Versions for fabric
     """
@@ -56,7 +57,7 @@ def is_minecraft_version_supported(version: str) -> bool:
     return False
 
 
-def get_all_loader_versions() -> List[Dict[str, Union[str, bool, int]]]:
+def get_all_loader_versions() -> List[FabricLoader]:
     """
     Returns all loader versions
     """
@@ -80,7 +81,7 @@ def get_latest_installer_version() -> str:
     return parse_maven_metadata(FABRIC_INSTALLER_MAVEN_URL)["latest"]
 
 
-def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: str = None, callback: Dict[str, Callable] = None, java: str = None) -> None:
+def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: str = None, callback: Optional[CallbackDict] = None, java: str = None) -> None:
     """
     Install a fabric version
     """

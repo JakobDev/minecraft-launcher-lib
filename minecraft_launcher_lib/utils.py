@@ -1,3 +1,4 @@
+from .types import MinecraftOptions, MinecraftVersionInfo
 from .helper import get_requests_response_cache
 from typing import Dict, List, Union
 import platform
@@ -29,7 +30,7 @@ def get_latest_version() -> Dict[str, str]:
     return get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()["latest"]
 
 
-def get_version_list() -> List[Dict[str, str]]:
+def get_version_list() -> List[MinecraftVersionInfo]:
     """
     Returns all versions that Mojang offers to download
     """
@@ -40,7 +41,7 @@ def get_version_list() -> List[Dict[str, str]]:
     return returnlist
 
 
-def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List[Dict[str, str]]:
+def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List[MinecraftVersionInfo]:
     """
     Returns all installed versions
     """
@@ -55,7 +56,7 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     return version_list
 
 
-def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List[Dict[str, str]]:
+def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List[MinecraftVersionInfo]:
     """
     Returns all installed versions and all versions that Mojang offers to download
     """
@@ -110,7 +111,7 @@ def get_library_version() -> str:
             return _version_cache
 
 
-def generate_test_options() -> Dict[str, str]:
+def generate_test_options() -> MinecraftOptions:
     """
     Generates options to launch minecraft. Useful for testing. Do not use in production.
     """

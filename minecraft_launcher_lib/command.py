@@ -3,6 +3,7 @@ from .runtime import get_executable_path
 from .exceptions import VersionNotFound
 from typing import Dict, List, Any, Union
 from .utils import get_library_version
+from .types import MinecraftOptions
 from .natives import get_natives
 import json
 import copy
@@ -31,7 +32,7 @@ def get_libraries(data: Dict[str, Any], path: str) -> str:
     return libstr
 
 
-def replace_arguments(argstr: str, versionData: Dict[str, Any], path: str, options: Dict[str, Any]) -> str:
+def replace_arguments(argstr: str, versionData: Dict[str, Any], path: str, options: MinecraftOptions) -> str:
     """
     Replace all placeholder in arguments with the needed value
     """
@@ -58,7 +59,7 @@ def replace_arguments(argstr: str, versionData: Dict[str, Any], path: str, optio
     return argstr
 
 
-def get_arguments_string(versionData: Dict[str, Any], path: str, options: Dict[str, Any]) -> List[str]:
+def get_arguments_string(versionData: Dict[str, Any], path: str, options: MinecraftOptions) -> List[str]:
     """
     Turns the argument string from the version.json into a list
     """
@@ -77,7 +78,7 @@ def get_arguments_string(versionData: Dict[str, Any], path: str, options: Dict[s
     return arglist
 
 
-def get_arguments(data: Dict[str, Any], versionData: Dict[str, Any], path: str, options: Dict[str, Any]) -> List[str]:
+def get_arguments(data: Dict[str, Any], versionData: Dict[str, Any], path: str, options: MinecraftOptions) -> List[str]:
     """
     Returns all arguments from the version.json
     """
@@ -103,7 +104,7 @@ def get_arguments(data: Dict[str, Any], versionData: Dict[str, Any], path: str, 
     return arglist
 
 
-def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathLike], options: Dict[str, Any]) -> List[str]:
+def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathLike], options: MinecraftOptions) -> List[str]:
     """
     Returns a command for launching Minecraft. For more information take a look at the documentation.
     """

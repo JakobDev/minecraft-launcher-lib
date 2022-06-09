@@ -1,4 +1,5 @@
-from typing import List, Dict, Union, Any, Callable
+from .types import MinecraftOptions, CallbackDict
+from typing import List, Dict, Union, Any
 import datetime
 import requests
 import platform
@@ -19,7 +20,7 @@ def empty(arg: Any) -> None:
     pass
 
 
-def download_file(url: str, path: str, callback: Dict[str, Callable] = {}, sha1: str = None, lzma_compressed: bool = False) -> bool:
+def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: str = None, lzma_compressed: bool = False) -> bool:
     """
     Downloads a file into the given path. Check sha1 if given.
     """
@@ -47,7 +48,7 @@ def download_file(url: str, path: str, callback: Dict[str, Callable] = {}, sha1:
     return True
 
 
-def parse_single_rule(rule: Dict[str, Any], options: Dict[str, Any]) -> bool:
+def parse_single_rule(rule: Dict[str, Any], options: MinecraftOptions) -> bool:
     """
     Parse a single rule from the versions.json
     """
@@ -79,7 +80,7 @@ def parse_single_rule(rule: Dict[str, Any], options: Dict[str, Any]) -> bool:
     return not returnvalue
 
 
-def parse_rule_list(data: Dict[str, Any], rule_string: str, options: Dict[str, Any]) -> bool:
+def parse_rule_list(data: Dict[str, Any], rule_string: str, options: MinecraftOptions) -> bool:
     """
     Parse a list of rules
     """

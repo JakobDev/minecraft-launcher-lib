@@ -1,7 +1,8 @@
 from .helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty
 from .install import install_minecraft_version, install_libraries
-from typing import Dict, List, Any, Callable, Union, Optional
+from typing import Dict, List, Any, Union, Optional
 from .exceptions import VersionNotFound
+from .types import CallbackDict
 import subprocess
 import platform
 import tempfile
@@ -45,7 +46,7 @@ def get_data_library_path(libname: str, path: str) -> str:
     return libpath
 
 
-def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: Dict[str, Callable], java: str = None) -> None:
+def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: CallbackDict, java: str = None) -> None:
     """
     Run the processors of the install_profile.json
     """
@@ -93,7 +94,7 @@ def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.Pa
         shutil.rmtree(root_path)
 
 
-def install_forge_version(versionid: str, path: str, callback: Dict[str, Callable] = None, java: str = None) -> None:
+def install_forge_version(versionid: str, path: str, callback: Optional[CallbackDict] = None, java: str = None) -> None:
     """
     Installs a forge version. Fore more information look at the documentation.
     """

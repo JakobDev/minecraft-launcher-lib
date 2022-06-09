@@ -9,6 +9,7 @@ minecraft_launcher_lib.egg-info/
 doc/_build
 doc/_static
 doc/examples
+doc/modules/types.rst
 
 #logs
 logs/

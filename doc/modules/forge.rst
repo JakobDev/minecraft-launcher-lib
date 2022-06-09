@@ -15,7 +15,7 @@ forge allows you to install forge.
 
 .. code:: python
 
-    install_forge_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Dict[str,Callable]=None, java: str = None) -> None
+    install_forge_version(versionid: str, path: str, callback: Optional[CallbackDict] = None, java: str = None) -> None
 
 Installs the given forge version in the given path. versionid must be one of the ids you get with list_forge_versions(). callback is the same dict as in the install module. java is a Java runtime to execute with.
 

@@ -16,19 +16,19 @@ Returns the latest versions of snapshot and release.
 
 .. code:: python
 
-    get_version_list() -> List[Dict[str,str]]
+    get_version_list() -> List[MinecraftVersionInfo]
 
 Returns a list of all versions with the type.
 
 .. code:: python
 
-    get_installed_versions(minecraft_directory: Union[str, os.PathLike])  -> List[Dict[str,str]]
+    get_installed_versions(minecraft_directory: Union[str, os.PathLike])  -> List[MinecraftVersionInfo]
 
 Returns a list with all installed versions in the given path.
 
 .. code:: python
 
-    get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List[Dict[str,str]]
+    get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List[MinecraftVersionInfo]
 
 Returns a list with all installable and only local installed (e.g. Forge) versions.
 
@@ -46,7 +46,7 @@ Return the version of the library.
 
 .. code:: python
 
-    generate_test_options() -> Dict[str,str]
+    generate_test_options() -> MinecraftOptions
 
 Generates test options for get_minecraft_command(). Use this function to test launching without logging in. This should not be used in production.
 
