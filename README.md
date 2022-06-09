@@ -72,7 +72,7 @@ Features:
 
 [View more examples](https://gitlab.com/JakobDev/minecraft-launcher-lib/-/tree/master/examples)
 
-[Read the documentation](https://minecraft-launcher-lib.readthedocs.io/en/latest/index.html)
+[Read the documentation](https://minecraft-launcher-lib.readthedocs.io)
 
 [Thanks to tomsik68 who documented how a minecraft launcher works](https://github.com/tomsik68/mclauncher-api/wiki)
 
