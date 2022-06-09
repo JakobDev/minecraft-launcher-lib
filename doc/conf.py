@@ -121,6 +121,6 @@ source_dir = pathlib.Path(__file__).parent.parent / "minecraft_launcher_lib"
 # Types template
 types_source = "\n".join(["    " + i for i in (source_dir / "types.py").read_text().splitlines()])
 # remove imports
-types_source = "    " + re.sub("^    from (.+)", "", types_source, flags=re.MULTILINE).strip()
+types_source = "    " + re.sub("^    (import|from) (.+)$", "", types_source, flags=re.MULTILINE).strip()
 types_template = (pathlib.Path(__file__).parent / "modules" / "types_template.rst").read_text()
 (pathlib.Path(__file__).parent / "modules" / "types.rst").write_text(".. This File ia autogenrated. Edit types_template.rst instead.\n\n" + types_template.replace("{{types_source}}", types_source))

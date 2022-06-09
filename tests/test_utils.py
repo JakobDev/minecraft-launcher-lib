@@ -1,4 +1,5 @@
 import minecraft_launcher_lib
+import datetime
 import json
 import os
 
@@ -9,6 +10,7 @@ def create_test_version_file(minecraft_directory: str):
         data = {}
         data["id"] = "utilstest"
         data["type"] = "release"
+        data["releaseTime"] = "1970-01-01T00:00:00"
         json.dump(data, f)
 
 
@@ -24,24 +26,30 @@ def test_get_latest_version():
 
 def test_get_version_list():
     version_list = minecraft_launcher_lib.utils.get_version_list()
-    assert "type" in version_list[0]
-    assert "id" in version_list[0]
+    for i in version_list:
+        assert isinstance(i["id"], str)
+        assert isinstance(i["type"], str)
+        assert isinstance(i["releaseTime"], datetime.datetime)
 
 
 def test_get_installed_versions(tmpdir):
     create_test_version_file(tmpdir)
-    version_list = minecraft_launcher_lib.utils. get_installed_versions(tmpdir)
-    version_list = minecraft_launcher_lib.utils. get_installed_versions(str(tmpdir))
-    assert version_list[0]["id"] == "utilstest"
-    assert version_list[0]["type"] == "release"
+    version_list = minecraft_launcher_lib.utils.get_installed_versions(tmpdir)
+    version_list = minecraft_launcher_lib.utils.get_installed_versions(str(tmpdir))
+    for i in version_list:
+        assert isinstance(i["id"], str)
+        assert isinstance(i["type"], str)
+        assert isinstance(i["releaseTime"], datetime.datetime)
 
 
 def test_get_available_versions(tmpdir):
     create_test_version_file(tmpdir)
     version_list = minecraft_launcher_lib.utils.get_available_versions(tmpdir)
     version_list = minecraft_launcher_lib.utils.get_available_versions(str(tmpdir))
-    assert "type" in version_list[0]
-    assert "id" in version_list[0]
+    for i in version_list:
+        assert isinstance(i["id"], str)
+        assert isinstance(i["type"], str)
+        assert isinstance(i["releaseTime"], datetime.datetime)
 
 
 def test_get_java_executable():

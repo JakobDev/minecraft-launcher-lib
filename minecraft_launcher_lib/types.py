@@ -1,4 +1,5 @@
 from typing import TypedDict, List, Callable
+import datetime
 
 
 class MinecraftOptions(TypedDict, total=False):
@@ -29,6 +30,7 @@ class CallbackDict(TypedDict, total=False):
 class MinecraftVersionInfo(TypedDict):
     id: str
     type: str
+    releaseTime: datetime.datetime
 
 
 class FabricMinecraftVersion(TypedDict):

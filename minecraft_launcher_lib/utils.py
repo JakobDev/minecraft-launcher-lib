@@ -1,6 +1,7 @@
 from .types import MinecraftOptions, MinecraftVersionInfo
 from .helper import get_requests_response_cache
 from typing import Dict, List, Union
+from datetime import datetime
 import platform
 import requests
 import random
@@ -37,7 +38,7 @@ def get_version_list() -> List[MinecraftVersionInfo]:
     vlist = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
     returnlist = []
     for i in vlist["versions"]:
-        returnlist.append({"id": i["id"], "type": i["type"]})
+        returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": datetime.fromisoformat(i["releaseTime"])})
     return returnlist
 
 
@@ -52,7 +53,7 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
             continue
         with open(os.path.join(minecraft_directory, "versions", i, i + ".json"), "r", encoding="utf-8") as f:
             version_data = json.load(f)
-        version_list.append({"id": version_data["id"], "type": version_data["type"]})
+        version_list.append({"id": version_data["id"], "type": version_data["type"], "releaseTime": datetime.fromisoformat(version_data["releaseTime"])})
     return version_list
 
 
@@ -63,7 +64,7 @@ def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     version_list = []
     version_check = []
     for i in get_version_list():
-        version_list.append({"id": i["id"], "type": i["type"]})
+        version_list.append({"id": i["id"], "type": i["type"], "releaseTime": i["releaseTime"]})
         version_check.append(i["id"])
     for i in get_installed_versions(minecraft_directory):
         if not i["id"] in version_check:

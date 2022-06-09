@@ -18,7 +18,7 @@ Returns the latest versions of snapshot and release.
 
     get_version_list() -> List[MinecraftVersionInfo]
 
-Returns a list of all versions with the type.
+Returns a list of all versions with the type and release time.
 
 .. code:: python
 
