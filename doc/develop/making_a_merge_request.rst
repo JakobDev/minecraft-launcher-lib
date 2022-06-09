@@ -5,7 +5,7 @@ A merge request is the same as a Pull Request on GitHub, which I think you shoul
 
 Before making a MR, you should follow this checklist:
 
-- minecraft-launcher-lib currently targets version 3.7 of Python and the latest version of `PyPy <https://www.pypy.org/>`_. Make sure, you don't use features that were added in a newer Python version.
+- minecraft-launcher-lib currently targets version 3.8 of Python and the latest version of `PyPy <https://www.pypy.org/>`_. Make sure, you don't use features that were added in a newer Python version.
 - Your code should work on Linux, Mac and Windows
 - Please make sure, you follow the :doc:`/develop/codestyle`
 - If possible, you should not break existing code that uses minecraft-launcher-lib
