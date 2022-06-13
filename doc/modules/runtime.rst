@@ -16,6 +16,12 @@ Returns a list of all available runtimes.
 
 .. code:: python
 
+    get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> List[str]
+
+Returns a list of all installed jvm runtimes.
+
+.. code:: python
+
     get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[str]
 
 Returns the path to the executable. Returns None if none is found.

@@ -39,6 +39,16 @@ def get_jvm_runtimes() -> List[str]:
     return jvm_list
 
 
+def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> List[str]:
+    """
+    Returns a list of all installed jvm runtimes
+    """
+    try:
+        return os.listdir(os.path.join(minecraft_directory, "runtime"))
+    except FileNotFoundError:
+        return []
+
+
 def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.PathLike], callback: Optional[CallbackDict] = None) -> None:
     """
     Installs the given jvm runtime. callback is the same dict as in the install module.
