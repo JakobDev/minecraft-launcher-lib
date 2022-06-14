@@ -15,3 +15,4 @@ Modules
     runtime
     exceptions
     types
+    microsoft_types

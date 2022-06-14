@@ -1,6 +1,7 @@
+from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftProfileResponse, CompleteLoginResponse
 from .exceptions import InvalidRefreshToken
+from typing import List, Dict, Union, cast
 from .helper import get_user_agent
-from typing import List, Dict, Union
 import urllib.parse
 import requests
 
@@ -30,7 +31,7 @@ def get_auth_code_from_url(url: str) -> str:
     return qs["code"][0]
 
 
-def get_authorization_token(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> Dict[str, str]:
+def get_authorization_token(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> AuthorizationTokenResponse:
     """
     Get the authorization token
     """
@@ -49,7 +50,7 @@ def get_authorization_token(client_id: str, client_secret: str, redirect_uri: st
     return r.json()
 
 
-def refresh_authorization_token(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str,) -> Dict[str, str]:
+def refresh_authorization_token(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str,) -> AuthorizationTokenResponse:
     """
     Refresh the authorization token
     """
@@ -67,7 +68,7 @@ def refresh_authorization_token(client_id: str, client_secret: str, redirect_uri
     return r.json()
 
 
-def authenticate_with_xbl(access_token: str) -> Dict[str, Union[str, Dict[str, List[Dict[str, str]]]]]:
+def authenticate_with_xbl(access_token: str) -> XBLResponse:
     """
     Authenticate with Xbox Live
     """
@@ -89,7 +90,7 @@ def authenticate_with_xbl(access_token: str) -> Dict[str, Union[str, Dict[str, L
     return r.json()
 
 
-def authenticate_with_xsts(xbl_token: str) -> Dict[str, Union[str, Dict[str, Union[str, List[str]]]]]:
+def authenticate_with_xsts(xbl_token: str) -> XSTSResponse:
     """
     Authenticate with XSTS
     """
@@ -112,7 +113,7 @@ def authenticate_with_xsts(xbl_token: str) -> Dict[str, Union[str, Dict[str, Uni
     return r.json()
 
 
-def authenticate_with_minecraft(userhash: str, xsts_token: str) -> Dict[str, Union[str, List, int]]:
+def authenticate_with_minecraft(userhash: str, xsts_token: str) -> MinecraftAuthenticateResponse:
     """
     Authenticate with Minecraft
     """
@@ -140,7 +141,7 @@ def get_store_information(token: str) -> Dict[str, Union[List[Dict[str, str]]]]:
     return r.json()
 
 
-def get_profile(token: str) -> Dict[str, Union[List[Dict[str, str]]]]:
+def get_profile(token: str) -> MinecraftProfileResponse:
     """
     Get the profile
     """
@@ -152,7 +153,7 @@ def get_profile(token: str) -> Dict[str, Union[List[Dict[str, str]]]]:
     return r.json()
 
 
-def complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> Dict[str, Union[List[Dict[str, str]]]]:
+def complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> CompleteLoginResponse:
     """
     Do the complete login process
     """
@@ -169,7 +170,7 @@ def complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_c
     account_request = authenticate_with_minecraft(userhash, xsts_token)
     access_token = account_request["access_token"]
 
-    profile = get_profile(access_token)
+    profile = cast(CompleteLoginResponse, get_profile(access_token))
 
     profile["access_token"] = account_request["access_token"]
     profile["refresh_token"] = token_request["refresh_token"]
@@ -177,7 +178,7 @@ def complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_c
     return profile
 
 
-def complete_refresh(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str) -> Dict[str, Union[List[Dict[str, str]]]]:
+def complete_refresh(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str) -> CompleteLoginResponse:
     """
     Do the complete login process with a refresh token
     """
@@ -198,7 +199,7 @@ def complete_refresh(client_id: str, client_secret: str, redirect_uri: str, refr
     account_request = authenticate_with_minecraft(userhash, xsts_token)
     access_token = account_request["access_token"]
 
-    profile = get_profile(access_token)
+    profile = cast(CompleteLoginResponse, get_profile(access_token))
 
     profile["access_token"] = account_request["access_token"]
     profile["refresh_token"] = token_request["refresh_token"]

@@ -43,7 +43,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "modules/types_template.rst"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "modules/types_template.rst", "modules/microsoft_types_template.rst"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -119,8 +119,9 @@ with open(os.path.join(examples_doc_dir, "index.rst"), "w", encoding="utf-8") as
 source_dir = pathlib.Path(__file__).parent.parent / "minecraft_launcher_lib"
 
 # Types template
-types_source = "\n".join(["    " + i for i in (source_dir / "types.py").read_text().splitlines()])
-# remove imports
-types_source = "    " + re.sub("^    (import|from) (.+)$", "", types_source, flags=re.MULTILINE).strip()
-types_template = (pathlib.Path(__file__).parent / "modules" / "types_template.rst").read_text()
-(pathlib.Path(__file__).parent / "modules" / "types.rst").write_text(".. This File ia autogenrated. Edit types_template.rst instead.\n\n" + types_template.replace("{{types_source}}", types_source))
+for i in ["types", "microsoft_types"]:
+    types_source = "\n".join(["    " + i for i in (source_dir / f"{i}.py").read_text().splitlines()])
+    # remove imports
+    types_source = "    " + re.sub("^    (import|from) (.+)$", "", types_source, flags=re.MULTILINE).strip()
+    types_template = (pathlib.Path(__file__).parent / "modules" / f"{i}_template.rst").read_text()
+    (pathlib.Path(__file__).parent / "modules" / f"{i}.rst").write_text(f".. This File ia autogenrated. Edit {i}_template.rst instead.\n\n" + types_template.replace("{{types_source}}", types_source))

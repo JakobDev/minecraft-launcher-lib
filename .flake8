@@ -3,4 +3,4 @@ ignore = E124 E501 E722 ANN101 ANN401 DC100 DC104
 
 per-file-ignores =
     examples/* tests/* doc/* setup.py: ANN001 ANN201 ANN204 DC101 DC102 DC103
-    minecraft_launcher_lib/types.py: DC101
+    minecraft_launcher_lib/types.py minecraft_launcher_lib/microsoft_types.py: DC101
