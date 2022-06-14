@@ -1,4 +1,4 @@
-from .types import MinecraftOptions, MinecraftVersionInfo
+from .types import MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
 from .helper import get_requests_response_cache
 from typing import Dict, List, Union
 from datetime import datetime
@@ -24,7 +24,7 @@ def get_minecraft_directory() -> str:
         return os.path.join(str(pathlib.Path.home()), ".minecraft")
 
 
-def get_latest_version() -> Dict[str, str]:
+def get_latest_version() -> LatestMinecraftVersions:
     """
     Returns the latest version of Minecraft
     """

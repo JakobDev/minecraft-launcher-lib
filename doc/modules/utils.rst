@@ -10,7 +10,7 @@ Returns the path to the standard minecraft directory.
 
 .. code:: python
 
-    get_latest_version() -> Dict[str,str]
+    get_latest_version() -> LatestMinecraftVersions
 
 Returns the latest versions of snapshot and release.
 

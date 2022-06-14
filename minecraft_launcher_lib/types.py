@@ -27,6 +27,11 @@ class CallbackDict(TypedDict, total=False):
     setMax: Callable[[int], None]
 
 
+class LatestMinecraftVersions(TypedDict):
+    release: str
+    snapshot: str
+
+
 class MinecraftVersionInfo(TypedDict):
     id: str
     type: str
