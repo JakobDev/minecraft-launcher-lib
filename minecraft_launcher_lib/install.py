@@ -16,6 +16,7 @@ def install_libraries(data: Dict[str, Any], path: str, callback: CallbackDict) -
     """
     Install all libraries
     """
+    session = requests.session()
     callback.get("setStatus", empty)("Download Libraries")
     callback.get("setMax", empty)(len(data["libraries"]))
     for count, i in enumerate(data["libraries"]):
@@ -53,17 +54,17 @@ def install_libraries(data: Dict[str, Any], path: str, callback: CallbackDict) -
         downloadUrl = downloadUrl + "/" + jarFilename
         # Try to download the lib
         try:
-            download_file(downloadUrl, os.path.join(currentPath, jarFilename), callback)
+            download_file(downloadUrl, os.path.join(currentPath, jarFilename), callback=callback, session=session)
         except Exception:
             pass
         if "downloads" not in i:
             if "extract" in i:
-                extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", data["id"], "natives"), i["extract"])
+                extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", data["id"], "natives"), i["extract"], session=session)
             continue
         if "artifact" in i["downloads"]:
-            download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"])
+            download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"], session=session)
         if native != "":
-            download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(currentPath, jarFilenameNative), callback, sha1=i["downloads"]["classifiers"][native]["sha1"])
+            download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(currentPath, jarFilenameNative), callback, sha1=i["downloads"]["classifiers"][native]["sha1"], session=session)
             if "extract" in i:
                 extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", data["id"], "natives"), i["extract"])
         callback.get("setProgress", empty)(count)
@@ -77,8 +78,9 @@ def install_assets(data: Dict[str, Any], path: str, callback: CallbackDict) -> N
     if "assetIndex" not in data:
         return
     callback.get("setStatus", empty)("Download Assets")
+    session = requests.session()
     # Download all assets
-    download_file(data["assetIndex"]["url"], os.path.join(path, "assets", "indexes", data["assets"] + ".json"), callback, sha1=data["assetIndex"]["sha1"])
+    download_file(data["assetIndex"]["url"], os.path.join(path, "assets", "indexes", data["assets"] + ".json"), callback, sha1=data["assetIndex"]["sha1"], session=session)
     with open(os.path.join(path, "assets", "indexes", data["assets"] + ".json")) as f:
         assets_data = json.load(f)
     # The assets has a hash. e.g. c4dbabc820f04ba685694c63359429b22e3a62b5
@@ -87,7 +89,7 @@ def install_assets(data: Dict[str, Any], path: str, callback: CallbackDict) -> N
     callback.get("setMax", empty)(len(assets_data["objects"]))
     count = 0
     for key, value in assets_data["objects"].items():
-        download_file("https://resources.download.minecraft.net/" + value["hash"][:2] + "/" + value["hash"], os.path.join(path, "assets", "objects", value["hash"][:2], value["hash"]), callback, sha1=value["hash"])
+        download_file("https://resources.download.minecraft.net/" + value["hash"][:2] + "/" + value["hash"], os.path.join(path, "assets", "objects", value["hash"][:2], value["hash"]), callback, sha1=value["hash"], session=session)
         count += 1
         callback.get("setProgress", empty)(count)
 

@@ -20,7 +20,7 @@ def empty(arg: Any) -> None:
     pass
 
 
-def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: str = None, lzma_compressed: bool = False) -> bool:
+def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: str = None, lzma_compressed: bool = False, session: Optional[requests.sessions.Session] = None) -> bool:
     """
     Downloads a file into the given path. Check sha1 if given.
     """
@@ -36,7 +36,10 @@ def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: str = 
     if not url.startswith("http"):
         return False
     callback.get("setStatus", empty)("Download " + os.path.basename(path))
-    r = requests.get(url, stream=True, headers={"user-agent": get_user_agent()})
+    if session is None:
+        r = requests.get(url, stream=True, headers={"user-agent": get_user_agent()})
+    else:
+        r = session.get(url, stream=True, headers={"user-agent": get_user_agent()})
     if r.status_code != 200:
         return False
     with open(path, 'wb') as f:
