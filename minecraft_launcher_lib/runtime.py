@@ -68,14 +68,15 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     # Download all files of the runtime
     callback.get("setMax", empty)(len(platform_manifest["files"]))
     count = 0
+    session = requests.session()
     for key, value in platform_manifest["files"].items():
         current_path = os.path.join(base_path, key)
         if value["type"] == "file":
             # Prefer downloading the compresses file
             if "lzma" in value["downloads"]:
-                download_file(value["downloads"]["lzma"]["url"], current_path, sha1=value["downloads"]["raw"]["sha1"], callback=callback, lzma_compressed=True)
+                download_file(value["downloads"]["lzma"]["url"], current_path, sha1=value["downloads"]["raw"]["sha1"], callback=callback, lzma_compressed=True, session=session)
             else:
-                download_file(value["downloads"]["raw"]["url"], current_path, sha1=value["downloads"]["raw"]["sha1"], callback=callback)
+                download_file(value["downloads"]["raw"]["url"], current_path, sha1=value["downloads"]["raw"]["sha1"], callback=callback, session=session)
             # Make files executable on unix systems
             if value["executable"]:
                 try:
@@ -85,6 +86,11 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
         elif value["type"] == "directory":
             try:
                 os.makedirs(current_path)
+            except Exception:
+                pass
+        elif value["type"] == "link":
+            try:
+                os.symlink(value["target"], current_path)
             except Exception:
                 pass
         callback.get("setProgress", empty)(count)
