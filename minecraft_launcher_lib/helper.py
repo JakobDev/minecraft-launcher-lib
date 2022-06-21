@@ -1,5 +1,5 @@
+from typing import List, Dict, Union, Optional, Any
 from .types import MinecraftOptions, CallbackDict
-from typing import List, Dict, Union, Any
 import datetime
 import requests
 import platform
@@ -20,7 +20,7 @@ def empty(arg: Any) -> None:
     pass
 
 
-def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: str = None, lzma_compressed: bool = False, session: Optional[requests.sessions.Session] = None) -> bool:
+def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Optional[str] = None, lzma_compressed: Optional[bool] = False, session: Optional[requests.sessions.Session] = None) -> bool:
     """
     Downloads a file into the given path. Check sha1 if given.
     """
