@@ -87,3 +87,7 @@ def test_get_minecraft_news():
 def test_is_vanilla_version():
     assert minecraft_launcher_lib.utils.is_vanilla_version("1.18") is True
     assert minecraft_launcher_lib.utils.is_vanilla_version("test") is False
+
+
+def test_is_platform_supported():
+    assert isinstance(minecraft_launcher_lib.utils.is_platform_supported(), bool)

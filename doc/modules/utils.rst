@@ -67,3 +67,9 @@ Get the news from minecraft.net
     is_vanilla_version(version: str) -> bool
 
 Checks if the given version is a vanilla version
+
+.. code:: python
+
+    is_platform_supported() -> bool
+
+Checks if the current platform is supported

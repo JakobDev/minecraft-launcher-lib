@@ -159,3 +159,12 @@ def is_vanilla_version(version: str) -> bool:
         if i["id"] == version:
             return True
     return False
+
+
+def is_platform_supported() -> bool:
+    """
+    Checks if the current platform is supported
+    """
+    if platform.system() not in ["Windows", "Darwin", "Linux"]:
+        return False
+    return True
