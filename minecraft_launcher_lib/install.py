@@ -59,7 +59,7 @@ def install_libraries(data: Dict[str, Any], path: str, callback: CallbackDict) -
             pass
         if "downloads" not in i:
             if "extract" in i:
-                extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", data["id"], "natives"), i["extract"], session=session)
+                extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", data["id"], "natives"), i["extract"])
             continue
         if "artifact" in i["downloads"]:
             download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"], session=session)
