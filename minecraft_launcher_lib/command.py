@@ -24,7 +24,10 @@ def get_libraries(data: Dict[str, Any], path: str) -> str:
         libstr += get_library_path(i["name"], path) + classpath_seperator
         native = get_natives(i)
         if native != "":
-            libstr += os.path.join(path, "libraries", i["downloads"]["classifiers"][native]["path"]) + classpath_seperator
+            if "downloads" in i:
+                libstr += os.path.join(path, "libraries", i["downloads"]["classifiers"][native]["path"]) + classpath_seperator
+            else:
+                libstr += get_library_path(i["name"] + "-" + native, path) + classpath_seperator
     if "jar" in data:
         libstr = libstr + os.path.join(path, "versions", data["jar"], data["jar"] + ".jar")
     else:
