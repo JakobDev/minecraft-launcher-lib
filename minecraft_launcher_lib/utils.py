@@ -1,6 +1,6 @@
 from .types import Articles, MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
 from .helper import get_requests_response_cache
-from typing import Dict, List, Union
+from typing import List, Union
 from datetime import datetime
 import platform
 import requests
