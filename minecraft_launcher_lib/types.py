@@ -51,9 +51,11 @@ class FabricLoader(TypedDict):
     version: str
     stable: bool
 
+
 # ----
 # News
 # ----
+
 
 class ArticleLang(Enum):
     en_us = "en-us"
