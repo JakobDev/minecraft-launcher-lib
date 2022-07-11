@@ -1,6 +1,6 @@
-from .types import MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
+from .types import Articles, MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
 from .helper import get_requests_response_cache
-from typing import Dict, List, Union
+from typing import List, Union
 from datetime import datetime
 import platform
 import requests
@@ -138,7 +138,7 @@ def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike])
     return False
 
 
-def get_minecraft_news(page_size: int = 20) -> Dict:
+def get_minecraft_news(page_size: int = 20) -> Articles:
     """
     Get the news from minecraft.net
     """
