@@ -58,7 +58,7 @@ Checks if the given version exists
 
 .. code:: python
 
-    get_minecraft_news(page_size: int = 20) -> Dict
+    get_minecraft_news(page_size: int = 20) -> Articles
 
 Get the news from minecraft.net
 
