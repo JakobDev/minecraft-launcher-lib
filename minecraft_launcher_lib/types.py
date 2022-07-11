@@ -1,5 +1,4 @@
-from typing import Optional, TypedDict, List, Callable
-from enum import Enum
+from typing import Literal, TypedDict, List, Callable
 import datetime
 
 
@@ -57,58 +56,40 @@ class FabricLoader(TypedDict):
 # ----
 
 
-class ArticleLang(Enum):
-    en_us = "en-us"
-
-
-class BackgroundColor(Enum):
-    bg_blue = "bg-blue"
-    bg_green = "bg-green"
-    bg_red = "bg-red"
-
-
-class ContentType(Enum):
-    image = "image"
-    outgoing_link = "outgoing-link"
-    video = "video"
-
-
-class Image(TypedDict):
-    content_type: ContentType
+class _ImageBase(TypedDict):
+    content_type: Literal["image", "outgoing-link", "video"]
     imageURL: str
-    alt: Optional[str]
-    videoURL: Optional[str]
-    videoType: Optional[str]
-    videoProvider: Optional[str]
-    videoId: Optional[str]
-    linkurl: Optional[str]
-    background_color: Optional[BackgroundColor]
 
 
-class TileSize(Enum):
-    the1x1 = "1x1"
-    the1x2 = "1x2"
-    the2x1 = "2x1"
-    the2x2 = "2x2"
-    the4x2 = "4x2"
+class Image(_ImageBase, total=False):
+    alt: str
+    videoURL: str
+    videoType: str
+    videoProvider: str
+    videoId: str
+    linkurl: str
+    background_color: Literal["bg-blue", "bg-green", "bg-red"]
 
 
 class Tile(TypedDict):
     sub_header: str
     image: Image
-    tile_size: TileSize
+    tile_size: Literal["1x1", "1x2", "2x1", "2x2", "4x2"]
     title: str
 
 
-class Article(TypedDict):
+class _ArticleBase(TypedDict):
     default_tile: Tile
-    articleLang: ArticleLang
+    articleLang: Literal["en-us"]
     primary_category: str
     categories: List[str]
     article_url: str
     publish_date: str
     tags: List[str]
-    preferred_tile: Optional[Tile]
+
+
+class Article(_ArticleBase, total=False):
+    preferred_tile: Tile
 
 
 class Articles(TypedDict):
