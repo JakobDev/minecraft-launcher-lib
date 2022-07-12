@@ -83,12 +83,12 @@ Authenticate with Minecraft.
 
 .. code:: python
 
-    get_store_information(token: str) -> Dict[str, Union[List[Dict[str, str]]]]
+    get_store_information(access_token: str) -> MinecraftProfileResponse
 
 Get the store information.
 
 .. code:: python
 
-    get_profile(token: str) -> MinecraftProfileResponse
+    get_profile(access_token: str) -> MinecraftProfileResponse
 
 Get the profile.

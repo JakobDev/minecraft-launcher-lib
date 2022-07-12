@@ -1,6 +1,6 @@
-from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftProfileResponse, CompleteLoginResponse
+from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from .exceptions import InvalidRefreshToken
-from typing import List, Dict, Union, cast
+from typing import cast
 from .helper import get_user_agent
 import urllib.parse
 import requests
@@ -129,7 +129,7 @@ def authenticate_with_minecraft(userhash: str, xsts_token: str) -> MinecraftAuth
     return r.json()
 
 
-def get_store_information(token: str) -> Dict[str, Union[List[Dict[str, str]]]]:
+def get_store_information(access_token: str) -> MinecraftStoreResponse:
     """
     Get the store information
     """
@@ -141,7 +141,7 @@ def get_store_information(token: str) -> Dict[str, Union[List[Dict[str, str]]]]:
     return r.json()
 
 
-def get_profile(token: str) -> MinecraftProfileResponse:
+def get_profile(access_token: str) -> MinecraftProfileResponse:
     """
     Get the profile
     """

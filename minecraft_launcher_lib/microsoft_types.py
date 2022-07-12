@@ -33,6 +33,17 @@ class XSTSResponse(TypedDict):
     DisplayClaimns: _DisplayClaims
 
 
+class _MinecraftStoreItem(TypedDict):
+    name: str
+    signature: str
+
+
+class MinecraftStoreResponse(TypedDict):
+    items: List[_MinecraftStoreItem]
+    signature: str
+    keyId: str
+
+
 class MinecraftAuthenticateResponse(TypedDict):
     username: str
     roles: List
