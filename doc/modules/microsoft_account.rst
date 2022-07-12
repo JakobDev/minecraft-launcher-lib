@@ -24,7 +24,7 @@ Get the authorization code from the url.
 
 .. code:: python
 
-    complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> CompleteLoginResponse
+    complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str) -> CompleteLoginResponse
 
 Do the complete login process. It returns the following:
 
@@ -47,19 +47,19 @@ Do the complete login process. It returns the following:
 
 .. code:: python
 
-    complete_refresh(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str) -> CompleteLoginResponse
+    complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri: str, refresh_token: str) -> CompleteLoginResponse
 
 Do the complete login process with a refresh token. It returns the same as complete_login().
 
 .. code:: python
 
-    get_authorization_token(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> AuthorizationTokenResponse
+    get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str) -> AuthorizationTokenResponse
 
 Get the authorization token.
 
 .. code:: python
 
-    refresh_authorization_token(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str,) -> AuthorizationTokenResponse
+    refresh_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, refresh_token: str,) -> AuthorizationTokenResponse
 
 Refresh the authorization token.
 

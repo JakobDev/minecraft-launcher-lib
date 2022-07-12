@@ -1,7 +1,7 @@
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from .exceptions import InvalidRefreshToken
-from typing import cast
 from .helper import get_user_agent
+from typing import Optional, cast
 import urllib.parse
 import requests
 
@@ -31,7 +31,7 @@ def get_auth_code_from_url(url: str) -> str:
     return qs["code"][0]
 
 
-def get_authorization_token(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> AuthorizationTokenResponse:
+def get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str) -> AuthorizationTokenResponse:
     """
     Get the authorization token
     """
@@ -50,7 +50,7 @@ def get_authorization_token(client_id: str, client_secret: str, redirect_uri: st
     return r.json()
 
 
-def refresh_authorization_token(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str,) -> AuthorizationTokenResponse:
+def refresh_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, refresh_token: str,) -> AuthorizationTokenResponse:
     """
     Refresh the authorization token
     """
@@ -129,7 +129,7 @@ def authenticate_with_minecraft(userhash: str, xsts_token: str) -> MinecraftAuth
     return r.json()
 
 
-def get_store_information(access_token: str) -> MinecraftStoreResponse:
+def get_store_information(token: str) -> MinecraftStoreResponse:
     """
     Get the store information
     """
@@ -141,7 +141,7 @@ def get_store_information(access_token: str) -> MinecraftStoreResponse:
     return r.json()
 
 
-def get_profile(access_token: str) -> MinecraftProfileResponse:
+def get_profile(token: str) -> MinecraftProfileResponse:
     """
     Get the profile
     """
@@ -153,7 +153,7 @@ def get_profile(access_token: str) -> MinecraftProfileResponse:
     return r.json()
 
 
-def complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) -> CompleteLoginResponse:
+def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str) -> CompleteLoginResponse:
     """
     Do the complete login process
     """
@@ -178,7 +178,7 @@ def complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_c
     return profile
 
 
-def complete_refresh(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str) -> CompleteLoginResponse:
+def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri: str, refresh_token: str) -> CompleteLoginResponse:
     """
     Do the complete login process with a refresh token
     """
