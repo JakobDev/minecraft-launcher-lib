@@ -129,24 +129,24 @@ def authenticate_with_minecraft(userhash: str, xsts_token: str) -> MinecraftAuth
     return r.json()
 
 
-def get_store_information(token: str) -> MinecraftStoreResponse:
+def get_store_information(access_token: str) -> MinecraftStoreResponse:
     """
     Get the store information
     """
     header = {
-        "Authorization": f"Bearer {token}",
+        "Authorization": f"Bearer {access_token}",
         "user-agent": get_user_agent()
     }
     r = requests.get("https://api.minecraftservices.com/entitlements/mcstore", headers=header)
     return r.json()
 
 
-def get_profile(token: str) -> MinecraftProfileResponse:
+def get_profile(access_token: str) -> MinecraftProfileResponse:
     """
     Get the profile
     """
     header = {
-        "Authorization": f"Bearer {token}",
+        "Authorization": f"Bearer {access_token}",
         "user-agent": get_user_agent()
     }
     r = requests.get("https://api.minecraftservices.com/minecraft/profile", headers=header)
