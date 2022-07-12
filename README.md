@@ -67,6 +67,7 @@ Features:
 - Only depents on [requests](https://pypi.org/project/requests)
 - Supports [PyPy](https://www.pypy.org)
 - Full Documention with tutorial online available
+- All public APIs are static typed
 - Examples available
 - OpenSource
 
