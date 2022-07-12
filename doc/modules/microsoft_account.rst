@@ -18,9 +18,9 @@ Checks if the given url contains a authorization code.
 
 .. code:: python
 
-    get_auth_code_from_url(url: str)
+    get_auth_code_from_url(url: str) -> Optional[str]
 
-Get the authorization code from the url.
+Get the authorization code from the url. Returns None when the URL contains no code.
 
 .. code:: python
 

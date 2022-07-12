@@ -22,13 +22,16 @@ def url_contains_auth_code(url: str) -> bool:
     return "code" in qs
 
 
-def get_auth_code_from_url(url: str) -> str:
+def get_auth_code_from_url(url: str) -> Optional[str]:
     """
-    Get the authorization code from the url
+    Get the authorization code from the url. Returns None when the URL contains no code.
     """
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query)
-    return qs["code"][0]
+    try:
+        return qs["code"][0]
+    except KeyError:
+        return None
 
 
 def get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str) -> AuthorizationTokenResponse:
