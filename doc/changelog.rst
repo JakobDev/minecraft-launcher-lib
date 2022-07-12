@@ -2,6 +2,21 @@ Changelog
 ==================================================
 
 -------------------------
+5.0
+-------------------------
+- The minimum Python version is now 3.8
+- All public APIs are now complety static typed (with help of `Manuel Quarneti <https://gitlab.com/mq-1>`_)
+- minecraft-launcher-lib has now a py.typed file
+- Installs now using requests.session for faster installing
+- Add types and microsoft_types module
+- Add is_platform_supported()
+- Add get_installed_jvm_runtimes()
+- The client secret is now optional for Microsoft Accounts
+- Include release time in version list
+- install_jvm_runtime() does now support symlinks
+- Fix launching custom clients
+
+-------------------------
 4.6
 -------------------------
 - Add is_vanilla_version()
