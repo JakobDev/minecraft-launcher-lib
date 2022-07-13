@@ -2,6 +2,11 @@ Changelog
 ==================================================
 
 -------------------------
+5.1
+-------------------------
+- Fix crash when custom clients use invalid releaseTime
+
+-------------------------
 5.0
 -------------------------
 - The minimum Python version is now 3.8
