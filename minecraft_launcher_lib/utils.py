@@ -56,7 +56,12 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
             continue
         with open(os.path.join(minecraft_directory, "versions", i, i + ".json"), "r", encoding="utf-8") as f:
             version_data = json.load(f)
-        version_list.append({"id": version_data["id"], "type": version_data["type"], "releaseTime": datetime.fromisoformat(version_data["releaseTime"])})
+        try:
+            release_time = datetime.fromisoformat(version_data["releaseTime"])
+        except ValueError:
+            # In case some custom client has a invalid time
+            release_time = datetime.fromtimestamp(0)
+        version_list.append({"id": version_data["id"], "type": version_data["type"], "releaseTime": release_time})
     return version_list
 
 
