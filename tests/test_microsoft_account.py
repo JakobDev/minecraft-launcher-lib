@@ -10,6 +10,7 @@ def test_get_login_url():
     assert code_verifier is not None
     assert login_url is not None
 
+
 def test_url_contains_auth_code():
     assert minecraft_launcher_lib.microsoft_account.url_contains_auth_code("https://login.live.com/oauth20_desktop.srf?code=testcode&lc=test") is True
     assert minecraft_launcher_lib.microsoft_account.url_contains_auth_code("https://example.com") is False
