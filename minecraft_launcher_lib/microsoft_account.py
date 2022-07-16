@@ -1,7 +1,7 @@
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from .exceptions import InvalidRefreshToken
 from .helper import get_user_agent
-from typing import Optional, cast
+from typing import Literal, Optional, cast
 import urllib.parse
 import requests
 import secrets
@@ -14,7 +14,7 @@ __TOKEN_URL__ = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
 __SCOPE__ = "XboxLive.signin offline_access"
 
 
-def generate_pkce() -> tuple[str, str, str]:
+def generate_pkce() -> tuple[str, str, Literal["plain", "S256"]]:
     """
     Generates the PKCE code challenge and code verifier
 
