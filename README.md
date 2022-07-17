@@ -30,19 +30,19 @@ minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
 minecraft_launcher_lib.install.install_minecraft_version(latest_version, minecraft_directory)
 
 # Login
-state = minecraft_launcher_lib.microsoft_account.generate_state()
-code_verifier, code_challenge, code_challenge_method = minecraft_launcher_lib.microsoft_account.generate_pkce()
-login_url = minecraft_launcher_lib.microsoft_account.get_login_url(CLIENT_ID, REDIRECT_URL, state, code_challenge, code_challenge_method)
+login_url, state, code_verifier = minecraft_launcher_lib.microsoft_account.get_login_data(CLIENT_ID, REDIRECT_URL)
 print(f"Please open {login_url} in your browser and copy the url you are redirected into the prompt below.")
 code_url = input()
 
-# Check if the url contains a code
-if not minecraft_launcher_lib.microsoft_account.url_contains_auth_code(code_url):
-    print("The url is not valid")
-    sys.exit(1)
-
 # Get the code from the url
-auth_code = minecraft_launcher_lib.microsoft_account.get_auth_code_from_url(code_url)
+try:
+    auth_code = minecraft_launcher_lib.microsoft_account.parse_auth_code_url(code_url, state)
+except AssertionError:
+    print("States do not match!")
+    sys.exit(1)
+except KeyError:
+    print("Url not valid")
+    sys.exit(1)
 
 # Get the login data
 login_data = minecraft_launcher_lib.microsoft_account.complete_login(CLIENT_ID, REDIRECT_URL, auth_code, code_verifier)

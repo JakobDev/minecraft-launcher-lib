@@ -1,7 +1,7 @@
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from .exceptions import InvalidRefreshToken
 from .helper import get_user_agent
-from typing import Literal, Optional, cast
+from typing import Literal, cast
 import urllib.parse
 import requests
 import secrets
@@ -14,7 +14,7 @@ __TOKEN_URL__ = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
 __SCOPE__ = "XboxLive.signin offline_access"
 
 
-def generate_pkce() -> tuple[str, str, Literal["plain", "S256"]]:
+def _generate_pkce_data() -> tuple[str, str, Literal["plain", "S256"]]:
     """
     Generates the PKCE code challenge and code verifier
 
@@ -26,17 +26,19 @@ def generate_pkce() -> tuple[str, str, Literal["plain", "S256"]]:
     return code_verifier, code_challenge, code_challenge_method
 
 
-def generate_state() -> str:
+def _generate_state() -> str:
     """
-    Generate the state
+    Generates a random state
     """
     return secrets.token_urlsafe(16)
 
 
-def get_login_url(client_id: str, redirect_uri: str, state: str, code_challenge: str, code_challenge_method: str) -> str:
+def get_login_data(client_id: str, redirect_uri: str, state: str = _generate_state()) -> tuple[str, str, str]:
     """
-    Returns the url to the website on which the user logs in
+    :return: The url to the website on which the user logs in, the state and the code verifier
     """
+    code_verifier, code_challenge, code_challenge_method = _generate_pkce_data()
+
     parameters = {
         "client_id": client_id,
         "response_type": "code",
@@ -48,29 +50,22 @@ def get_login_url(client_id: str, redirect_uri: str, state: str, code_challenge:
         "code_challenge_method": code_challenge_method
     }
 
-    url = urlparse(__AUTH_URL__)._replace(query=urlencode(parameters))
-    return url.geturl()
+    url = urlparse(__AUTH_URL__)._replace(query=urlencode(parameters)).geturl()
+
+    return url, state, code_verifier
 
 
-def url_contains_auth_code(url: str) -> bool:
+def parse_auth_code_url(url: str, state: str) -> str:
     """
-    Checks if the given url contains a authorization code
-    """
-    parsed = urllib.parse.urlparse(url)
-    qs = urllib.parse.parse_qs(parsed.query)
-    return "code" in qs
-
-
-def get_auth_code_from_url(url: str) -> Optional[str]:
-    """
-    Get the authorization code from the url. Returns None when the URL contains no code.
+    Parse the authorization code url and checks the state.
+    :return: The auth code
     """
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query)
-    try:
-        return qs["code"][0]
-    except KeyError:
-        return None
+
+    assert(state == qs["state"][0])
+
+    return qs["code"][0]
 
 
 def get_authorization_token(client_id: str, redirect_uri: str, auth_code: str, code_verifier: str) -> AuthorizationTokenResponse:
