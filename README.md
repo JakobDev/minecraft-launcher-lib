@@ -30,7 +30,7 @@ minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
 minecraft_launcher_lib.install.install_minecraft_version(latest_version, minecraft_directory)
 
 # Login
-login_url, state, code_verifier = minecraft_launcher_lib.microsoft_account.get_login_data(CLIENT_ID, REDIRECT_URL)
+login_url, state, code_verifier = minecraft_launcher_lib.microsoft_account.get_secure_login_data(CLIENT_ID, REDIRECT_URL)
 print(f"Please open {login_url} in your browser and copy the url you are redirected into the prompt below.")
 code_url = input()
 

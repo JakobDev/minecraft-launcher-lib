@@ -3,7 +3,12 @@ import pytest
 
 
 def test_get_login_url():
-    login_url, state, code_verifier = minecraft_launcher_lib.microsoft_account.get_login_data("CLIENT_ID", "REDIRECT_URL")
+    login_url = minecraft_launcher_lib.microsoft_account.get_login_url("CLIENT_ID", "REDIRECT_URL")
+    assert(login_url is not None)
+
+
+def test_get_secure_login_data():
+    login_url, state, code_verifier = minecraft_launcher_lib.microsoft_account.get_secure_login_data("CLIENT_ID", "REDIRECT_URL")
 
     assert login_url is not None
     assert state is not None

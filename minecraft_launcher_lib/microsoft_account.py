@@ -1,7 +1,7 @@
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from .exceptions import InvalidRefreshToken
 from .helper import get_user_agent
-from typing import Literal, cast
+from typing import Literal, Optional, cast
 import urllib.parse
 import requests
 import secrets
@@ -12,6 +12,25 @@ from urllib.parse import urlparse, urlencode
 __AUTH_URL__ = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize"
 __TOKEN_URL__ = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
 __SCOPE__ = "XboxLive.signin offline_access"
+
+
+def get_login_url(client_id: str, redirect_uri: str) -> str:
+    """
+    Generate a login url.\\
+    For a more secure alternative, use get_secure_login_data()
+
+    :return: The url to the website on which the user logs in
+    """
+    parameters = {
+        "client_id": client_id,
+        "response_type": "code",
+        "redirect_uri": redirect_uri,
+        "response_mode": "query",
+        "scope": __SCOPE__,
+    }
+
+    url = urlparse(__AUTH_URL__)._replace(query=urlencode(parameters)).geturl()
+    return url
 
 
 def _generate_pkce_data() -> tuple[str, str, Literal["plain", "S256"]]:
@@ -33,8 +52,11 @@ def _generate_state() -> str:
     return secrets.token_urlsafe(16)
 
 
-def get_login_data(client_id: str, redirect_uri: str, state: str = _generate_state()) -> tuple[str, str, str]:
+def get_secure_login_data(client_id: str, redirect_uri: str, state: str = _generate_state()) -> tuple[str, str, str]:
     """
+    Generates the login data for a secure login with pkce and state.\\
+    Prevents Cross-Site Request Forgery attacks and authorization code injection attacks.
+
     :return: The url to the website on which the user logs in, the state and the code verifier
     """
     code_verifier, code_challenge, code_challenge_method = _generate_pkce_data()
@@ -55,6 +77,33 @@ def get_login_data(client_id: str, redirect_uri: str, state: str = _generate_sta
     return url, state, code_verifier
 
 
+def url_contains_auth_code(url: str) -> bool:
+    """
+    Checks if the given url contains a authorization code
+    """
+    parsed = urllib.parse.urlparse(url)
+    qs = urllib.parse.parse_qs(parsed.query)
+    return "code" in qs
+
+
+def get_auth_code_from_url(url: str) -> Optional[str]:
+    """
+    Get the authorization code from the url and checks the state if supplied.\\
+    If you want to check the state, use parse_auth_code_url(), which throws errors instead of returning an optional value.
+
+    :return: The auth code or None if the the code is nonexistent
+    """
+    parsed = urllib.parse.urlparse(url)
+    qs = urllib.parse.parse_qs(parsed.query)
+
+    parsed = urllib.parse.urlparse(url)
+    qs = urllib.parse.parse_qs(parsed.query)
+    try:
+        return qs["code"][0]
+    except KeyError:
+        return None
+
+
 def parse_auth_code_url(url: str, state: str) -> str:
     """
     Parse the authorization code url and checks the state.
@@ -68,7 +117,7 @@ def parse_auth_code_url(url: str, state: str) -> str:
     return qs["code"][0]
 
 
-def get_authorization_token(client_id: str, redirect_uri: str, auth_code: str, code_verifier: str) -> AuthorizationTokenResponse:
+def get_authorization_token(client_id: str, redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> AuthorizationTokenResponse:
     """
     Get the authorization token
     """
@@ -78,8 +127,11 @@ def get_authorization_token(client_id: str, redirect_uri: str, auth_code: str, c
         "code": auth_code,
         "redirect_uri": redirect_uri,
         "grant_type": "authorization_code",
-        "code_verifier": code_verifier
     }
+
+    if code_verifier is not None:
+        parameters["code_verifier"] = code_verifier
+
     header = {
         "Content-Type": "application/x-www-form-urlencoded",
         "user-agent": get_user_agent()
@@ -190,7 +242,7 @@ def get_profile(access_token: str) -> MinecraftProfileResponse:
     return r.json()
 
 
-def complete_login(client_id: str, redirect_uri: str, auth_code: str, code_verifier: str) -> CompleteLoginResponse:
+def complete_login(client_id: str, redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> CompleteLoginResponse:
     """
     Do the complete login process
     """
