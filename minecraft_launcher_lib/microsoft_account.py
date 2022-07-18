@@ -88,7 +88,7 @@ def url_contains_auth_code(url: str) -> bool:
 
 def get_auth_code_from_url(url: str) -> Optional[str]:
     """
-    Get the authorization code from the url and checks the state if supplied.\\
+    Get the authorization code from the url.\\
     If you want to check the state, use parse_auth_code_url(), which throws errors instead of returning an optional value.
 
     :return: The auth code or None if the the code is nonexistent
