@@ -107,7 +107,7 @@ def get_auth_code_from_url(url: str) -> Optional[str]:
         return None
 
 
-def parse_auth_code_url(url: str, state: str) -> str:
+def parse_auth_code_url(url: str, state: Optional[str]) -> str:
     """
     Parse the authorization code url and checks the state.
     :return: The auth code
@@ -115,12 +115,13 @@ def parse_auth_code_url(url: str, state: str) -> str:
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query)
 
-    assert(state == qs["state"][0])
+    if state is not None:
+        assert(state == qs["state"][0])
 
     return qs["code"][0]
 
 
-def get_authorization_token(client_id: str, redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> AuthorizationTokenResponse:
+def get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> AuthorizationTokenResponse:
     """
     Get the authorization token
     """
@@ -131,6 +132,9 @@ def get_authorization_token(client_id: str, redirect_uri: str, auth_code: str, c
         "redirect_uri": redirect_uri,
         "grant_type": "authorization_code",
     }
+
+    if client_secret is not None:
+        parameters["client_secret"] = client_secret
 
     if code_verifier is not None:
         parameters["code_verifier"] = code_verifier
@@ -143,7 +147,7 @@ def get_authorization_token(client_id: str, redirect_uri: str, auth_code: str, c
     return r.json()
 
 
-def refresh_authorization_token(client_id: str, refresh_token: str) -> AuthorizationTokenResponse:
+def refresh_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: Optional[str], refresh_token: str) -> AuthorizationTokenResponse:
     """
     Refresh the authorization token
     """
@@ -153,6 +157,14 @@ def refresh_authorization_token(client_id: str, refresh_token: str) -> Authoriza
         "refresh_token": refresh_token,
         "grant_type": "refresh_token"
     }
+
+    if client_secret is not None:
+        parameters["client_secret"] = client_secret
+
+    # redirect_uri was used in a previous version of this library
+    # we keep it for backwards compatibility, but it is not required anymore
+    _ = redirect_uri
+
     header = {
         "user-agent": get_user_agent()
     }
@@ -245,11 +257,11 @@ def get_profile(access_token: str) -> MinecraftProfileResponse:
     return r.json()
 
 
-def complete_login(client_id: str, redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> CompleteLoginResponse:
+def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> CompleteLoginResponse:
     """
     Do the complete login process
     """
-    token_request = get_authorization_token(client_id, redirect_uri, auth_code, code_verifier)
+    token_request = get_authorization_token(client_id, client_secret, redirect_uri, auth_code, code_verifier)
     token = token_request["access_token"]
 
     xbl_request = authenticate_with_xbl(token)
@@ -270,11 +282,11 @@ def complete_login(client_id: str, redirect_uri: str, auth_code: str, code_verif
     return profile
 
 
-def complete_refresh(client_id: str, refresh_token: str) -> CompleteLoginResponse:
+def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri: Optional[str], refresh_token: str) -> CompleteLoginResponse:
     """
     Do the complete login process with a refresh token
     """
-    token_request = refresh_authorization_token(client_id, refresh_token)
+    token_request = refresh_authorization_token(client_id, client_secret, redirect_uri, refresh_token)
 
     if "error" in token_request:
         raise InvalidRefreshToken()
