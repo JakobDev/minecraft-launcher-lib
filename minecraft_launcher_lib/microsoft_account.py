@@ -52,7 +52,7 @@ def _generate_state() -> str:
     return secrets.token_urlsafe(16)
 
 
-def get_secure_login_data(client_id: str, redirect_uri: str, state: str = _generate_state()) -> Tuple[str, str, str]:
+def get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str] = None) -> Tuple[str, str, str]:
     """
     Generates the login data for a secure login with pkce and state.\\
     Prevents Cross-Site Request Forgery attacks and authorization code injection attacks.
@@ -60,6 +60,9 @@ def get_secure_login_data(client_id: str, redirect_uri: str, state: str = _gener
     :return: The url to the website on which the user logs in, the state and the code verifier
     """
     code_verifier, code_challenge, code_challenge_method = _generate_pkce_data()
+
+    if state is None:
+        state = _generate_state()
 
     parameters = {
         "client_id": client_id,
