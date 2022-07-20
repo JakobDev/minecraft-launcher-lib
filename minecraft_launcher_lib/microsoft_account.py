@@ -1,7 +1,7 @@
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from .exceptions import InvalidRefreshToken
 from .helper import get_user_agent
-from typing import Literal, Optional, cast
+from typing import Literal, Optional, Tuple, cast
 import urllib.parse
 import requests
 import secrets
@@ -33,7 +33,7 @@ def get_login_url(client_id: str, redirect_uri: str) -> str:
     return url
 
 
-def _generate_pkce_data() -> tuple[str, str, Literal["plain", "S256"]]:
+def _generate_pkce_data() -> Tuple[str, str, Literal["plain", "S256"]]:
     """
     Generates the PKCE code challenge and code verifier
 
@@ -52,7 +52,7 @@ def _generate_state() -> str:
     return secrets.token_urlsafe(16)
 
 
-def get_secure_login_data(client_id: str, redirect_uri: str, state: str = _generate_state()) -> tuple[str, str, str]:
+def get_secure_login_data(client_id: str, redirect_uri: str, state: str = _generate_state()) -> Tuple[str, str, str]:
     """
     Generates the login data for a secure login with pkce and state.\\
     Prevents Cross-Site Request Forgery attacks and authorization code injection attacks.
