@@ -25,4 +25,4 @@ def test_parse_auth_code_url():
 
 def test_complete_refresh_invalid_token():
     with pytest.raises(minecraft_launcher_lib.exceptions.InvalidRefreshToken):
-        minecraft_launcher_lib.microsoft_account.complete_refresh("CLIENT_ID", "REFRESH_TOKEN")
+        minecraft_launcher_lib.microsoft_account.complete_refresh("CLIENT_ID", "CLIENT_SECRET", None, "REFRESH_TOKEN")
