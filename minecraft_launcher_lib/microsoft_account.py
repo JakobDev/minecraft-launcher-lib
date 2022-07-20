@@ -1,13 +1,13 @@
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
-from .exceptions import InvalidRefreshToken
-from .helper import get_user_agent
 from typing import Literal, Optional, Tuple, cast
+from urllib.parse import urlparse, urlencode
+from .exceptions import InvalidRefreshToken
+from base64 import urlsafe_b64encode
+from .helper import get_user_agent
+from hashlib import sha256
 import urllib.parse
 import requests
 import secrets
-from hashlib import sha256
-from base64 import urlsafe_b64encode
-from urllib.parse import urlparse, urlencode
 
 __AUTH_URL__ = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize"
 __TOKEN_URL__ = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
