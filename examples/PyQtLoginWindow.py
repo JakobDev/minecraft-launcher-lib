@@ -8,7 +8,6 @@ import sys
 import os
 
 CLIENT_ID = "YOUR CLIENT ID"
-SECRET = "YOUR SECRET"
 REDIRECT_URL = "YOUR REDIRECT URL"
 
 
@@ -27,15 +26,15 @@ class LoginWindow(QWebEngineView):
                 refresh_token = json.load(f)
                 # Do the login with refresh token
                 try:
-                    account_informaton = minecraft_launcher_lib.microsoft_account.complete_refresh(CLIENT_ID, SECRET, REDIRECT_URL, refresh_token)
+                    account_informaton = minecraft_launcher_lib.microsoft_account.complete_refresh(CLIENT_ID, None, REDIRECT_URL, refresh_token)
                     self.show_account_information(account_informaton)
-                    return
                 # Show the window if the refresh token is invalid
                 except minecraft_launcher_lib.exceptions.InvalidRefreshToken:
                     pass
 
         # Open the login url
-        self.load(QUrl(minecraft_launcher_lib.microsoft_account.get_login_url(CLIENT_ID, REDIRECT_URL)))
+        login_url, self.state, self.code_verifier = minecraft_launcher_lib.microsoft_account.get_secure_login_data(CLIENT_ID, REDIRECT_URL)
+        self.load(QUrl(login_url))
 
         # Connects a function that is called when the url changed
         self.urlChanged.connect(self.new_url)
@@ -43,14 +42,17 @@ class LoginWindow(QWebEngineView):
         self.show()
 
     def new_url(self, url: QUrl):
-        # Check if the url contains the code
-        if minecraft_launcher_lib.microsoft_account.url_contains_auth_code(url.toString()):
+        try:
             # Get the code from the url
-            auth_code = minecraft_launcher_lib.microsoft_account.get_auth_code_from_url(url.toString())
+            auth_code = minecraft_launcher_lib.microsoft_account.parse_auth_code_url(url.toString(), self.state)
             # Do the login
-            account_informaton = minecraft_launcher_lib.microsoft_account.complete_login(CLIENT_ID, SECRET, REDIRECT_URL, auth_code)
+            account_information = minecraft_launcher_lib.microsoft_account.complete_login(CLIENT_ID, None, REDIRECT_URL, auth_code, self.code_verifier)
             # Show the login information
-            self.show_account_information(account_informaton)
+            self.show_account_information(account_information)
+        except AssertionError:
+            print("States do not match!")
+        except KeyError:
+            print("Url not valid")
 
     def show_account_information(self, information_dict):
         information_string = f'Username: {information_dict["name"]}<br>'
