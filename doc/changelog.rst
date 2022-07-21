@@ -2,6 +2,11 @@ Changelog
 ==================================================
 
 -------------------------
+5.2
+-------------------------
+- Added a secure login option using pkce (get_secure_login_data)
+
+-------------------------
 5.1
 -------------------------
 - Fix crash when custom clients use invalid releaseTime
