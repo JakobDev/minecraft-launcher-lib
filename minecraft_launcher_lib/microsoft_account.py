@@ -107,7 +107,7 @@ def get_auth_code_from_url(url: str) -> Optional[str]:
         return None
 
 
-def parse_auth_code_url(url: str, state: Optional[str] = None) -> str:
+def parse_auth_code_url(url: str, state: Optional[str]) -> str:
     """
     Parse the authorization code url and checks the state.
     :return: The auth code
