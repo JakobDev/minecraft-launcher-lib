@@ -3,18 +3,26 @@ import pytest
 
 
 def test_get_login_url():
-    assert minecraft_launcher_lib.microsoft_account.get_login_url("client", "uri") == "https://login.live.com/oauth20_authorize.srf?client_id=client&response_type=code&redirect_uri=uri&scope=XboxLive.signin%20offline_access&state=<optional;"
+    login_url = minecraft_launcher_lib.microsoft_account.get_login_url("CLIENT_ID", "REDIRECT_URL")
+    assert(login_url is not None)
 
 
-def test_url_contains_auth_code():
-    assert minecraft_launcher_lib.microsoft_account.url_contains_auth_code("https://login.live.com/oauth20_desktop.srf?code=testcode&lc=test") is True
-    assert minecraft_launcher_lib.microsoft_account.url_contains_auth_code("https://example.com") is False
+def test_get_secure_login_data():
+    login_url, state, code_verifier = minecraft_launcher_lib.microsoft_account.get_secure_login_data("CLIENT_ID", "REDIRECT_URL")
+
+    assert login_url is not None
+    assert state is not None
+    assert code_verifier is not None
 
 
-def test_get_auth_code_from_url():
-    assert minecraft_launcher_lib.microsoft_account.get_auth_code_from_url("https://login.live.com/oauth20_desktop.srf?code=testcode&lc=test") == "testcode"
+def test_parse_auth_code_url():
+    test_state = "123456"
+    test_code = "abcxyz"
+
+    auth_code = minecraft_launcher_lib.microsoft_account.parse_auth_code_url(f"http://127.0.0.1:3003?code={test_code}&state={test_state}", test_state)
+    assert(auth_code == test_code)
 
 
 def test_complete_refresh_invalid_token():
     with pytest.raises(minecraft_launcher_lib.exceptions.InvalidRefreshToken):
-        minecraft_launcher_lib.microsoft_account.complete_refresh("clientid", "secret", "url", "token")
+        minecraft_launcher_lib.microsoft_account.complete_refresh("CLIENT_ID", "CLIENT_SECRET", None, "REFRESH_TOKEN")

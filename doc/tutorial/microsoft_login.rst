@@ -17,9 +17,19 @@ Open the URL and test if you can login. After you've logged in you will be redir
 to get the code from the url. You can also use minecraft_launcher_lib.microsoft_account.url_contains_auth_code(url: str) to check if the given URL has a code.
 
 -------------------------
+Secure option
+-------------------------
+The minecraft_launcher_lib.microsoft_account.get_secure_login_data(client_id: str, redirect_uri: str, state: str = _generate_state()) generates the login data for a secure login with pkce and state to prevent Cross-Site Request Forgery attacks and authorization code injection attacks.
+This is the recommended way to login.
+You can parse the auth code and verify the state with minecraft_launcher_lib.microsoft_account.parse_auth_code_url(url: str, state: str)
+
+-------------------------
 Do the Login
 -------------------------
-Use minecraft_launcher_lib.microsoft_account.complete_login(client_id: str, client_secret: str, redirect_uri: str, auth_code: str) to login to Minecraftt. The auth code is the code from URL you've got in the previous step. You get this result:
+Use minecraft_launcher_lib.microsoft_account.complete_login(client_id: str, redirect_uri: str, auth_code: str, code_verifier: Optional[str]) to login to Minecraft.
+The auth code is the code from URL you've got in the previous step.
+The code verifier is the code verifier you've got if you used the secure login method.
+You get this result:
 
 .. code:: json
 
@@ -43,5 +53,5 @@ As you can see it contains everything you need for the options dict of get_minec
 -------------------------
 Refresh
 -------------------------
-To refresh just use minecraft_launcher_lib.microsoft_account.complete_refresh(client_id: str, client_secret: str, redirect_uri: str, refresh_token: str). The refresh token is from the function above.
+To refresh just use minecraft_launcher_lib.microsoft_account.complete_refresh(client_id: str, refresh_token: str). The refresh token is from the function above.
 If the refresh fails, it will throw a InvalidRefreshToken exception. In this case you need the user to login again.

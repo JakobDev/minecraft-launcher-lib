@@ -1,16 +1,83 @@
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
+from typing import Literal, Optional, Tuple, cast
+from urllib.parse import urlparse, urlencode
 from .exceptions import InvalidRefreshToken
+from base64 import urlsafe_b64encode
 from .helper import get_user_agent
-from typing import Optional, cast
+from hashlib import sha256
 import urllib.parse
 import requests
+import secrets
+
+__AUTH_URL__ = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize"
+__TOKEN_URL__ = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
+__SCOPE__ = "XboxLive.signin offline_access"
 
 
 def get_login_url(client_id: str, redirect_uri: str) -> str:
     """
-    Returns the url to the website on which the user logs in
+    Generate a login url.\\
+    For a more secure alternative, use get_secure_login_data()
+
+    :return: The url to the website on which the user logs in
     """
-    return f"https://login.live.com/oauth20_authorize.srf?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope=XboxLive.signin%20offline_access&state=<optional;"
+    parameters = {
+        "client_id": client_id,
+        "response_type": "code",
+        "redirect_uri": redirect_uri,
+        "response_mode": "query",
+        "scope": __SCOPE__,
+    }
+
+    url = urlparse(__AUTH_URL__)._replace(query=urlencode(parameters)).geturl()
+    return url
+
+
+def _generate_pkce_data() -> Tuple[str, str, Literal["plain", "S256"]]:
+    """
+    Generates the PKCE code challenge and code verifier
+
+    :return: A tuple containing the code_verifier, the code_challenge and the code_challenge_method.
+    """
+    code_verifier = secrets.token_urlsafe(128)[:128]
+    code_challenge = urlsafe_b64encode(sha256(code_verifier.encode("ascii")).digest()).decode("ascii")[:-1]
+    code_challenge_method = "S256"
+    return code_verifier, code_challenge, code_challenge_method
+
+
+def _generate_state() -> str:
+    """
+    Generates a random state
+    """
+    return secrets.token_urlsafe(16)
+
+
+def get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str] = None) -> Tuple[str, str, str]:
+    """
+    Generates the login data for a secure login with pkce and state.\\
+    Prevents Cross-Site Request Forgery attacks and authorization code injection attacks.
+
+    :return: The url to the website on which the user logs in, the state and the code verifier
+    """
+    code_verifier, code_challenge, code_challenge_method = _generate_pkce_data()
+
+    if state is None:
+        state = _generate_state()
+
+    parameters = {
+        "client_id": client_id,
+        "response_type": "code",
+        "redirect_uri": redirect_uri,
+        "response_mode": "query",
+        "scope": __SCOPE__,
+        "state": state,
+        "code_challenge": code_challenge,
+        "code_challenge_method": code_challenge_method
+    }
+
+    url = urlparse(__AUTH_URL__)._replace(query=urlencode(parameters)).geturl()
+
+    return url, state, code_verifier
 
 
 def url_contains_auth_code(url: str) -> bool:
@@ -24,8 +91,14 @@ def url_contains_auth_code(url: str) -> bool:
 
 def get_auth_code_from_url(url: str) -> Optional[str]:
     """
-    Get the authorization code from the url. Returns None when the URL contains no code.
+    Get the authorization code from the url.\\
+    If you want to check the state, use parse_auth_code_url(), which throws errors instead of returning an optional value.
+
+    :return: The auth code or None if the the code is nonexistent
     """
+    parsed = urllib.parse.urlparse(url)
+    qs = urllib.parse.parse_qs(parsed.query)
+
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query)
     try:
@@ -34,36 +107,64 @@ def get_auth_code_from_url(url: str) -> Optional[str]:
         return None
 
 
-def get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str) -> AuthorizationTokenResponse:
+def parse_auth_code_url(url: str, state: Optional[str]) -> str:
+    """
+    Parse the authorization code url and checks the state.
+    :return: The auth code
+    """
+    parsed = urllib.parse.urlparse(url)
+    qs = urllib.parse.parse_qs(parsed.query)
+
+    if state is not None:
+        assert(state == qs["state"][0])
+
+    return qs["code"][0]
+
+
+def get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str] = None) -> AuthorizationTokenResponse:
     """
     Get the authorization token
     """
     parameters = {
         "client_id": client_id,
-        "client_secret": client_secret,
-        "redirect_uri": redirect_uri,
+        "scope": __SCOPE__,
         "code": auth_code,
+        "redirect_uri": redirect_uri,
         "grant_type": "authorization_code",
     }
+
+    if client_secret is not None:
+        parameters["client_secret"] = client_secret
+
+    if code_verifier is not None:
+        parameters["code_verifier"] = code_verifier
+
     header = {
         "Content-Type": "application/x-www-form-urlencoded",
         "user-agent": get_user_agent()
     }
-    r = requests.post("https://login.live.com/oauth20_token.srf", data=parameters, headers=header)
+    r = requests.post(__TOKEN_URL__, data=parameters, headers=header)
     return r.json()
 
 
-def refresh_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, refresh_token: str,) -> AuthorizationTokenResponse:
+def refresh_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: Optional[str], refresh_token: str) -> AuthorizationTokenResponse:
     """
     Refresh the authorization token
     """
     parameters = {
         "client_id": client_id,
-        "client_secret": client_secret,
-        "redirect_uri": redirect_uri,
+        "scope": __SCOPE__,
         "refresh_token": refresh_token,
         "grant_type": "refresh_token"
     }
+
+    if client_secret is not None:
+        parameters["client_secret"] = client_secret
+
+    # redirect_uri was used in a previous version of this library
+    # we keep it for backwards compatibility, but it is not required anymore
+    _ = redirect_uri
+
     header = {
         "user-agent": get_user_agent()
     }
@@ -156,11 +257,11 @@ def get_profile(access_token: str) -> MinecraftProfileResponse:
     return r.json()
 
 
-def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str) -> CompleteLoginResponse:
+def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str] = None) -> CompleteLoginResponse:
     """
     Do the complete login process
     """
-    token_request = get_authorization_token(client_id, client_secret, redirect_uri, auth_code)
+    token_request = get_authorization_token(client_id, client_secret, redirect_uri, auth_code, code_verifier)
     token = token_request["access_token"]
 
     xbl_request = authenticate_with_xbl(token)
@@ -181,7 +282,7 @@ def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: s
     return profile
 
 
-def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri: str, refresh_token: str) -> CompleteLoginResponse:
+def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri: Optional[str], refresh_token: str) -> CompleteLoginResponse:
     """
     Do the complete login process with a refresh token
     """

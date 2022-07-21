@@ -18,7 +18,6 @@ import sys
 
 # Set the data for your Azure Application here. For more information look at the documentation.
 CLIENT_ID = "YOUR CLIENT ID"
-SECRET = "YOUR SECRET"
 REDIRECT_URL = "YOUR REDIRECT URL"
 
 # Get latest version
@@ -31,19 +30,22 @@ minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
 minecraft_launcher_lib.install.install_minecraft_version(latest_version, minecraft_directory)
 
 # Login
-print(f"Please open {minecraft_launcher_lib.microsoft_account.get_login_url(CLIENT_ID, REDIRECT_URL)} in your browser and copy the url you are redirected into the prompt below.")
+login_url, state, code_verifier = minecraft_launcher_lib.microsoft_account.get_secure_login_data(CLIENT_ID, REDIRECT_URL)
+print(f"Please open {login_url} in your browser and copy the url you are redirected into the prompt below.")
 code_url = input()
 
-# Check if the url contains a code
-if not minecraft_launcher_lib.microsoft_account.url_contains_auth_code(code_url):
-    print("The url is not valid")
+# Get the code from the url
+try:
+    auth_code = minecraft_launcher_lib.microsoft_account.parse_auth_code_url(code_url, state)
+except AssertionError:
+    print("States do not match!")
+    sys.exit(1)
+except KeyError:
+    print("Url not valid")
     sys.exit(1)
 
-# Get the code from the url
-auth_code = minecraft_launcher_lib.microsoft_account.get_auth_code_from_url(code_url)
-
 # Get the login data
-login_data = minecraft_launcher_lib.microsoft_account.complete_login(CLIENT_ID, SECRET, REDIRECT_URL, auth_code)
+login_data = minecraft_launcher_lib.microsoft_account.complete_login(CLIENT_ID, None, REDIRECT_URL, auth_code, code_verifier)
 
 # Get Minecraft command
 options = {

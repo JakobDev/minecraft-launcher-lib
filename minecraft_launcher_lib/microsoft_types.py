@@ -1,14 +1,12 @@
-from typing import TypedDict, List
+from typing import Any, Literal, TypedDict, List
 
 
 class AuthorizationTokenResponse(TypedDict):
-    token_type: str
+    access_token: str
+    token_type: Literal["Bearer"]
     expires_in: int
     scope: str
-    access_token: str
     refresh_token: str
-    user_id: str
-    foci: str
 
 
 class _Xui(TypedDict):
@@ -46,17 +44,23 @@ class MinecraftStoreResponse(TypedDict):
 
 class MinecraftAuthenticateResponse(TypedDict):
     username: str
-    roles: List
+    roles: List[Any]
     access_token: str
     token_type: str
     expires_in: int
 
 
-class _MinecraftProfileSkin(TypedDict):
+class _MinecraftProfileInfo(TypedDict):
     id: str
-    state: str
+    state: Literal["ACTIVE", "INACTIVE"]
     url: str
+
+
+class _MinecraftProfileSkin(_MinecraftProfileInfo):
     variant: str
+
+
+class _MinecraftProfileCape(_MinecraftProfileInfo):
     alias: str
 
 
@@ -64,7 +68,7 @@ class MinecraftProfileResponse(TypedDict):
     id: str
     name: str
     skins: List[_MinecraftProfileSkin]
-    capes: List
+    capes: List[_MinecraftProfileCape]
 
 
 class CompleteLoginResponse(MinecraftProfileResponse):
