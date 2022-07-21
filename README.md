@@ -45,7 +45,7 @@ except KeyError:
     sys.exit(1)
 
 # Get the login data
-login_data = minecraft_launcher_lib.microsoft_account.complete_login(CLIENT_ID, REDIRECT_URL, auth_code, code_verifier)
+login_data = minecraft_launcher_lib.microsoft_account.complete_login(CLIENT_ID, None, REDIRECT_URL, auth_code, code_verifier)
 
 # Get Minecraft command
 options = {
