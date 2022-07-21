@@ -13,7 +13,13 @@ For a list of all types see :doc:`/modules/microsoft_types`.
 
 .. code:: python
 
-    get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str] = None) -> tuple[str, str, str]:
+    generate_state() -> str
+
+Generates a random state
+
+.. code:: python
+
+    get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str] = None) -> Tuple[str, str, str]:
 
 | Generates the login data for a secure login with pkce and state.
 | Prevents Cross-Site Request Forgery attacks and authorization code injection attacks.

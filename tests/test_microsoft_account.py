@@ -7,6 +7,10 @@ def test_get_login_url():
     assert(login_url is not None)
 
 
+def test_generate_state():
+    assert isinstance(minecraft_launcher_lib.microsoft_account.generate_state(), str)
+
+
 def test_get_secure_login_data():
     login_url, state, code_verifier = minecraft_launcher_lib.microsoft_account.get_secure_login_data("CLIENT_ID", "REDIRECT_URL")
 

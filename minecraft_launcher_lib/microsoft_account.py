@@ -45,7 +45,7 @@ def _generate_pkce_data() -> Tuple[str, str, Literal["plain", "S256"]]:
     return code_verifier, code_challenge, code_challenge_method
 
 
-def _generate_state() -> str:
+def generate_state() -> str:
     """
     Generates a random state
     """
@@ -62,7 +62,7 @@ def get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str
     code_verifier, code_challenge, code_challenge_method = _generate_pkce_data()
 
     if state is None:
-        state = _generate_state()
+        state = generate_state()
 
     parameters = {
         "client_id": client_id,
