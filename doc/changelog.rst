@@ -4,7 +4,9 @@ Changelog
 -------------------------
 5.2
 -------------------------
-- Added a secure login option using pkce (get_secure_login_data)
+- Added a secure login option using pkce (get_secure_login_data)(`Manuel Quarneti <https://gitlab.com/mq-1>`_)
+- Add forge_to_installed_version()
+- Fix setMax callback
 
 -------------------------
 5.1
