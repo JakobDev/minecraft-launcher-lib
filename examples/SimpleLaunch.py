@@ -6,7 +6,6 @@ import sys
 
 # Set the data for your Azure Application here. For more information look at the documentation.
 CLIENT_ID = "YOUR CLIENT ID"
-SECRET = "YOUR SECRET"
 REDIRECT_URL = "YOUR REDIRECT URL"
 
 # Get latest version
