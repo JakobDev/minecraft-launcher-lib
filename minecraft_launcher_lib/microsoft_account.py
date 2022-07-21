@@ -257,7 +257,7 @@ def get_profile(access_token: str) -> MinecraftProfileResponse:
     return r.json()
 
 
-def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> CompleteLoginResponse:
+def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str] = None) -> CompleteLoginResponse:
     """
     Do the complete login process
     """
