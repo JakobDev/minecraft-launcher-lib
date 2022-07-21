@@ -121,7 +121,7 @@ def parse_auth_code_url(url: str, state: Optional[str]) -> str:
     return qs["code"][0]
 
 
-def get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> AuthorizationTokenResponse:
+def get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str] = None) -> AuthorizationTokenResponse:
     """
     Get the authorization token
     """
