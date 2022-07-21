@@ -13,7 +13,7 @@ For a list of all types see :doc:`/modules/microsoft_types`.
 
 .. code:: python
 
-    get_secure_login_data(client_id: str, redirect_uri: str, state: str = _generate_state()) -> tuple[str, str, str]:
+    get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str] = None) -> tuple[str, str, str]:
 
 | Generates the login data for a secure login with pkce and state.
 | Prevents Cross-Site Request Forgery attacks and authorization code injection attacks.
@@ -35,14 +35,14 @@ Checks if the given url contains a authorization code.
 
 .. code:: python
 
-    parse_auth_code_url(url: str, state: str) -> str:
+    parse_auth_code_url(url: str, state: Optional[str]) -> str:
 
-| Parse the authorization code url and checks the state.
+| Parse the authorization code url and checks the state if supplied.
 | Returns the auth code
 
 .. code:: python
 
-    complete_login(client_id: str, redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> CompleteLoginResponse:
+    complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str] = None) -> CompleteLoginResponse:
 
 Do the complete login process. It returns the following:
 
@@ -65,19 +65,19 @@ Do the complete login process. It returns the following:
 
 .. code:: python
 
-    complete_refresh(client_id: str, refresh_token: str) -> CompleteLoginResponse:
+    complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri: Optional[str], refresh_token: str) -> CompleteLoginResponse:
 
 Do the complete login process with a refresh token. It returns the same as complete_login().
 
 .. code:: python
 
-    get_authorization_token(client_id: str, redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> AuthorizationTokenResponse:
+    get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str]) -> AuthorizationTokenResponse:
 
 Get the authorization token.
 
 .. code:: python
 
-    refresh_authorization_token(client_id: str, refresh_token: str) -> AuthorizationTokenResponse:
+    refresh_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: Optional[str], refresh_token: str) -> AuthorizationTokenResponse:
 
 Refresh the authorization token.
 
