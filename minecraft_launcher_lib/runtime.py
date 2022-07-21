@@ -66,7 +66,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     platform_manifest = requests.get(manifest_data[platform_string][jvm_version][0]["manifest"]["url"], headers={"user-agent": get_user_agent()}).json()
     base_path = os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, jvm_version)
     # Download all files of the runtime
-    callback.get("setMax", empty)(len(platform_manifest["files"]))
+    callback.get("setMax", empty)(len(platform_manifest["files"]) - 1)
     count = 0
     session = requests.session()
     for key, value in platform_manifest["files"].items():

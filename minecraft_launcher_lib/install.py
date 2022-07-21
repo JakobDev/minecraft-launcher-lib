@@ -18,7 +18,7 @@ def install_libraries(data: Dict[str, Any], path: str, callback: CallbackDict) -
     """
     session = requests.session()
     callback.get("setStatus", empty)("Download Libraries")
-    callback.get("setMax", empty)(len(data["libraries"]))
+    callback.get("setMax", empty)(len(data["libraries"]) - 1)
     for count, i in enumerate(data["libraries"]):
         # Check, if the rules allow this lib for the current system
         if not parse_rule_list(i, "rules", {}):
@@ -86,7 +86,7 @@ def install_assets(data: Dict[str, Any], path: str, callback: CallbackDict) -> N
     # The assets has a hash. e.g. c4dbabc820f04ba685694c63359429b22e3a62b5
     # With this hash, it can be download from https://resources.download.minecraft.net/c4/c4dbabc820f04ba685694c63359429b22e3a62b5
     # And saved at assets/objects/c4/c4dbabc820f04ba685694c63359429b22e3a62b5
-    callback.get("setMax", empty)(len(assets_data["objects"]))
+    callback.get("setMax", empty)(len(assets_data["objects"]) - 1)
     count = 0
     for key, value in assets_data["objects"].items():
         download_file("https://resources.download.minecraft.net/" + value["hash"][:2] + "/" + value["hash"], os.path.join(path, "assets", "objects", value["hash"][:2], value["hash"]), callback, sha1=value["hash"], session=session)
