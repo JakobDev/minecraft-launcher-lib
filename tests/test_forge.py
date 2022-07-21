@@ -26,3 +26,12 @@ def test_is_forge_version_valid():
 def test_supports_automatic_install():
     assert minecraft_launcher_lib.forge.supports_automatic_install("1.16.5-36.1.32") is True
     assert minecraft_launcher_lib.forge.supports_automatic_install("1.12-14.21.1.2443") is False
+
+
+def test_forge_to_installed_version():
+    assert minecraft_launcher_lib.forge.forge_to_installed_version("1.19-41.0.105") == "1.19-forge-41.0.105"
+
+
+def test__forge_to_installed_version_invalid_version():
+    with pytest.raises(ValueError):
+        minecraft_launcher_lib.forge.forge_to_installed_version("Test123")

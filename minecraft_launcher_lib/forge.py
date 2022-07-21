@@ -194,3 +194,15 @@ def supports_automatic_install(forge_version: str) -> bool:
             return False
     except Exception:
         return False
+
+
+def forge_to_installed_version(forge_version: str) -> str:
+    """
+    Returns the Version under which Forge will be installed from the given Forge version.
+    Raises a ValueError if the Version is invalid.
+    """
+    try:
+        vanilla_part, forge_part = forge_version.split("-")
+        return f"{vanilla_part}-forge-{forge_part}"
+    except ValueError:
+        raise ValueError(f"{forge_version} is not a valid forge version") from None

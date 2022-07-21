@@ -50,3 +50,10 @@ Checks if a forge version is valid.
     supports_automatic_install(forge_version: str) -> bool
 
 Checks if install_forge_version() supports the given forge version.
+
+.. code:: python
+
+    forge_to_installed_version(forge_version: str) -> str
+
+Returns the Version under which Forge will be installed from the given Forge version.
+Raises a ValueError if the Version is invalid.
