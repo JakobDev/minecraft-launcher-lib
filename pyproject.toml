@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minecraft-launcher-lib"
+description = "A library for creating a custom Minecraft launcher"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["JakobDev", "Minecraft", "Mojang", "launcher", "minecraft-launcher", "java"]
+license = { text = "BSD-2-Clause" }
+authors = [
+  { name = "JakobDev", email = "jakobdev@gmx.de" }
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Environment :: Other Environment",
+  "License :: OSI Approved :: BSD License",
+  "Topic :: Games/Entertainment",
+  "Operating System :: OS Independent",
+  "Operating System :: POSIX",
+  "Operating System :: POSIX :: BSD",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS :: MacOS X",
+  "Operating System :: Microsoft :: Windows",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "requests"
+]
+dynamic = ["version"]
+
+[project.urls]
+Documentation = "https://minecraft-launcher-lib.readthedocs.io/en/stable/index.html"
+Issues = "https://gitlab.com/JakobDev/minecraft-launcher-lib/-/issues"
+Source = "https://gitlab.com/JakobDev/minecraft-launcher-lib"
+Changelog = "https://minecraft-launcher-lib.readthedocs.io/en/stable/changelog.html"
+Donation = "https://ko-fi.com/jakobdev"
+
+[tool.setuptools.dynamic]
+version = { file = "minecraft_launcher_lib/version.txt" }
