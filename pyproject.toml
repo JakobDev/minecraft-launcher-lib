@@ -46,3 +46,6 @@ Donation = "https://ko-fi.com/jakobdev"
 
 [tool.setuptools.dynamic]
 version = { file = "minecraft_launcher_lib/version.txt" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
