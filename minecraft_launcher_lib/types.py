@@ -36,6 +36,7 @@ class MinecraftVersionInfo(TypedDict):
     id: str
     type: str
     releaseTime: datetime.datetime
+    complianceLevel: int
 
 
 class FabricMinecraftVersion(TypedDict):

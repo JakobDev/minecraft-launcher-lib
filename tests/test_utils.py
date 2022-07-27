@@ -11,6 +11,7 @@ def create_test_version_file(minecraft_directory: str):
         data["id"] = "utilstest"
         data["type"] = "release"
         data["releaseTime"] = "1970-01-01T00:00:00"
+        data["complianceLevel"] = 1
         json.dump(data, f)
 
 
@@ -30,6 +31,7 @@ def test_get_version_list():
         assert isinstance(i["id"], str)
         assert isinstance(i["type"], str)
         assert isinstance(i["releaseTime"], datetime.datetime)
+        assert isinstance(i["complianceLevel"], int)
 
 
 def test_get_installed_versions(tmpdir):
@@ -40,6 +42,7 @@ def test_get_installed_versions(tmpdir):
         assert isinstance(i["id"], str)
         assert isinstance(i["type"], str)
         assert isinstance(i["releaseTime"], datetime.datetime)
+        assert isinstance(i["complianceLevel"], int)
     assert len(minecraft_launcher_lib.utils.get_installed_versions("not_existing_directory")) == 0
 
 
@@ -51,6 +54,7 @@ def test_get_available_versions(tmpdir):
         assert isinstance(i["id"], str)
         assert isinstance(i["type"], str)
         assert isinstance(i["releaseTime"], datetime.datetime)
+        assert isinstance(i["complianceLevel"], int)
     assert isinstance(minecraft_launcher_lib.utils.get_available_versions("not_existing_directory"), list)
 
 

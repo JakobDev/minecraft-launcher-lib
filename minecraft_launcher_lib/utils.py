@@ -38,7 +38,7 @@ def get_version_list() -> List[MinecraftVersionInfo]:
     vlist = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
     returnlist = []
     for i in vlist["versions"]:
-        returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": datetime.fromisoformat(i["releaseTime"])})
+        returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": datetime.fromisoformat(i["releaseTime"]), "complianceLevel": i["complianceLevel"]})
     return returnlist
 
 
@@ -61,7 +61,7 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
         except ValueError:
             # In case some custom client has a invalid time
             release_time = datetime.fromtimestamp(0)
-        version_list.append({"id": version_data["id"], "type": version_data["type"], "releaseTime": release_time})
+        version_list.append({"id": version_data["id"], "type": version_data["type"], "releaseTime": release_time, "complianceLevel": version_data.get("complianceLevel", 0)})
     return version_list
 
 
@@ -72,7 +72,7 @@ def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     version_list = []
     version_check = []
     for i in get_version_list():
-        version_list.append({"id": i["id"], "type": i["type"], "releaseTime": i["releaseTime"]})
+        version_list.append(i)
         version_check.append(i["id"])
     for i in get_installed_versions(minecraft_directory):
         if not i["id"] in version_check:
