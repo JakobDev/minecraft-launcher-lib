@@ -47,8 +47,9 @@ def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[st
     for i in zf.namelist():
         for e in extract_data["exclude"]:
             if i.startswith(e):
-                continue
-        zf.extract(i, extract_path)
+                break
+        else:
+            zf.extract(i, extract_path)
 
 
 def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path: str) -> None:
