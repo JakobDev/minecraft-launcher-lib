@@ -94,13 +94,13 @@ def install_assets(data: Dict[str, Any], path: str, callback: CallbackDict) -> N
         callback.get("setProgress", empty)(count)
 
 
-def do_version_install(versionid: str, path: str, callback: CallbackDict, url: str = None) -> None:
+def do_version_install(versionid: str, path: str, callback: CallbackDict, url: Optional[str] = None, sha1: Optional[str] = None) -> None:
     """
     Install the given version
     """
     # Download and read versions.json
     if url:
-        download_file(url, os.path.join(path, "versions", versionid, versionid + ".json"), callback)
+        download_file(url, os.path.join(path, "versions", versionid, versionid + ".json"), callback, sha1=sha1)
     with open(os.path.join(path, "versions", versionid, versionid + ".json")) as f:
         versiondata = json.load(f)
     # For Forge
@@ -142,9 +142,9 @@ def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os
     if os.path.isfile(os.path.join(minecraft_directory, "versions", versionid, f"{versionid}.json")):
         do_version_install(versionid, minecraft_directory, callback)
         return
-    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", headers={"user-agent": get_user_agent()}).json()
+    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json", headers={"user-agent": get_user_agent()}).json()
     for i in version_list["versions"]:
         if i["id"] == versionid:
-            do_version_install(versionid, minecraft_directory, callback, url=i["url"])
+            do_version_install(versionid, minecraft_directory, callback, url=i["url"], sha1=i["sha1"])
             return
     raise VersionNotFound(versionid)

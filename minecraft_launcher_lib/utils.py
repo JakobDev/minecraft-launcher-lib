@@ -28,14 +28,14 @@ def get_latest_version() -> LatestMinecraftVersions:
     """
     Returns the latest version of Minecraft
     """
-    return get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()["latest"]
+    return get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()["latest"]
 
 
 def get_version_list() -> List[MinecraftVersionInfo]:
     """
     Returns all versions that Mojang offers to download
     """
-    vlist = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
+    vlist = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
     returnlist = []
     for i in vlist["versions"]:
         returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": datetime.fromisoformat(i["releaseTime"])})

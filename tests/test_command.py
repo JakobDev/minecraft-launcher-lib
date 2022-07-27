@@ -20,7 +20,7 @@ def check_argument(command: List[str], argument: str, value: str) -> bool:
 
 def download_test_version(tmpdir) -> str:
     # Download a random version for test
-    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
+    version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
     version_id = version_list["versions"][0]["id"]
     r = requests.get(version_list["versions"][0]["url"], stream=True)
     os.makedirs(os.path.join(tmpdir, "versions", version_id))
