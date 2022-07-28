@@ -98,9 +98,6 @@ def get_auth_code_from_url(url: str) -> Optional[str]:
     """
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query)
-
-    parsed = urllib.parse.urlparse(url)
-    qs = urllib.parse.parse_qs(parsed.query)
     try:
         return qs["code"][0]
     except KeyError:
