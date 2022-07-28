@@ -72,6 +72,7 @@ def add_optional_extension(name: str):
 add_optional_extension("sphinx_reredirects")
 add_optional_extension("notfound.extension")
 add_optional_extension("sphinx_rtd_dark_mode")
+add_optional_extension("sphinx_copybutton")
 
 redirects = {
     "account": "modules/account.html",

@@ -11,6 +11,7 @@ minecraft-launcher-lib uses the following Sphinx plugins:
 - `sphinx-reredirects <https://pypi.org/project/sphinx-reredirects/>`_: The module documentation has been moved in the modules directory. This Plugin creates redirects, so older links will still work.
 - `sphinx-notfound-page <https://pypi.org/project/sphinx-notfound-page/>`_: Used for setting the custom 404 page.
 - `sphinx-rtd-dark-mode <https://pypi.org/project/sphinx-rtd-dark-mode/>`_: Provides the dark theme, that you can turn on by clicking on the button in the bottom right corner.
+- `sphinx-copybutton <https://pypi.org/project/sphinx-copybutton/>`_: Provides the copy button on the code blocks
 
 These plugins are all completely optional. You can build the documentation without having these plugins installed. The features, that the plugins provide are missing in that case.
 
