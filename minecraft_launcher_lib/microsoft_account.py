@@ -1,6 +1,5 @@
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from typing import Literal, Optional, Tuple, cast
-from urllib.parse import urlparse, urlencode
 from .exceptions import InvalidRefreshToken
 from base64 import urlsafe_b64encode
 from .helper import get_user_agent
@@ -29,7 +28,7 @@ def get_login_url(client_id: str, redirect_uri: str) -> str:
         "scope": __SCOPE__,
     }
 
-    url = urlparse(__AUTH_URL__)._replace(query=urlencode(parameters)).geturl()
+    url = urllib.parse.urlparse(__AUTH_URL__)._replace(query=urllib.parse.urlencode(parameters)).geturl()
     return url
 
 
@@ -75,7 +74,7 @@ def get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str
         "code_challenge_method": code_challenge_method
     }
 
-    url = urlparse(__AUTH_URL__)._replace(query=urlencode(parameters)).geturl()
+    url = urllib.parse.urlparse(__AUTH_URL__)._replace(query=urllib.parse.urlencode(parameters)).geturl()
 
     return url, state, code_verifier
 
