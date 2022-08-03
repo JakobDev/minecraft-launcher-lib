@@ -19,6 +19,8 @@ class MinecraftOptions(TypedDict, total=False):
     port: str
     nativesDirectory: str
     enableLoggingConfig: bool
+    disableMultiplayer: bool
+    disableChat: bool
 
 
 class CallbackDict(TypedDict, total=False):

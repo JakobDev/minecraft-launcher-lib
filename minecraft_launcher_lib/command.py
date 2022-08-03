@@ -165,4 +165,8 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
         if "port" in options:
             command.append("--port")
             command.append(options["port"])
+    if options.get("disableMultiplayer", False):
+        command.append("--disableMultiplayer")
+    if options.get("disableChat", False):
+        command.append("--disableChat")
     return command

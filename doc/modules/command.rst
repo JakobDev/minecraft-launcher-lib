@@ -29,8 +29,10 @@ options is a dict:
         "resolutionHeight": "480", #The resolution heigth
         "server": "example.com", #The ip of a server where Minecraft connect to after start
         "port": "123", #The port of a server where Minecraft connect to after start
-        "nativesDirectory": "minecraft_directory/versions/version/natives" #The natives directory
+        "nativesDirectory": "minecraft_directory/versions/version/natives", #The natives directory
         "enableLoggingConfig": False, #Enable use of the log4j configuration file
+        "disableMultiplayer": False, #Disables the multiplayer
+        "disableChat": False #Disables the chat
     }
 
 You can use the account module to get the needed information.
