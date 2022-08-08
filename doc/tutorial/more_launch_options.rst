@@ -26,9 +26,13 @@ Java Executable
 The Java Executable is the path the Java which is used to run Minecraft. If the version.json contains a Java Runtime, it minecraft-launcher-lib will download and use these version. Otherwise it will just use the java command.
 minecraft-launcher-lib allows to overwrite this. This can be useful, if you want to start a older version which needs a older Java and does not contain a runtime in the version.json.
 
+There are 2 options to overwrite the Java Executable: executablePath and defaultExecutablePath. The difference is, that executablePath is always used. defaultExecutablePath is only used, when the version.json
+has set no Java Runtime. If the version.json contains a Runtime, the Runtime will be prefered over the defaultExecutablePath.
+
 .. code:: python
 
     options["executablePath"] = "path/to/java"
+    options["defaultExecutablePath"] = "path/to/java"
 
 -------------------------
 Custom Resolution

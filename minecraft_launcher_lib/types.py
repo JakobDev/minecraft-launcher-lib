@@ -7,6 +7,7 @@ class MinecraftOptions(TypedDict, total=False):
     uuid: str
     token: str
     executablePath: str
+    defaultExecutablePath: str
     jvmArguments: List[str]
     launcherName: str
     launcherVersion: str
