@@ -112,7 +112,7 @@ def parse_auth_code_url(url: str, state: Optional[str]) -> str:
     qs = urllib.parse.parse_qs(parsed.query)
 
     if state is not None:
-        assert(state == qs["state"][0])
+        assert state == qs["state"][0]
 
     return qs["code"][0]
 
