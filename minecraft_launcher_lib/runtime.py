@@ -25,7 +25,12 @@ def _get_jvm_platform_string() -> str:
         else:
             return "linux"
     elif platform.system() == "Darwin":
-        return "mac-os"
+        if platform.machine() == "arm64":
+            return "mac-os-arm64"
+        else:
+            return "mac-os"
+    else:
+        return "gamecore"
 
 
 def get_jvm_runtimes() -> List[str]:
