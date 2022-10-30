@@ -34,6 +34,12 @@ pytest_python3.10:
     extends:
         - .pytest
 
+pytest_python3.11:
+    stage: test
+    image: "python:3.11"
+    extends:
+        - .pytest
+
 pytest_pypy:
     stage: test
     image: "pypy:latest"
