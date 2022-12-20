@@ -94,7 +94,7 @@ def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.Pa
         shutil.rmtree(root_path)
 
 
-def install_forge_version(versionid: str, path: str, callback: Optional[CallbackDict] = None, java: str = None) -> None:
+def install_forge_version(versionid: str, path: str, callback: Optional[CallbackDict] = None, java: Optional[str] = None) -> None:
     """
     Installs a forge version. Fore more information look at the documentation.
     """
@@ -141,7 +141,7 @@ def install_forge_version(versionid: str, path: str, callback: Optional[Callback
         os.remove(lzma_path)
 
 
-def run_forge_installer(version: str, java: str = None) -> None:
+def run_forge_installer(version: str, java: Optional[str] = None) -> None:
     """
     Run the forge installer of the given forge version
     """
