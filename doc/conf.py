@@ -21,7 +21,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'minecraft-launcher-lib'
-copyright = '2019-2022, JakobDev'
+copyright = '2019-2023, JakobDev'
 author = 'JakobDev'
 
 # The full version, including alpha/beta/rc tags
