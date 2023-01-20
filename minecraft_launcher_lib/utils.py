@@ -86,11 +86,11 @@ def get_java_executable() -> str:
     """
     if platform.system() == "Windows":
         if os.getenv("JAVA_HOME"):
-            return os.path.join(os.getenv("JAVA_HOME"), "bin", "java.exe")
-        elif os.path.isfile(r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"):
-            return r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\java.exe"
+            return os.path.join(os.getenv("JAVA_HOME"), "bin", "javaw.exe")
+        elif os.path.isfile(r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\javaw.exe"):
+            return r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\javaw.exe"
         else:
-            return shutil.which("java") or "java"
+            return shutil.which("javaw") or "javaw"
     elif os.getenv("JAVA_HOME"):
         return os.path.join(os.getenv("JAVA_HOME"), "bin", "java")
     elif platform.system() == "Darwin":
