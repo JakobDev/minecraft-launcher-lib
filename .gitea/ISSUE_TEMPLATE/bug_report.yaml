@@ -1,0 +1,41 @@
+name: Bug report
+description: Write a Bug report
+labels: [Bug]
+body:
+  - type: textarea
+    id: bug_description
+    attributes:
+        label: Describe the bug
+        description: A clear description what the Bug is
+    validations:
+        required: true
+  - type: textarea
+    id: code
+    attributes:
+        label: Python code
+        description: Please post a example Python code that causes the Bug here. The code should be full working, not part of a bigger code.
+        render: python
+  - type: textarea
+    id: output
+    attributes:
+        label: Output
+        description: If minecraft-launcher-lib crashes with a error message/traceback or yor code outputs something, paste it here. If not, please remove this section.
+        render: plaintext
+    validations:
+        required: false
+  - type: input
+    id: operating_system
+    attributes:
+        label: Operating System
+        description: Please post your Operating System and Version here
+        placeholder: e.g. Windows 11, Ubuntu 22.04
+    validations:
+        required: true
+  - type: input
+    id: python_version
+    attributes:
+        label: Python version
+        description: Please post your Python version here
+        placeholder: e.g. 3.11.0
+    validations:
+        required: true
