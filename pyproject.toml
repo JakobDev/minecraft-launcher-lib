@@ -39,8 +39,8 @@ dynamic = ["version"]
 
 [project.urls]
 Documentation = "https://minecraft-launcher-lib.readthedocs.io/en/stable/index.html"
-Issues = "https://gitlab.com/JakobDev/minecraft-launcher-lib/-/issues"
-Source = "https://gitlab.com/JakobDev/minecraft-launcher-lib"
+Issues = "https://codeberg.org/JakobDev/minecraft-launcher-lib/issues"
+Source = "https://codeberg.org/JakobDev/minecraft-launcher-lib"
 Changelog = "https://minecraft-launcher-lib.readthedocs.io/en/stable/changelog.html"
 Donation = "https://ko-fi.com/jakobdev"
 
