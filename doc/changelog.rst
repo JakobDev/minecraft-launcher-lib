@@ -7,7 +7,7 @@ Changelog
 - Move minecraft-launcher-lib to Codeberg
 - Add defaultExecutablePath option
 - Add disableMultiplayer and disableChat options
-- Change get_java_executable to use javaw.exe on Windows  (`osfanbuff63 <https://gitlab.com/osfanbuff63>`_)
+- Change get_java_executable to use javaw.exe on Windows (`osfanbuff63 <https://gitlab.com/osfanbuff63>`_)
 
 -------------------------
 5.2
