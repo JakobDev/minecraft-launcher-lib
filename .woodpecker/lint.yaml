@@ -1,0 +1,6 @@
+pipeline:
+    flake8:
+        image: python:latest
+        commands:
+              - pip install flake8 flake8-annotations flake8-docstring-checker
+              - flake8 --show-source

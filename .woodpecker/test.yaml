@@ -1,0 +1,14 @@
+matrix:
+    PYTHON_IMAGE:
+        - python:3.8
+        - python:3.9
+        - python:3.10
+        - python:3.11
+        - pypy:latest
+
+pipeline:
+    pytest:
+        image: ${PYTHON_IMAGE}
+        commands:
+            - pip install pytest requests
+            - pytest

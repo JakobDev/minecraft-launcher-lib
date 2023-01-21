@@ -1,0 +1,15 @@
+depends_on:
+    - lint
+    - test
+
+pipeline:
+    pip_deploy:
+        image: python:latest
+        commands:
+            - pip install twine build
+            - python -m build
+            - twine upload -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD" dist/*
+        when:
+            event: tag
+             branch: master
+        secrets: [PYPI_USERNAME, PYPI_PASSWORD]
