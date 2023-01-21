@@ -8,4 +8,4 @@ Develop
     codestyle
     automatic_tests
     build_and_edit_documentation
-    making_a_merge_request
+    making_a_pull_request

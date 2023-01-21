@@ -1,7 +1,7 @@
 Build and edit documentation
 ==================================================
 minecraft-launcher-lib uses `Sphinx <https://www.sphinx-doc.org>`_ for it's documentation. The documentation is hosted on `Read the Docs <https://readthedocs.org/>`_.
-You can find the soucre files for the documentation in `doc folder <https://gitlab.com/JakobDev/minecraft-launcher-lib/-/tree/master/doc>`_. You can also access to source of each Page by clicking on the "Edit on GitLab" link at the top of each page.
+You can find the soucre files for the documentation in `doc folder <https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/doc>`_.
 
 -------------------------
 Plugins
@@ -40,4 +40,4 @@ Now you can view the documentation by opening _build/html/index.html in your fav
 -------------------------
 Examples
 -------------------------
-The examples are stored in the `examples folder <https://gitlab.com/JakobDev/minecraft-launcher-lib/-/tree/master/examples>`_. They are added to the documentation during build. Please do not edit anything inside doc/examples. All files in this folder are overwritten during the build.
+The examples are stored in the `examples folder <https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/examples>`_. They are added to the documentation during build. Please do not edit anything inside doc/examples. All files in this folder are overwritten during the build.

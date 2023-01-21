@@ -1,6 +1,6 @@
 Making a Merge Request
 ==========================
-minecraft-launcher-lib uses GitLab as development platform. If you want to contribute some changes, a need to make a Merge Request (MR) against the `GitLab repo of minecraft-launcher-lib <https://gitlab.com/JakobDev/minecraft-launcher-lib>`_.
+minecraft-launcher-lib uses Codeberg as development platform. If you want to contribute some changes, a need to make a Pull Request (PR) against the `Codeberg repo of minecraft-launcher-lib <https://codeberg.org/JakobDev/minecraft-launcher-lib>`_.
 A merge request is the same as a Pull Request on GitHub, which I think you should familiar with. It's works exactly the same way.
 
 Before making a MR, you should follow this checklist:
@@ -13,7 +13,7 @@ Before making a MR, you should follow this checklist:
 - You should update the :doc:`documentation</develop/build_and_edit_documentation>` with your changes
 - Please don't add extra dependencies if not absolutely needed
 
-After you've created a PR, flake8 and Pytest with all supported versions (including PyPy) will run. If one of those fails, GitLab will show it on the Website and you will get a mail.
+After you've created a PR, flake8 and Pytest with all supported versions (including PyPy) will run. If one of those fails, Codeberg will show it on the Website and you will get a mail.
 
 Read the Docs is configured to build the documentation for each MR. Unfortunately, it will not provide a link or any hint, if the build was successful. You will have to visit `this site <https://readthedocs.org/projects/minecraft-launcher-lib/builds>`_ and search for your MR.
 

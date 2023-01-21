@@ -71,7 +71,7 @@ Features:
 - Examples available
 - OpenSource
 
-[View more examples](https://gitlab.com/JakobDev/minecraft-launcher-lib/-/tree/master/examples)
+[View more examples](https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/examples)
 
 [Read the documentation](https://minecraft-launcher-lib.readthedocs.io)
 

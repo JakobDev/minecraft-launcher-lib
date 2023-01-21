@@ -19,4 +19,4 @@ Here are different methods to install minecraft-launcher-lib.
 
     .. code::
 
-        pip install -U git+https://gitlab.com/JakobDev/minecraft-launcher-lib.git
+        pip install -U git+https://codeberg.org/JakobDev/minecraft-launcher-lib.git

@@ -25,4 +25,4 @@ Here is a quick checklist for you, if Minecraft doesn't starts.
 
     If you use custom JVM Arguments, make sure all of them start with - and not a other char e.g. a whitespace.
 
-If all of the steps above failed, please fill a `Bug Report <https://gitlab.com/JakobDev/minecraft-launcher-lib/-/issues>`_.
+If all of the steps above failed, please fill a `Bug Report <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues>`_.

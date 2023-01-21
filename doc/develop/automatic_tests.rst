@@ -1,6 +1,6 @@
 Automatic tests
 ==========================
-minecraft-launcher-lib uses `Pytest <https://pytest.org>`_ to run some automatic tests. The tests only covers the utils functions. The main things like installing, launching and logging in to Microsoft are not covered, because I don't know how to do this, if it should work in the GitLab CI as well.
+minecraft-launcher-lib uses `Pytest <https://pytest.org>`_ to run some automatic tests. The tests only covers the utils functions. The main things like installing, launching and logging in to Microsoft are not covered, because I don't know how to do this, if it should work in the Codeberg CI as well.
 
 -------------------------
 Using Pytest

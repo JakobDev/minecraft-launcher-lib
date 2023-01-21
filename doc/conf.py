@@ -97,7 +97,7 @@ def write_examples_file(in_path: pathlib.Path, out_dir: pathlib.Path):
         f.write("\n.. code:: python\n\n")
         for i in file_content.splitlines():
             f.write("    " + i + "\n")
-        f.write(f"\n\n`View this example at GitLab <https://gitlab.com/JakobDev/minecraft-launcher-lib/-/blob/master/examples/{in_path.name}>`_")
+        f.write(f"\n\n`View this example on Codeberg <https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/examples/{in_path.name}>`_")
 
 
 examples_path = pathlib.Path(__file__).parent.parent / "examples"
