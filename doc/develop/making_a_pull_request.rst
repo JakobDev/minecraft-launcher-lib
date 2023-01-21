@@ -1,4 +1,4 @@
-Making a Merge Request
+Making a Pull Request
 ==========================
 minecraft-launcher-lib uses Codeberg as development platform. If you want to contribute some changes, a need to make a Pull Request (PR) against the `Codeberg repo of minecraft-launcher-lib <https://codeberg.org/JakobDev/minecraft-launcher-lib>`_.
 A merge request is the same as a Pull Request on GitHub, which I think you should familiar with. It's works exactly the same way.
