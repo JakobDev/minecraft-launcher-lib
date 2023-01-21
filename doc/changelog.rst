@@ -2,6 +2,14 @@ Changelog
 ==================================================
 
 -------------------------
+5.3
+-------------------------
+- Move minecraft-launcher-lib to Codeberg
+- Add defaultExecutablePath option
+- Add disableMultiplayer and disableChat options
+- Change get_java_executable to use javaw.exe on Windows  (`osfanbuff63 <https://gitlab.com/osfanbuff63>`_)
+
+-------------------------
 5.2
 -------------------------
 - Added a secure login option using pkce (get_secure_login_data)(`Manuel Quarneti <https://gitlab.com/mq-1>`_)
