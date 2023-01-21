@@ -85,7 +85,7 @@ redirects = {
     "natives": "modules/natives.html",
     "runtime": "modules/runtime.html",
     "utils": "modules/utils.html",
-    "develop/making_a_merge_request": "develop/making_a_pull_request.html"
+    "develop/making_a_merge_request": "making_a_pull_request.html"
 }
 
 
