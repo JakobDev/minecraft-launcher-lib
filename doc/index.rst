@@ -21,3 +21,5 @@ minecraft-launcher-lib is a easy to use Python library for creating your own Min
     develop/index
     showcase
     changelog
+    Issues <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues>
+    Source <https://codeberg.org/JakobDev/minecraft-launcher-lib/>
