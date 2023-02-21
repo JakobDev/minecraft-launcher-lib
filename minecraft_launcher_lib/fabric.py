@@ -144,4 +144,3 @@ def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.Pa
     # Install all libs of fabric
     fabric_minecraft_version = f"fabric-loader-{loader_version}-{minecraft_version}"
     install_minecraft_version(fabric_minecraft_version, path, callback=callback)
-

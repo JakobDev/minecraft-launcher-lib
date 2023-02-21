@@ -17,7 +17,6 @@ import importlib
 import pathlib
 import shutil
 import sys
-import re
 import os
 
 sys.path.insert(0, os.path.abspath('..'))
