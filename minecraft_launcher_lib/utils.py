@@ -1,6 +1,6 @@
 "utils contains a few functions for helping you that doesn't fit in any other category"
 from .types import Articles, MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
-from .helper import get_requests_response_cache
+from ._helper import get_requests_response_cache
 from typing import List, Union
 from datetime import datetime
 import platform

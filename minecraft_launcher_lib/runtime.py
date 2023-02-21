@@ -1,5 +1,5 @@
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
-from .helper import get_user_agent, download_file, empty
+from ._helper import get_user_agent, download_file, empty
 from typing import List, Union, Optional
 from .exceptions import VersionNotFound
 from .types import CallbackDict

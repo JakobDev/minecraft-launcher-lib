@@ -1,5 +1,5 @@
 "fabric contains functions for dealing with the Fabric modloader"
-from .helper import download_file, get_requests_response_cache, parse_maven_metadata, empty
+from ._helper import download_file, get_requests_response_cache, parse_maven_metadata, empty
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
 from .types import FabricMinecraftVersion, FabricLoader, CallbackDict
 from .install import install_minecraft_version

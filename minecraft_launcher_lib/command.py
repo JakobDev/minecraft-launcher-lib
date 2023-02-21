@@ -1,5 +1,5 @@
 "command contains the function for creating the minecraft command"
-from .helper import parse_rule_list, inherit_json, get_classpath_separator, get_library_path
+from ._helper import parse_rule_list, inherit_json, get_classpath_separator, get_library_path
 from .runtime import get_executable_path
 from .exceptions import VersionNotFound
 from typing import Dict, List, Any, Union

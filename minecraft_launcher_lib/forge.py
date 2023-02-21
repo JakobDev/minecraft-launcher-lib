@@ -12,7 +12,7 @@
 
 forge contains functions for dealing with the Forge modloader
 """
-from .helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty
+from ._helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty
 from .install import install_minecraft_version, install_libraries
 from typing import Dict, List, Any, Union, Optional
 from .exceptions import VersionNotFound

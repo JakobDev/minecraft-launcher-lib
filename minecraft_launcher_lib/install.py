@@ -1,5 +1,5 @@
 "install allows you to install minecraft."
-from .helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
+from ._helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
 from .natives import extract_natives_file, get_natives
 from typing import Any, Dict, Optional, Union
 from .exceptions import VersionNotFound

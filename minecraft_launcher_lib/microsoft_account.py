@@ -8,7 +8,7 @@ from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSRespon
 from typing import Literal, Optional, Tuple, cast
 from .exceptions import InvalidRefreshToken
 from base64 import urlsafe_b64encode
-from .helper import get_user_agent
+from ._helper import get_user_agent
 from hashlib import sha256
 import urllib.parse
 import requests

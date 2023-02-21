@@ -1,7 +1,7 @@
 "natives contains a function for extracting natives libraries to a specific folder"
 from .exceptions import VersionNotFound
+from ._helper import parse_rule_list
 from typing import Dict, Any, Union
-from .helper import parse_rule_list
 import platform
 import zipfile
 import json
