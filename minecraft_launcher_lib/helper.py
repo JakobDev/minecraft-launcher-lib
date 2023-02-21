@@ -1,3 +1,4 @@
+"This module contains some helper functions. It should nt be used outside minecraft_launcher_lib"
 from typing import List, Dict, Union, Optional, Any
 from .types import MinecraftOptions, CallbackDict
 import datetime

@@ -1,3 +1,4 @@
+"runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
 from .helper import get_user_agent, download_file, empty
 from typing import List, Union, Optional
 from .exceptions import VersionNotFound
@@ -47,6 +48,9 @@ def get_jvm_runtimes() -> List[str]:
 def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> List[str]:
     """
     Returns a list of all installed jvm runtimes
+
+    :param minecraft_directory: The path to your Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
     """
     try:
         return os.listdir(os.path.join(minecraft_directory, "runtime"))
@@ -57,6 +61,13 @@ def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> 
 def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.PathLike], callback: Optional[CallbackDict] = None) -> None:
     """
     Installs the given jvm runtime. callback is the same dict as in the install module.
+
+    :param jvm_version: The Name of the JVM version
+    :type jvm_verion: str
+    :param minecraft_directory: The path to your Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
+    :param callback: the same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
+    :type callback: Optional[CallbackDict]
     """
     if callback is None:
         callback = {}
@@ -108,6 +119,11 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
 def get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[str]:
     """
     Returns the path to the executable. Returns None if none is found.
+
+    :param jvm_version: The Name of the JVM version
+    :type jvm_verion: str
+    :param minecraft_directory: The path to your Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
     """
     java_path = os.path.join(minecraft_directory, "runtime", jvm_version, _get_jvm_platform_string(), jvm_version, "bin", "java")
     if os.path.isfile(java_path):

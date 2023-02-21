@@ -1,3 +1,4 @@
+"utils contains a few functions for helping you that doesn't fit in any other category"
 from .types import Articles, MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
 from .helper import get_requests_response_cache
 from typing import List, Union
@@ -45,6 +46,9 @@ def get_version_list() -> List[MinecraftVersionInfo]:
 def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List[MinecraftVersionInfo]:
     """
     Returns all installed versions
+
+    :param minecraft_directory: The path to your Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
     """
     try:
         dir_list = os.listdir(os.path.join(minecraft_directory, "versions"))
@@ -68,6 +72,9 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
 def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List[MinecraftVersionInfo]:
     """
     Returns all installed versions and all versions that Mojang offers to download
+
+    :param minecraft_directory: The path to your Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
     """
     version_list = []
     version_check = []
@@ -134,6 +141,11 @@ def generate_test_options() -> MinecraftOptions:
 def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike]) -> bool:
     """
     Checks if the given version exists
+
+    :param version: A Minecraft version
+    :type version: str
+    :param minecraft_directory: The path to your Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
     """
     if os.path.isdir(os.path.join(minecraft_directory, "versions", version)):
         return True
@@ -146,6 +158,9 @@ def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike])
 def get_minecraft_news(page_size: int = 20) -> Articles:
     """
     Get the news from minecraft.net
+
+    :param page_size: The Page Size (default 20)
+    :type page_size: int
     """
     parameters = {
         "pageSize": page_size
@@ -159,6 +174,9 @@ def get_minecraft_news(page_size: int = 20) -> Articles:
 def is_vanilla_version(version: str) -> bool:
     """
     Checks if the given version is a vanilla version
+
+    :param version: A Minecraft version
+    :type version: str
     """
     for i in get_version_list():
         if i["id"] == version:

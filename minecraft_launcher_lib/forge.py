@@ -1,3 +1,17 @@
+"""
+.. note::
+    Before using this module, please read this comment from the forge developers:
+
+    .. code:: text
+
+        Please do not automate the download and installation of Forge.
+        Our efforts are supported by ads from the download page.
+        If you MUST automate this, please consider supporting the project through https://www.patreon.com/LexManos/
+
+    It's your choice, if you want to respect that and support forge.
+
+forge contains functions for dealing with the Forge modloader
+"""
 from .helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty
 from .install import install_minecraft_version, install_libraries
 from typing import Dict, List, Any, Union, Optional
@@ -46,7 +60,7 @@ def get_data_library_path(libname: str, path: str) -> str:
     return libpath
 
 
-def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: CallbackDict, java: str = None) -> None:
+def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: CallbackDict, java: str) -> None:
     """
     Run the processors of the install_profile.json
     """
@@ -78,7 +92,7 @@ def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.Pa
             classpath = classpath + get_library_path(c, path) + classpath_seperator
         classpath = classpath + get_library_path(i["jar"], path)
         mainclass = get_jar_mainclass(get_library_path(i["jar"], path))
-        command = [java or "java", "-cp", classpath, mainclass]
+        command = [java, "-cp", classpath, mainclass]
         for c in i["args"]:
             var = argument_vars.get(c, c)
             if var.startswith("[") and var.endswith("]"):
@@ -94,29 +108,48 @@ def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.Pa
         shutil.rmtree(root_path)
 
 
-def install_forge_version(versionid: str, path: str, callback: Optional[CallbackDict] = None, java: Optional[str] = None) -> None:
+def install_forge_version(versionid: str, path: Union[str, os.PathLike], callback: Optional[CallbackDict] = None, java: Optional[Union[str, os.PathLike]] = None) -> None:
     """
-    Installs a forge version. Fore more information look at the documentation.
+    Installs the given Forge version
+
+    :param versionid: A Forge Version. You can get a List of Forge versions using :func:`list_forge_versions`
+    :type versionid: str
+    :param path: The path to your Minecraft directory
+    :type path: Union[str, os.PathLike]
+    :param callback: the same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
+    :type callback: Optional[CallbackDict]
+    :param java: A Path to a custom Java executable
+    :type java: Union[str, os.PathLike]]
+
+    Raises a :class:`~minecraft_launcher_lib.exceptions.VersionNotFound` exception when the given forge version is not found
     """
     if callback is None:
         callback = {}
+
     FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
     temp_file_path = os.path.join(tempfile.gettempdir(), "forge-installer-" + str(random.randrange(1, 100000)) + ".tmp")
+
     if not download_file(FORGE_DOWNLOAD_URL.format(version=versionid), temp_file_path, callback):
         raise VersionNotFound(versionid)
+
     zf = zipfile.ZipFile(temp_file_path, "r")
+
     # Read the install_profile.json
     with zf.open("install_profile.json", "r") as f:
         version_content = f.read()
     version_data = json.loads(version_content)
     forge_version_id = version_data["version"]
+
     # Make sure, the base version is installed
     install_minecraft_version(version_data["minecraft"], path, callback=callback)
+
     # Install all needed libs from install_profile.json
     install_libraries(version_data, path, callback)
+
     # Extract the version.json
     version_json_path = os.path.join(path, "versions", forge_version_id, forge_version_id + ".json")
     extract_file(zf, "version.json", version_json_path)
+
     # Extract forge libs from the installer
     forge_lib_path = os.path.join(path, "libraries", "net", "minecraftforge", "forge", versionid)
     try:
@@ -124,31 +157,44 @@ def install_forge_version(versionid: str, path: str, callback: Optional[Callback
         extract_file(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + "-universal.jar"))
     except KeyError:
         pass
+
     # Extract the client.lzma
     lzma_path = os.path.join(tempfile.gettempdir(), "lzma-" + str(random.randrange(1, 100000)) + ".tmp")
     try:
         extract_file(zf, "data/client.lzma", lzma_path)
     except KeyError:
         pass
+
     zf.close()
+
     # Install the rest with the vanilla function
-    install_minecraft_version(forge_version_id, path, callback=callback)
+    install_minecraft_version(forge_version_id, str(path), callback=callback)
+
     # Run the processors
-    forge_processors(version_data, path, lzma_path, temp_file_path, callback, java)
+    forge_processors(version_data, str(path), lzma_path, temp_file_path, callback, "java" if java is None else str(java))
+
     # Delete the temporary files
     os.remove(temp_file_path)
     if os.path.isfile(lzma_path):
         os.remove(lzma_path)
 
 
-def run_forge_installer(version: str, java: Optional[str] = None) -> None:
+def run_forge_installer(version: str, java: Optional[Union[str, os.PathLike]] = None) -> None:
     """
     Run the forge installer of the given forge version
+
+    :param version: A Forge Version. You can get a List of Forge versions using :func:`list_forge_versions`
+    :type version: str
+    :param java: A Path to a custom Java executable
+    :type java: Optional[Union[str, os.PathLike]]
     """
     FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
     temp_file_path = os.path.join(tempfile.gettempdir(), "forge-" + str(random.randrange(1, 100000)) + ".tmp")
-    download_file(FORGE_DOWNLOAD_URL.format(version=version), temp_file_path, {})
-    subprocess.call([java or "java", "-jar", temp_file_path])
+
+    if not download_file(FORGE_DOWNLOAD_URL.format(version=version), temp_file_path, {}):
+        raise VersionNotFound(version)
+
+    subprocess.call(["java" if java is None else str(java), "-jar", temp_file_path])
     os.remove(temp_file_path)
 
 
@@ -163,6 +209,9 @@ def list_forge_versions() -> List[str]:
 def find_forge_version(vanilla_version: str) -> Optional[str]:
     """
     Find the latest forge version that is compatible to the given vanilla version
+
+    :param vanilla_version: A vanilla Minecraft version
+    :type vanilla_version: str
     """
     version_list = list_forge_versions()
     for i in version_list:
@@ -175,6 +224,9 @@ def find_forge_version(vanilla_version: str) -> Optional[str]:
 def is_forge_version_valid(forge_version: str) -> bool:
     """
     Checks if a forge version is valid
+
+    :param forge_version: A Forge Version
+    :type version: str
     """
     forge_version_list = list_forge_versions()
     return forge_version in forge_version_list
@@ -183,6 +235,9 @@ def is_forge_version_valid(forge_version: str) -> bool:
 def supports_automatic_install(forge_version: str) -> bool:
     """
     Checks if install_forge_version() supports the given forge version
+
+    :param forge_version: A Forge Version
+    :type version: str
     """
     try:
         vanilla_version, forge = forge_version.split("-")
@@ -199,6 +254,10 @@ def supports_automatic_install(forge_version: str) -> bool:
 def forge_to_installed_version(forge_version: str) -> str:
     """
     Returns the Version under which Forge will be installed from the given Forge version.
+
+    :param forge_version: A Forge Version
+    :type version: str
+
     Raises a ValueError if the Version is invalid.
     """
     try:

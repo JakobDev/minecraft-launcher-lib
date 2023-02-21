@@ -1,3 +1,4 @@
+"natives contains a function for extracting natives libraries to a specific folder"
 from .exceptions import VersionNotFound
 from typing import Dict, Any, Union
 from .helper import parse_rule_list
@@ -5,6 +6,8 @@ import platform
 import zipfile
 import json
 import os
+
+__all__ = ["extract_natives"]
 
 
 def get_natives(data: Dict[str, Any]) -> str:
@@ -54,7 +57,17 @@ def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[st
 
 def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path: str) -> None:
     """
-    Extract natives into the givrn path. For more information look at the documentation.
+    Extract all native libraries from a version into the given directory. The directory will be created, if it does not exist.
+
+    :param version: The Minecraft version
+    :type version: str
+    :param minecraft_directory: The path to your Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
+    :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
+    :type callback: Optional[CallbackDict]
+
+    Note:
+    The natives are all extracted while installing. So you don't need to use this function in most cases.
     """
     if not os.path.isfile(os.path.join(path, "versions", versionid, versionid + ".json")):
         raise VersionNotFound(versionid)

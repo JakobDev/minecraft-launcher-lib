@@ -1,3 +1,4 @@
+"install allows you to install minecraft."
 from .helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
 from .natives import extract_natives_file, get_natives
 from typing import Any, Dict, Optional, Union
@@ -96,7 +97,7 @@ def install_assets(data: Dict[str, Any], path: str, callback: CallbackDict) -> N
 
 def do_version_install(versionid: str, path: str, callback: CallbackDict, url: Optional[str] = None, sha1: Optional[str] = None) -> None:
     """
-    Install the given version
+    Installs the given version
     """
     # Download and read versions.json
     if url:
@@ -133,7 +134,26 @@ def do_version_install(versionid: str, path: str, callback: CallbackDict, url: O
 
 def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Optional[CallbackDict] = None) -> None:
     """
-    Install a Minecraft Version. Fore more Information take a look at the documentation"
+    Installs a minecraft version into the given path. e.g. ``install_version("1.14", "/tmp/minecraft")``. Use :func:`~minecraft_launcher_lib.utils.get_minecraft_directory` to get the default Minecraft directory.
+
+    :param versionid: The Minecraft version
+    :type versionid: str
+    :param minecraft_directory: The path to your Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
+    :param callback: Some functions that are called to monitor the progress (see below)
+    :type callback: Optional[CallbackDict]
+
+    ``callback`` is a dict with functions that are called with arguments to get the progress. You can use it to show the progress to the user.
+
+    .. code:: python
+
+        callback = {
+            "setStatus": some_function, # This function is called to set a text
+            "setProgress" some_function, # This function is called to set the progress.
+            "setMax": some_function, # This function is called to set to max progress.
+        }
+
+    Files that are already exists will not be replaced.
     """
     if isinstance(minecraft_directory, os.PathLike):
         minecraft_directory = str(minecraft_directory)
