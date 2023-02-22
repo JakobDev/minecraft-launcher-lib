@@ -3,7 +3,7 @@ This module contains all Types for minecraft-launcher-lib. It may help your IDE.
 If you are not interested in static typing just ignore it.
 For more information about TypeDict see `PEP 589 <https://peps.python.org/pep-0589/>`_.
 """
-from typing import Literal, TypedDict, List, Callable
+from typing import Literal, TypedDict, List, Callable, Optional
 import datetime
 
 
@@ -111,6 +111,6 @@ class JavaInformation(TypedDict):
     name: str
     version: str
     java_path: str
-    javaw_path: str
+    javaw_path: Optional[str]
     is_64bit: bool
     openjdk: bool
