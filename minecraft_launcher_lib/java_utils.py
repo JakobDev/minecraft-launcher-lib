@@ -48,6 +48,7 @@ def get_java_information(path: Union[str, os.PathLike]) -> JavaInformation:
 
 
 def _search_java_directory(path: str) -> List[str]:
+    "Used by find_system_java_versions() to parse a Directory"
     if not os.path.isdir(path):
         return []
 
