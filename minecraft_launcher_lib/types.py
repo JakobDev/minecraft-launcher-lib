@@ -104,3 +104,13 @@ class Article(_ArticleBase, total=False):
 class Articles(TypedDict):
     article_grid: List[Article]
     article_count: int
+
+
+class JavaInformation(TypedDict):
+    path: str
+    name: str
+    version: str
+    java_path: str
+    javaw_path: str
+    is_64bit: bool
+    openjdk: bool
