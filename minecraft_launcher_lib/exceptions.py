@@ -1,4 +1,5 @@
 "exceptions contains all custom exceptions that can be raised by minecraft_launcher_lib"
+from .types import VanillaLauncherProfile
 from typing import List
 
 
@@ -50,3 +51,14 @@ class InvalidRefreshToken(ValueError):
     Raised when :func:`~minecraft_launcher_lib.microsoft_account.complete_refresh` is called with a invalid refresh token
     """
     pass
+
+
+class InvalidVanillaLauncherProfile(ValueError):
+    """
+    Raised when a function from the :doc:`vanilla_launcher` module is called with a invalid vanilla profile
+    """
+    def __init__(self, profile: VanillaLauncherProfile) -> None:
+        self.profile: VanillaLauncherProfile = profile
+        "The invalid profile"
+
+        super().__init__("Invalid VanillaLauncherProfile")

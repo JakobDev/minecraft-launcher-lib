@@ -26,3 +26,9 @@ def test_ExternalProgramError():
 def test_InvalidRefreshToken():
     i = minecraft_launcher_lib.exceptions.InvalidRefreshToken()
     assert isinstance(i, ValueError)
+
+
+def test_InvalidVanillaLauncherProfile():
+    ex = minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile({"name": "test"})
+    assert ex.profile == {"name": "test"}
+    assert isinstance(ex, ValueError)

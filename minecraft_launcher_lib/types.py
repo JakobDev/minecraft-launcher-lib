@@ -106,6 +106,8 @@ class Articles(TypedDict):
     article_count: int
 
 
+# java_utils
+
 class JavaInformation(TypedDict):
     path: str
     name: str
@@ -114,3 +116,19 @@ class JavaInformation(TypedDict):
     javaw_path: Optional[str]
     is_64bit: bool
     openjdk: bool
+
+
+# vanilla_launcher
+
+class VanillaLauncherProfileResolution(TypedDict):
+    height: int
+    width: int
+
+
+class VanillaLauncherProfile(TypedDict, total=False):
+    name: str
+    version: Optional[str]
+    versionType: Literal["latest-release", "latest-snapshot", "custom"]
+    gameDirectory: Optional[str]
+    javaArguments: Optional[List[str]]
+    customResolution: Optional[VanillaLauncherProfileResolution]

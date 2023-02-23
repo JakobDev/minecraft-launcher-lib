@@ -1,0 +1,201 @@
+"vanilla_launcher contains some functions for interacting with the Vanilla Minecraft Launcher"
+from .types import VanillaLauncherProfile, MinecraftOptions
+from .exceptions import InvalidVanillaLauncherProfile
+from .utils import get_latest_version
+from typing import List, Union
+import datetime
+import json
+import uuid
+import os
+
+__all__ = [
+    "load_vanilla_launcher_profiles",
+    "vanilla_launcher_profile_to_minecraft_options",
+    "get_vanilla_launcher_profile_version",
+    "add_vanilla_launcher_profile"
+]
+
+
+def _is_vanilla_launcher_profile_valid(vanilla_profile: VanillaLauncherProfile) -> bool:
+    "Checks if the given profile is valid"
+    if not isinstance(vanilla_profile.get("name"), str):
+        return False
+
+    if vanilla_profile.get("versionType") not in ("latest-release", "latest-snapshot", "custom"):
+        return False
+
+    if vanilla_profile["versionType"] == "custom" and vanilla_profile.get("version") is None:
+        return False
+
+    if vanilla_profile.get("gameDirectory") is not None and not isinstance(vanilla_profile.get("gameDirectory"), str):
+        return False
+
+    if vanilla_profile.get("javaArguments") is not None:
+        try:
+            for i in vanilla_profile["javaArguments"]:
+                assert isinstance(i, str)
+        except Exception:
+            return False
+
+    if vanilla_profile.get("customResolution") is not None:
+        try:
+            assert len(vanilla_profile["customResolution"]) == 2
+            assert isinstance(vanilla_profile["customResolution"]["height"], int)
+            assert isinstance(vanilla_profile["customResolution"]["width"], int)
+        except Exception:
+            return False
+
+    return True
+
+
+def load_vanilla_launcher_profiles(minecraft_directory: Union[str, os.PathLike]) -> List[VanillaLauncherProfile]:
+    """
+    Loads the profiles of the Vanilla Launcher from the given Minecraft directory
+
+    :param minecraft_directory: The Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
+    :return: A List with the Profiles
+    :rtype: List[VanillaLauncherProfile]
+    """
+    with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    profile_list: List[VanillaLauncherProfile] = []
+    for value in data["profiles"].values():
+        vanilla_profile: VanillaLauncherProfile = {}
+
+        vanilla_profile["name"] = value["name"]
+
+        if value["lastVersionId"] == "latest-release":
+            vanilla_profile["versionType"] = "latest-release"
+            vanilla_profile["version"] = None
+        elif value["lastVersionId"] == "latest-snapshot":
+            vanilla_profile["versionType"] = "latest-snapshot"
+            vanilla_profile["version"] = None
+        else:
+            vanilla_profile["versionType"] = "custom"
+            vanilla_profile["version"] = value["lastVersionId"]
+
+        vanilla_profile["gameDirectory"] = value.get("gameDir")
+
+        if "javaArgs" in value:
+            vanilla_profile["javaArguments"] = value["javaArgs"].split(" ")
+        else:
+            vanilla_profile["javaArguments"] = None
+
+        if "resolution" in value:
+            vanilla_profile["customResolution"] = {
+                "height": value["resolution"]["height"],
+                "width": value["resolution"]["width"]
+            }
+        else:
+            vanilla_profile["customResolution"] = None
+
+        profile_list.append(vanilla_profile)
+
+    return profile_list
+
+
+def vanilla_launcher_profile_to_minecraft_options(vanilla_profile: VanillaLauncherProfile) -> MinecraftOptions:
+    """
+    Converts a VanillaLauncherProfile into a Options dict, that can be used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`.
+    You still need to add the Login Data to the Options before you can use it.
+
+    :param vanilla_profile: The profile as returned by :func:`load_vanilla_launcher_profiles`
+    :type vanilla_profile: VanillaLauncherProfile
+    :raises InvalidVanillaLauncherProfile: The given Profile in invalid
+    :return: The Options Dict
+    :rtype: MinecraftOptions
+    """
+    if not _is_vanilla_launcher_profile_valid(vanilla_profile):
+        raise InvalidVanillaLauncherProfile(vanilla_profile)
+
+    options: MinecraftOptions = {}
+
+    if vanilla_profile.get("gameDirectory") is not None:
+        options["gameDirectory"] = vanilla_profile["gameDirectory"]
+
+    if vanilla_profile.get("javaArguments") is not None:
+        options["jvmArguments"] = vanilla_profile["javaArguments"]
+
+    if vanilla_profile.get("customResolution") is not None:
+        options["customResolution"] = True
+        options["resolutionWidth"] = str(vanilla_profile["customResolution"]["width"])
+        options["resolutionHeight"] = str(vanilla_profile["customResolution"]["height"])
+
+    return options
+
+
+def get_vanilla_launcher_profile_version(vanilla_profile: VanillaLauncherProfile) -> str:
+    """
+    Returns the Minecraft version of the VanillaProfile. Handles ``latest-release`` and ``latest-snapshot``.
+
+    :param vanilla_profile: The Profile
+    :type vanilla_profile: VanillaLauncherProfile
+    :raises InvalidVanillaLauncherProfile: The given Profile in invalid
+    :return: The Minecraft version
+    :rtype: str
+    """
+    if not _is_vanilla_launcher_profile_valid(vanilla_profile):
+        raise InvalidVanillaLauncherProfile(vanilla_profile)
+
+    if vanilla_profile["versionType"] == "latest-release":
+        return get_latest_version()["release"]
+    elif vanilla_profile["versionType"] == "latest-snapshot":
+        return get_latest_version()["snapshot"]
+    elif vanilla_profile["versionType"] == "custom":
+        return vanilla_profile["version"]
+
+
+def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], vanilla_profile: VanillaLauncherProfile) -> None:
+    """
+    Adds a new Profile to the Vanilla Launcher
+
+    :param minecraft_directory: The Minecraft directory
+    :type minecraft_directory: Union[str, os.PathLike]
+    :param vanilla_profile: The new Profile
+    :type vanilla_profile: VanillaLauncherProfile
+    :raises InvalidVanillaLauncherProfile: The given Profile in invalid
+    """
+    if not _is_vanilla_launcher_profile_valid(vanilla_profile):
+        raise InvalidVanillaLauncherProfile(vanilla_profile)
+
+    with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    new_profile = {}
+    new_profile["name"] = vanilla_profile["name"]
+
+    if vanilla_profile["versionType"] == "latest-release":
+        new_profile["lastVersionId"] = "latest-release"
+    elif vanilla_profile["versionType"] == "latest-snapshot":
+        new_profile["lastVersionId"] = "latest-snapshot"
+    elif vanilla_profile["versionType"] == "custom":
+        new_profile["lastVersionId"] = "version"
+
+    if vanilla_profile.get("gameDirectory") is not None:
+        new_profile["gameDir"] = vanilla_profile["gameDirectory"]
+
+    if vanilla_profile.get("javaArguments") is not None:
+        new_profile["javaArgs"] = " ".join(vanilla_profile["javaArguments"])
+
+    if vanilla_profile.get("customResolution") is not None:
+        new_profile["resolution"] = {
+            "height": vanilla_profile["customResolution"]["height"],
+            "width": vanilla_profile["customResolution"]["width"]
+        }
+
+    new_profile["created"] = datetime.datetime.now().isoformat()
+    new_profile["lastUsed"] = datetime.datetime.now().isoformat()
+    new_profile["type"] = "custom"
+
+    # Generate a Key for the Profile
+    while True:
+        key = str(uuid.uuid4())
+        if key not in data["profiles"]:
+            break
+
+    data["profiles"][key] = new_profile
+
+    with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
