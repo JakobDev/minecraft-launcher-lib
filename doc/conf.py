@@ -101,6 +101,7 @@ def write_module_file(in_path: pathlib.Path, out_dir: pathlib.Path) -> None:
         f.write(in_path.stem + "\n")
         f.write("==========================\n")
         f.write(f".. automodule:: minecraft_launcher_lib.{in_path.stem}\n")
+        f.write("  :show-inheritance:\n")
         f.write("  :undoc-members:\n")
         f.write("  :members:\n")
         f.write(f"\n\n`View the source code of this module <https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/minecraft_launcher_lib/{in_path.name}>`_\n")
