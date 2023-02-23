@@ -60,11 +60,8 @@ def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path:
     Extract all native libraries from a version into the given directory. The directory will be created, if it does not exist.
 
     :param version: The Minecraft version
-    :type version: str
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
-    :type callback: Optional[CallbackDict]
 
     Note:
     The natives are all extracted while installing. So you don't need to use this function in most cases.

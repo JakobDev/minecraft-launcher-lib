@@ -62,6 +62,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = []
 
 autodoc_member_order = "bysource"
+autodoc_typehints = "both"
 add_module_names = False
 
 default_dark_mode = False

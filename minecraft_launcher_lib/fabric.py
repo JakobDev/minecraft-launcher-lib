@@ -52,7 +52,6 @@ def is_minecraft_version_supported(version: str) -> bool:
     Checks if a Minecraft version supported by Fabric
 
     :param version: A vanilla version
-    :type version: str
     """
     minecraft_versions = get_all_minecraft_versions()
     for i in minecraft_versions:
@@ -90,15 +89,10 @@ def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.Pa
     Installs the Fabric modloader.
 
     :param minecraft_version: A vanilla version that is supported by Fabric
-    :type minecraft_version: str
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     :param loader_version: The fabric loader version. If not given it will use the latest
-    :type loader_version: Optional[str]
     :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
-    :type callback: Optional[CallbackDict]
     :param java: A Path to a custom Java executable
-    :type java: Optional[Union[str, os.PathLike]]
 
     Raises a :class:`~minecraft_launcher_lib.exceptions.UnsupportedVersion` exception when the given minecraft version is not supported by Fabric.
     """

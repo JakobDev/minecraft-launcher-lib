@@ -53,9 +53,7 @@ def load_vanilla_launcher_profiles(minecraft_directory: Union[str, os.PathLike])
     Loads the profiles of the Vanilla Launcher from the given Minecraft directory
 
     :param minecraft_directory: The Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     :return: A List with the Profiles
-    :rtype: List[VanillaLauncherProfile]
     """
     with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -102,10 +100,8 @@ def vanilla_launcher_profile_to_minecraft_options(vanilla_profile: VanillaLaunch
     You still need to add the Login Data to the Options before you can use it.
 
     :param vanilla_profile: The profile as returned by :func:`load_vanilla_launcher_profiles`
-    :type vanilla_profile: VanillaLauncherProfile
-    :raises InvalidVanillaLauncherProfile: The given Profile in invalid
+    :raises InvalidVanillaLauncherProfile: The given Profile is invalid
     :return: The Options Dict
-    :rtype: MinecraftOptions
     """
     if not _is_vanilla_launcher_profile_valid(vanilla_profile):
         raise InvalidVanillaLauncherProfile(vanilla_profile)
@@ -132,9 +128,8 @@ def get_vanilla_launcher_profile_version(vanilla_profile: VanillaLauncherProfile
 
     :param vanilla_profile: The Profile
     :type vanilla_profile: VanillaLauncherProfile
-    :raises InvalidVanillaLauncherProfile: The given Profile in invalid
+    :raises InvalidVanillaLauncherProfile: The given Profile is invalid
     :return: The Minecraft version
-    :rtype: str
     """
     if not _is_vanilla_launcher_profile_valid(vanilla_profile):
         raise InvalidVanillaLauncherProfile(vanilla_profile)
@@ -152,10 +147,8 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
     Adds a new Profile to the Vanilla Launcher
 
     :param minecraft_directory: The Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     :param vanilla_profile: The new Profile
-    :type vanilla_profile: VanillaLauncherProfile
-    :raises InvalidVanillaLauncherProfile: The given Profile in invalid
+    :raises InvalidVanillaLauncherProfile: The given Profile is invalid
     """
     if not _is_vanilla_launcher_profile_valid(vanilla_profile):
         raise InvalidVanillaLauncherProfile(vanilla_profile)

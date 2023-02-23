@@ -25,9 +25,7 @@ def get_login_url(client_id: str, redirect_uri: str) -> str:
     For a more secure alternative, use :func:`get_secure_login_data`
 
     :param client_id: The Client ID of your Azure App
-    :type client_id: str
     :param redirect_uri: The Redirect URI of your Azure App
-    :type redirect_uri: str
     :return: The url to the website on which the user logs in
     """
     parameters = {
@@ -67,11 +65,8 @@ def get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str
     Prevents Cross-Site Request Forgery attacks and authorization code injection attacks.
 
     :param client_id: The Client ID of your Azure App
-    :type client_id: str
     :param redirect_uri: The Redirect URI of your Azure App
-    :type redirect_uri: str
     :param state: You can use a existing state. If not set, a state will be generated using :func:`generate_state`.
-    :type state: Optional[str]
     """
     code_verifier, code_challenge, code_challenge_method = _generate_pkce_data()
 
@@ -99,7 +94,6 @@ def url_contains_auth_code(url: str) -> bool:
     Checks if the given url contains a authorization code
 
     :param url: The URL to check
-    :type url: str
     """
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query)
@@ -112,8 +106,6 @@ def get_auth_code_from_url(url: str) -> Optional[str]:
     If you want to check the state, use :func:`parse_auth_code_url`, which throws errors instead of returning an optional value.
 
     :param url: The URL to parse
-    :type url: str
-
     :return: The auth code or None if the the code is nonexistent
     """
     parsed = urllib.parse.urlparse(url)
@@ -129,9 +121,7 @@ def parse_auth_code_url(url: str, state: Optional[str]) -> str:
     Parse the authorization code url and checks the state.
 
     :param url: The URL to parse
-    :type url: str
     :param state: If set, the function raises a AssertionError, if the state do no match the state in the URL
-    :type state: Optional[str]
     :return: The auth code
     """
     parsed = urllib.parse.urlparse(url)
@@ -148,15 +138,10 @@ def get_authorization_token(client_id: str, client_secret: Optional[str], redire
     Get the authorization token. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
 
     :param client_id: The Client ID of your Azure App
-    :type client_id: str
     :param client_secret: The Client Secret of your Azure App. This is deprecated and should not been used anymore.
-    :type client_secret: Optional[str]
     :param redirect_uri: The Redirect URI of your Azure App
-    :type redirect_uri: str
     :param auth_code: The Code you get from :func:`parse_auth_code_url`
-    :type auth_code: str
     :param code_verifier: The 3rd entry in the Tuple you get from :func:`get_secure_login_data`
-    :type code_verifier: Optional[str]
     """
     parameters = {
         "client_id": client_id,
@@ -185,13 +170,9 @@ def refresh_authorization_token(client_id: str, client_secret: Optional[str], re
     Refresh the authorization token. This function is called during :func:`complete_refresh`, so you need to use this function ony if :func:`complete_refresh` doesnt't work for you.
 
     :param client_id: The Client ID of your Azure App
-    :type client_id: str
     :param client_secret: The Client Secret of your Azure App. This is deprecated and should not been used anymore.
-    :type client_secret: str
     :param redirect_uri: The Redirect URI of Azure App. This Parameter only exists for backwards compatibility and is not used anymore.
-    :type redirect_uri: Optional[str]
     :param refresh_token: Your refresh token
-    :type refresh_token: str
     """
     parameters = {
         "client_id": client_id,
@@ -219,7 +200,6 @@ def authenticate_with_xbl(access_token: str) -> XBLResponse:
     Authenticate with Xbox Live. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
 
     :param access_token: The Token you get from :func:`get_authorization_token`
-    :type access_token: str
     """
     parameters = {
         "Properties": {
@@ -244,7 +224,6 @@ def authenticate_with_xsts(xbl_token: str) -> XSTSResponse:
     Authenticate with XSTS. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
 
     :param xbl_token: The Token you get from :func:`authenticate_with_xbl`
-    :type xbl_token: str
     """
     parameters = {
         "Properties": {
@@ -270,9 +249,7 @@ def authenticate_with_minecraft(userhash: str, xsts_token: str) -> MinecraftAuth
     Authenticate with Minecraft. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
 
     :param userhash: The Hash you get from :func:`authenticate_with_xbl`
-    :type userhash: str
     :param xsts_token: The Token you get from :func:`authenticate_with_xsts`
-    :type xsts_token: str
     """
     parameters = {
         "identityToken": f"XBL3.0 x={userhash};{xsts_token}"
@@ -291,7 +268,6 @@ def get_store_information(access_token: str) -> MinecraftStoreResponse:
     Get the store information.
 
     :param access_token: The Token you get from :func:`authenticate_with_minecraft`
-    :type access_token: str
     """
     header = {
         "Authorization": f"Bearer {access_token}",
@@ -306,7 +282,6 @@ def get_profile(access_token: str) -> MinecraftProfileResponse:
     Get the profile. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
 
     :param access_token: The Token you get from :func:`authenticate_with_minecraft`
-    :type access_token: str
     """
     header = {
         "Authorization": f"Bearer {access_token}",
@@ -321,15 +296,10 @@ def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: s
     Do the complete login process.
 
     :param client_id: The Client ID of your Azure App
-    :type client_id: str
     :param client_secret: The Client Secret of your Azure App. This is deprecated and should not been used anymore.
-    :type client_secret: Optional[str]
     :param redirect_uri: The Redirect URI of your Azure App
-    :type redirect_uri: str
     :param auth_code: The Code you get from :func:`parse_auth_code_url`
-    :type auth_code: str
     :param code_verifier: The 3rd entry in the Tuple you get from :func:`get_secure_login_data`
-    :type code_verifier: Optional[str]
 
     It returns the following:
 
@@ -376,13 +346,9 @@ def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri:
     Do the complete login process with a refresh token. It returns the same as :func:`complete_login`.
 
     :param client_id: The Client ID of your Azure App
-    :type client_id: str
     :param client_secret: The Client Secret of your Azure App. This is deprecated and should not been used anymore.
-    :type client_secret: str
     :param redirect_uri: The Redirect URI of Azure App. This Parameter only exists for backwards compatibility and is not used anymore.
-    :type redirect_uri: Optional[str]
     :param refresh_token: Your refresh token
-    :type refresh_token: str
 
     Raises a :class:`~minecraft_launcher_lib.exceptions.InvalidRefreshToken` exception when the refresh token is invalid.
     """

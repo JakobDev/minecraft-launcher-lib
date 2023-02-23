@@ -113,13 +113,9 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
     Installs the given Forge version
 
     :param versionid: A Forge Version. You can get a List of Forge versions using :func:`list_forge_versions`
-    :type versionid: str
     :param path: The path to your Minecraft directory
-    :type path: Union[str, os.PathLike]
     :param callback: the same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
-    :type callback: Optional[CallbackDict]
     :param java: A Path to a custom Java executable
-    :type java: Union[str, os.PathLike]]
 
     Raises a :class:`~minecraft_launcher_lib.exceptions.VersionNotFound` exception when the given forge version is not found
     """
@@ -184,9 +180,7 @@ def run_forge_installer(version: str, java: Optional[Union[str, os.PathLike]] = 
     Run the forge installer of the given forge version
 
     :param version: A Forge Version. You can get a List of Forge versions using :func:`list_forge_versions`
-    :type version: str
     :param java: A Path to a custom Java executable
-    :type java: Optional[Union[str, os.PathLike]]
     """
     FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
     temp_file_path = os.path.join(tempfile.gettempdir(), "forge-" + str(random.randrange(1, 100000)) + ".tmp")
@@ -211,7 +205,6 @@ def find_forge_version(vanilla_version: str) -> Optional[str]:
     Find the latest forge version that is compatible to the given vanilla version
 
     :param vanilla_version: A vanilla Minecraft version
-    :type vanilla_version: str
     """
     version_list = list_forge_versions()
     for i in version_list:
@@ -226,7 +219,6 @@ def is_forge_version_valid(forge_version: str) -> bool:
     Checks if a forge version is valid
 
     :param forge_version: A Forge Version
-    :type version: str
     """
     forge_version_list = list_forge_versions()
     return forge_version in forge_version_list
@@ -237,7 +229,6 @@ def supports_automatic_install(forge_version: str) -> bool:
     Checks if install_forge_version() supports the given forge version
 
     :param forge_version: A Forge Version
-    :type version: str
     """
     try:
         vanilla_version, forge = forge_version.split("-")
@@ -256,7 +247,6 @@ def forge_to_installed_version(forge_version: str) -> str:
     Returns the Version under which Forge will be installed from the given Forge version.
 
     :param forge_version: A Forge Version
-    :type version: str
 
     Raises a ValueError if the Version is invalid.
     """

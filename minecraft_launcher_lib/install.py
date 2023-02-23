@@ -137,11 +137,8 @@ def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os
     Installs a minecraft version into the given path. e.g. ``install_version("1.14", "/tmp/minecraft")``. Use :func:`~minecraft_launcher_lib.utils.get_minecraft_directory` to get the default Minecraft directory.
 
     :param versionid: The Minecraft version
-    :type versionid: str
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     :param callback: Some functions that are called to monitor the progress (see below)
-    :type callback: Optional[CallbackDict]
 
     ``callback`` is a dict with functions that are called with arguments to get the progress. You can use it to show the progress to the user.
 

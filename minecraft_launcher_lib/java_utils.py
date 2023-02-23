@@ -12,9 +12,7 @@ def get_java_information(path: Union[str, os.PathLike]) -> JavaInformation:
     Returns Some Information about the given Java Installation
 
     :param path: The Path to the Installation. It must be the Directory. If your Java executbale is e.g. /usr/lib/jvm/java-19-openjdk-amd64/bin/java this Parameter must be /usr/lib/jvm/java-19-openjdk-amd64.
-    :type path: Union[str, os.PathLike]
     :return: A dict with Information about the given java installation
-    :rtype: JavaInformation
 
     Raises a ValueError on the worng Path
 
@@ -70,7 +68,6 @@ def find_system_java_versions() -> List[str]:
     Try to find all Java Versions installed on the System. You can use this to e.g. let the User choose between different Java Versions in a Dropdown.
 
     :return: A List with all Directories of Java Installations
-    :rtype: List[str]
 
     macOS is not supported yet
     """
@@ -89,7 +86,6 @@ def find_system_java_versions_information() -> List[JavaInformation]:
     Same as :func:`find_system_java_version`, but uses :func:`get_java_information` to get some Information about the Installation instead of just proving a Path.
 
     :return: A List with Information of Java Installations
-    :rtype: List[JavaInformation]
 
     macOS is not supported yet
 

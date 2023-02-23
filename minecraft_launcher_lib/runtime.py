@@ -50,7 +50,6 @@ def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> 
     Returns a list of all installed jvm runtimes
 
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     """
     try:
         return os.listdir(os.path.join(minecraft_directory, "runtime"))
@@ -63,11 +62,8 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     Installs the given jvm runtime. callback is the same dict as in the install module.
 
     :param jvm_version: The Name of the JVM version
-    :type jvm_verion: str
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     :param callback: the same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
-    :type callback: Optional[CallbackDict]
     """
     if callback is None:
         callback = {}
@@ -121,9 +117,7 @@ def get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.Pat
     Returns the path to the executable. Returns None if none is found.
 
     :param jvm_version: The Name of the JVM version
-    :type jvm_verion: str
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     """
     java_path = os.path.join(minecraft_directory, "runtime", jvm_version, _get_jvm_platform_string(), jvm_version, "bin", "java")
     if os.path.isfile(java_path):

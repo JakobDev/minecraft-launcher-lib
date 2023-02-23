@@ -113,11 +113,8 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
     Returns the command for running minecraft as list. The given command can be executed with subprocess. Use :func:`~minecraft_launcher_lib.utils.get_minecraft_directory` to get the default Minecraft directory.
 
     :param version: The Minecraft version
-    :type version: str
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     :param options: Some Options (see below)
-    :type options: MinecraftOptions
 
     ``options`` is a dict:
 

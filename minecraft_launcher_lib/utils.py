@@ -48,7 +48,6 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     Returns all installed versions
 
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     """
     try:
         dir_list = os.listdir(os.path.join(minecraft_directory, "versions"))
@@ -74,7 +73,6 @@ def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     Returns all installed versions and all versions that Mojang offers to download
 
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     """
     version_list = []
     version_check = []
@@ -143,9 +141,7 @@ def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike])
     Checks if the given version exists
 
     :param version: A Minecraft version
-    :type version: str
     :param minecraft_directory: The path to your Minecraft directory
-    :type minecraft_directory: Union[str, os.PathLike]
     """
     if os.path.isdir(os.path.join(minecraft_directory, "versions", version)):
         return True
@@ -160,7 +156,6 @@ def get_minecraft_news(page_size: int = 20) -> Articles:
     Get the news from minecraft.net
 
     :param page_size: The Page Size (default 20)
-    :type page_size: int
     """
     parameters = {
         "pageSize": page_size
@@ -176,7 +171,6 @@ def is_vanilla_version(version: str) -> bool:
     Checks if the given version is a vanilla version
 
     :param version: A Minecraft version
-    :type version: str
     """
     for i in get_version_list():
         if i["id"] == version:
