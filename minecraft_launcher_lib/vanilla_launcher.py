@@ -30,6 +30,9 @@ def _is_vanilla_launcher_profile_valid(vanilla_profile: VanillaLauncherProfile) 
     if vanilla_profile.get("gameDirectory") is not None and not isinstance(vanilla_profile.get("gameDirectory"), str):
         return False
 
+    if vanilla_profile.get("javaExecutable") is not None and not isinstance(vanilla_profile.get("javaExecutable"), str):
+        return False
+
     if vanilla_profile.get("javaArguments") is not None:
         try:
             for i in vanilla_profile["javaArguments"]:
@@ -62,7 +65,12 @@ def load_vanilla_launcher_profiles(minecraft_directory: Union[str, os.PathLike])
     for value in data["profiles"].values():
         vanilla_profile: VanillaLauncherProfile = {}
 
-        vanilla_profile["name"] = value["name"]
+        if value["type"] == "latest-release":
+            vanilla_profile["name"] = "Latest release"
+        elif value["type"] == "latest-snapshot":
+            vanilla_profile["name"] = "Latest snapshot"
+        else:
+            vanilla_profile["name"] = value["name"]
 
         if value["lastVersionId"] == "latest-release":
             vanilla_profile["versionType"] = "latest-release"
@@ -75,6 +83,7 @@ def load_vanilla_launcher_profiles(minecraft_directory: Union[str, os.PathLike])
             vanilla_profile["version"] = value["lastVersionId"]
 
         vanilla_profile["gameDirectory"] = value.get("gameDir")
+        vanilla_profile["javaExecutable"] = value.get("javaDir")
 
         if "javaArgs" in value:
             vanilla_profile["javaArguments"] = value["javaArgs"].split(" ")
@@ -110,6 +119,9 @@ def vanilla_launcher_profile_to_minecraft_options(vanilla_profile: VanillaLaunch
 
     if vanilla_profile.get("gameDirectory") is not None:
         options["gameDirectory"] = vanilla_profile["gameDirectory"]
+
+    if vanilla_profile.get("javaExecutable") is not None:
+        options["executablePath"] = vanilla_profile["javaExecutable"]
 
     if vanilla_profile.get("javaArguments") is not None:
         options["jvmArguments"] = vanilla_profile["javaArguments"]
@@ -168,6 +180,9 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
 
     if vanilla_profile.get("gameDirectory") is not None:
         new_profile["gameDir"] = vanilla_profile["gameDirectory"]
+
+    if vanilla_profile.get("javaExecutable") is not None:
+        new_profile["javaDir"] = vanilla_profile["javaExecutable"]
 
     if vanilla_profile.get("javaArguments") is not None:
         new_profile["javaArgs"] = " ".join(vanilla_profile["javaArguments"])

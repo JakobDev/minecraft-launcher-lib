@@ -130,5 +130,6 @@ class VanillaLauncherProfile(TypedDict, total=False):
     version: Optional[str]
     versionType: Literal["latest-release", "latest-snapshot", "custom"]
     gameDirectory: Optional[str]
+    javaExecutable: Optional[str]
     javaArguments: Optional[List[str]]
     customResolution: Optional[VanillaLauncherProfileResolution]
