@@ -241,3 +241,16 @@ def parse_maven_metadata(url: str) -> Dict[str, Union[str, List[str]]]:
     data["latest"] = re.search("(?<=<latest>).*?(?=</latest>)", r.text, re.MULTILINE).group()
     data["versions"] = re.findall("(?<=<version>).*?(?=</version>)", r.text, re.MULTILINE)
     return data
+
+
+def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path: str) -> None:
+    """
+    Extract a file from a zip handler into the given path
+    """
+    try:
+        os.makedirs(os.path.dirname(extract_path))
+    except Exception:
+        pass
+    with handler.open(zip_path, "r") as f:
+        with open(extract_path, "wb") as w:
+            w.write(f.read())

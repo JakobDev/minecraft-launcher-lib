@@ -148,3 +148,19 @@ class VanillaLauncherProfile(TypedDict, total=False):
     javaExecutable: Optional[str]
     javaArguments: Optional[List[str]]
     customResolution: Optional[VanillaLauncherProfileResolution]
+
+
+# mrpack
+
+class MrpackInformation(TypedDict):
+    name: str
+    summary: str
+    versionId: str
+    formatVersion: int
+    minecraftVersion: str
+    optionalFiles: List[str]
+
+
+class MrpackInstallOptions(TypedDict, total=False):
+    optionalFiles: List[str]
+    skipDependenciesInstall: bool

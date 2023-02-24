@@ -114,7 +114,7 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
 
     :param versionid: A Forge Version. You can get a List of Forge versions using :func:`list_forge_versions`
     :param path: The path to your Minecraft directory
-    :param callback: the same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
+    :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
     :param java: A Path to a custom Java executable
 
     Raises a :class:`~minecraft_launcher_lib.exceptions.VersionNotFound` exception when the given forge version is not found

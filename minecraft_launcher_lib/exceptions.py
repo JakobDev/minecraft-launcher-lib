@@ -62,3 +62,28 @@ class InvalidVanillaLauncherProfile(ValueError):
         "The invalid profile"
 
         super().__init__("Invalid VanillaLauncherProfile")
+
+
+class SecurityError(Exception):
+    """
+    Raised when something security related happens
+    """
+    def __init__(self, code: str, message: str) -> None:
+        self.code: str = code
+        "A Code to specify the Error"
+
+        super().__init__(message)
+
+
+class FileOutsideMinecraftDirectory(SecurityError):
+    """
+    Raised when a File should be placed outside the given Minecraft directory
+    """
+    def __init__(self, path: str, minecraft_directory: str) -> None:
+        self.path: str = path
+        "The Path of the File"
+
+        self.minecraft_direcory: str = minecraft_directory
+        "The Minecraft directory of the File"
+
+        super().__init__("FileOutsideMinecraftDirectory", f"Tried to place {path} outside {minecraft_directory}")
