@@ -19,7 +19,7 @@ class VersionNotFound(ValueError):
 
 class UnsupportedVersion(ValueError):
     """
-    This Exception is raised when you try to run :func:`~minecraft_launcher_lib.fabric.install_fabric` with a unsupported version
+    This Exception is raised when you try to run :func:`~minecraft_launcher_lib.fabric.install_fabric` or :func:`~minecraft_launcher_lib.quilt.install_quilt` with a unsupported version
     """
     def __init__(self, version: str) -> None:
         self.version: str = version

@@ -47,6 +47,8 @@ class MinecraftVersionInfo(TypedDict):
     complianceLevel: int
 
 
+# fabric
+
 class FabricMinecraftVersion(TypedDict):
     version: str
     stable: bool
@@ -59,6 +61,18 @@ class FabricLoader(TypedDict):
     version: str
     stable: bool
 
+# quilt
+
+class QuiltMinecraftVersion(TypedDict):
+    version: str
+    stable: bool
+
+
+class QuiltLoader(TypedDict):
+    separator: str
+    build: int
+    maven: str
+    version: str
 
 # ----
 # News
