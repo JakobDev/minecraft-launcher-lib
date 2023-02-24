@@ -61,6 +61,7 @@ class FabricLoader(TypedDict):
     version: str
     stable: bool
 
+
 # quilt
 
 class QuiltMinecraftVersion(TypedDict):
