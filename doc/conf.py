@@ -46,7 +46,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "modules/types_template.rst", "modules/microsoft_types_template.rst"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -82,7 +82,6 @@ add_optional_extension("sphinx_rtd_dark_mode")
 add_optional_extension("sphinx_copybutton")
 
 redirects = {
-    "account": "modules/account.html",
     "command": "modules/command.html",
     "exceptions": "modules/exceptions.html",
     "fabric": "modules/fabric.html",
