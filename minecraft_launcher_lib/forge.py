@@ -12,7 +12,7 @@
 
 forge contains functions for dealing with the Forge modloader
 """
-from ._helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty
+from ._helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty, extract_file_from_zip
 from .install import install_minecraft_version, install_libraries
 from typing import Dict, List, Any, Union, Optional
 from .exceptions import VersionNotFound
@@ -27,19 +27,6 @@ import json
 import os
 
 __all__ = ["install_forge_version", "run_forge_installer", "list_forge_versions", "find_forge_version", "is_forge_version_valid", "supports_automatic_install"]
-
-
-def extract_file(handler: zipfile.ZipFile, zip_path: str, extract_path: str) -> None:
-    """
-    Extract a file from a zip handler into the given path
-    """
-    try:
-        os.makedirs(os.path.dirname(extract_path))
-    except Exception:
-        pass
-    with handler.open(zip_path, "r") as f:
-        with open(extract_path, "wb") as w:
-            w.write(f.read())
 
 
 def get_data_library_path(libname: str, path: str) -> str:
@@ -144,20 +131,20 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
 
     # Extract the version.json
     version_json_path = os.path.join(path, "versions", forge_version_id, forge_version_id + ".json")
-    extract_file(zf, "version.json", version_json_path)
+    extract_file_from_zip(zf, "version.json", version_json_path)
 
     # Extract forge libs from the installer
     forge_lib_path = os.path.join(path, "libraries", "net", "minecraftforge", "forge", versionid)
     try:
-        extract_file(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + ".jar"))
-        extract_file(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + "-universal.jar"))
+        extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + ".jar"))
+        extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + "-universal.jar"))
     except KeyError:
         pass
 
     # Extract the client.lzma
     lzma_path = os.path.join(tempfile.gettempdir(), "lzma-" + str(random.randrange(1, 100000)) + ".tmp")
     try:
-        extract_file(zf, "data/client.lzma", lzma_path)
+        extract_file_from_zip(zf, "data/client.lzma", lzma_path)
     except KeyError:
         pass
 
