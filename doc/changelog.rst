@@ -2,6 +2,18 @@ Changelog
 ==================================================
 
 -------------------------
+6.0
+-------------------------
+- Add :doc:`/modules/vanilla_launcher` module
+- Add :doc:`/modules/mrpack` module
+- Add :doc:`/modules/quilt` module
+- Add :func:`~minecraft_launcher_lib.runtime.get_jvm_runtime_information`
+- Remove account module (deprecated since 4.4 which was released 2022-02-16)
+- Move module documentation into Code
+- Add internal types
+- Refactor Code
+
+-------------------------
 5.3
 -------------------------
 - Move minecraft-launcher-lib to Codeberg
