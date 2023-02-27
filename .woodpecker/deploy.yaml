@@ -1,6 +1,7 @@
 depends_on:
     - lint
     - test
+    - typecheck
 
 pipeline:
     pip_deploy:
