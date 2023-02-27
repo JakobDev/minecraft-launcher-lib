@@ -1,11 +1,12 @@
 import minecraft_launcher_lib
+import pathlib
 import pytest
 
 
-def test_install_minecraft_version_invalid_version(tmpdir):
+def test_install_minecraft_version_invalid_version(tmp_path: pathlib.Path):
     # Checks if the VersionNotFound exception raised
     with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
-        minecraft_launcher_lib.forge.install_forge_version("InvalidVersion", str(tmpdir))
+        minecraft_launcher_lib.forge.install_forge_version("InvalidVersion", str(tmp_path))
 
 
 def test_list_forge_versions():

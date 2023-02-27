@@ -1,4 +1,5 @@
 import minecraft_launcher_lib
+import pathlib
 import pytest
 
 
@@ -43,8 +44,8 @@ def test_get_latest_installer_version():
     assert isinstance(minecraft_launcher_lib.fabric.get_latest_installer_version(), str)
 
 
-def test_install_fabric_exceptions(tmpdir):
+def test_install_fabric_exceptions(tmp_path: pathlib.Path):
     with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
-        minecraft_launcher_lib.fabric.install_fabric("InvalidVersion", tmpdir)
+        minecraft_launcher_lib.fabric.install_fabric("InvalidVersion", tmp_path)
     with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
-        minecraft_launcher_lib.fabric.install_fabric("1.0", tmpdir)
+        minecraft_launcher_lib.fabric.install_fabric("1.0", tmp_path)

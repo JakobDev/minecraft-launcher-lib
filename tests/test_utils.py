@@ -1,10 +1,11 @@
 import minecraft_launcher_lib
 import datetime
+import pathlib
 import json
 import os
 
 
-def create_test_version_file(minecraft_directory: str):
+def create_test_version_file(minecraft_directory: pathlib.Path):
     os.makedirs(os.path.join(minecraft_directory, "versions", "utilstest"))
     with open(os.path.join(minecraft_directory, "versions", "utilstest", "utilstest.json"), "w", encoding="utf-8") as f:
         data = {}
@@ -34,10 +35,10 @@ def test_get_version_list():
         assert isinstance(i["complianceLevel"], int)
 
 
-def test_get_installed_versions(tmpdir):
-    create_test_version_file(tmpdir)
-    version_list = minecraft_launcher_lib.utils.get_installed_versions(tmpdir)
-    version_list = minecraft_launcher_lib.utils.get_installed_versions(str(tmpdir))
+def test_get_installed_versions(tmp_path: pathlib.Path):
+    create_test_version_file(tmp_path)
+    version_list = minecraft_launcher_lib.utils.get_installed_versions(tmp_path)
+    version_list = minecraft_launcher_lib.utils.get_installed_versions(str(tmp_path))
     for i in version_list:
         assert isinstance(i["id"], str)
         assert isinstance(i["type"], str)
@@ -46,10 +47,10 @@ def test_get_installed_versions(tmpdir):
     assert len(minecraft_launcher_lib.utils.get_installed_versions("not_existing_directory")) == 0
 
 
-def test_get_available_versions(tmpdir):
-    create_test_version_file(tmpdir)
-    version_list = minecraft_launcher_lib.utils.get_available_versions(tmpdir)
-    version_list = minecraft_launcher_lib.utils.get_available_versions(str(tmpdir))
+def test_get_available_versions(tmp_path: pathlib.Path):
+    create_test_version_file(tmp_path)
+    version_list = minecraft_launcher_lib.utils.get_available_versions(tmp_path)
+    version_list = minecraft_launcher_lib.utils.get_available_versions(str(tmp_path))
     for i in version_list:
         assert isinstance(i["id"], str)
         assert isinstance(i["type"], str)
@@ -73,14 +74,14 @@ def test_generate_test_options():
     assert isinstance(options["token"], str)
 
 
-def test_is_version_valid(tmpdir):
-    create_test_version_file(tmpdir)
-    assert minecraft_launcher_lib.utils.is_version_valid("1.16", tmpdir) is True
-    assert minecraft_launcher_lib.utils.is_version_valid("1.16", str(tmpdir)) is True
-    assert minecraft_launcher_lib.utils.is_version_valid("utilstest", tmpdir) is True
-    assert minecraft_launcher_lib.utils.is_version_valid("utilstest", str(tmpdir)) is True
-    assert minecraft_launcher_lib.utils.is_version_valid("Test123", str(tmpdir)) is False
-    assert minecraft_launcher_lib.utils.is_version_valid("Test123", tmpdir) is False
+def test_is_version_valid(tmp_path: pathlib.Path):
+    create_test_version_file(tmp_path)
+    assert minecraft_launcher_lib.utils.is_version_valid("1.16", tmp_path) is True
+    assert minecraft_launcher_lib.utils.is_version_valid("1.16", str(tmp_path)) is True
+    assert minecraft_launcher_lib.utils.is_version_valid("utilstest", tmp_path) is True
+    assert minecraft_launcher_lib.utils.is_version_valid("utilstest", str(tmp_path)) is True
+    assert minecraft_launcher_lib.utils.is_version_valid("Test123", str(tmp_path)) is False
+    assert minecraft_launcher_lib.utils.is_version_valid("Test123", tmp_path) is False
 
 
 def test_get_minecraft_news():
