@@ -1,0 +1,6 @@
+pipeline:
+    mypy:
+        image: python:latest
+        commands:
+              - pip install mypy
+              - mypy minecraft_launcher_lib
