@@ -1,5 +1,6 @@
 "utils contains a few functions for helping you that doesn't fit in any other category"
 from .types import Articles, MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
+from ._internal_types.shared_types import ClientJson, VersionListManifestJson
 from ._helper import get_requests_response_cache
 from typing import List, Union
 from datetime import datetime
@@ -36,7 +37,7 @@ def get_version_list() -> List[MinecraftVersionInfo]:
     """
     Returns all versions that Mojang offers to download
     """
-    vlist = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
+    vlist: VersionListManifestJson = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
     returnlist: List[MinecraftVersionInfo] = []
     for i in vlist["versions"]:
         returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": datetime.fromisoformat(i["releaseTime"]), "complianceLevel": i["complianceLevel"]})
@@ -58,13 +59,16 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     for i in dir_list:
         if not os.path.isfile(os.path.join(minecraft_directory, "versions", i, i + ".json")):
             continue
+
         with open(os.path.join(minecraft_directory, "versions", i, i + ".json"), "r", encoding="utf-8") as f:
-            version_data = json.load(f)
+            version_data: ClientJson = json.load(f)
+
         try:
             release_time = datetime.fromisoformat(version_data["releaseTime"])
         except ValueError:
             # In case some custom client has a invalid time
             release_time = datetime.fromtimestamp(0)
+
         version_list.append({"id": version_data["id"], "type": version_data["type"], "releaseTime": release_time, "complianceLevel": version_data.get("complianceLevel", 0)})
     return version_list
 
@@ -77,12 +81,15 @@ def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     """
     version_list = []
     version_check = []
+
     for i in get_version_list():
         version_list.append(i)
         version_check.append(i["id"])
+
     for i in get_installed_versions(minecraft_directory):
         if not i["id"] in version_check:
             version_list.append(i)
+
     return version_list
 
 

@@ -1,4 +1,5 @@
 "vanilla_launcher contains some functions for interacting with the Vanilla Minecraft Launcher"
+from ._internal_types.vanilla_launcher_types import VanillaLauncherProfilesJson, VanillaLauncherProfilesJsonProfile
 from .types import VanillaLauncherProfile, MinecraftOptions
 from .exceptions import InvalidVanillaLauncherProfile
 from .utils import get_latest_version
@@ -33,18 +34,18 @@ def _is_vanilla_launcher_profile_valid(vanilla_profile: VanillaLauncherProfile) 
     if vanilla_profile.get("javaExecutable") is not None and not isinstance(vanilla_profile.get("javaExecutable"), str):
         return False
 
-    if vanilla_profile.get("javaArguments") is not None:
+    if java_arguments := vanilla_profile.get("javaArguments"):
         try:
-            for i in vanilla_profile["javaArguments"]:
+            for i in java_arguments:
                 assert isinstance(i, str)
         except Exception:
             return False
 
-    if vanilla_profile.get("customResolution") is not None:
+    if custom_resolution := vanilla_profile.get("customResolution"):
         try:
-            assert len(vanilla_profile["customResolution"]) == 2
-            assert isinstance(vanilla_profile["customResolution"]["height"], int)
-            assert isinstance(vanilla_profile["customResolution"]["width"], int)
+            assert len(custom_resolution) == 2
+            assert isinstance(custom_resolution["height"], int)
+            assert isinstance(custom_resolution["width"], int)
         except Exception:
             return False
 
@@ -59,7 +60,7 @@ def load_vanilla_launcher_profiles(minecraft_directory: Union[str, os.PathLike])
     :return: A List with the Profiles
     """
     with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "r", encoding="utf-8") as f:
-        data = json.load(f)
+        data: VanillaLauncherProfilesJson = json.load(f)
 
     profile_list: List[VanillaLauncherProfile] = []
     for value in data["profiles"].values():
@@ -117,19 +118,19 @@ def vanilla_launcher_profile_to_minecraft_options(vanilla_profile: VanillaLaunch
 
     options: MinecraftOptions = {}
 
-    if vanilla_profile.get("gameDirectory") is not None:
-        options["gameDirectory"] = vanilla_profile["gameDirectory"]
+    if game_directory := vanilla_profile.get("gameDirectory"):
+        options["gameDirectory"] = game_directory
 
-    if vanilla_profile.get("javaExecutable") is not None:
-        options["executablePath"] = vanilla_profile["javaExecutable"]
+    if java_executable := vanilla_profile.get("javaExecutable"):
+        options["executablePath"] = java_executable
 
-    if vanilla_profile.get("javaArguments") is not None:
-        options["jvmArguments"] = vanilla_profile["javaArguments"]
+    if java_arguments := vanilla_profile.get("javaArguments"):
+        options["jvmArguments"] = java_arguments
 
-    if vanilla_profile.get("customResolution") is not None:
+    if custom_resolution := vanilla_profile.get("customResolution"):
         options["customResolution"] = True
-        options["resolutionWidth"] = str(vanilla_profile["customResolution"]["width"])
-        options["resolutionHeight"] = str(vanilla_profile["customResolution"]["height"])
+        options["resolutionWidth"] = str(custom_resolution["width"])
+        options["resolutionHeight"] = str(custom_resolution["height"])
 
     return options
 
@@ -151,7 +152,7 @@ def get_vanilla_launcher_profile_version(vanilla_profile: VanillaLauncherProfile
     elif vanilla_profile["versionType"] == "latest-snapshot":
         return get_latest_version()["snapshot"]
     elif vanilla_profile["versionType"] == "custom":
-        return vanilla_profile["version"]
+        return vanilla_profile["version"]  # type: ignore
 
 
 def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], vanilla_profile: VanillaLauncherProfile) -> None:
@@ -166,9 +167,9 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
         raise InvalidVanillaLauncherProfile(vanilla_profile)
 
     with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "r", encoding="utf-8") as f:
-        data = json.load(f)
+        data: VanillaLauncherProfilesJson = json.load(f)
 
-    new_profile = {}
+    new_profile: VanillaLauncherProfilesJsonProfile = {}
     new_profile["name"] = vanilla_profile["name"]
 
     if vanilla_profile["versionType"] == "latest-release":
@@ -178,19 +179,19 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
     elif vanilla_profile["versionType"] == "custom":
         new_profile["lastVersionId"] = "version"
 
-    if vanilla_profile.get("gameDirectory") is not None:
-        new_profile["gameDir"] = vanilla_profile["gameDirectory"]
+    if game_directory := vanilla_profile.get("gameDirectory"):
+        new_profile["gameDir"] = game_directory
 
-    if vanilla_profile.get("javaExecutable") is not None:
-        new_profile["javaDir"] = vanilla_profile["javaExecutable"]
+    if java_executable := vanilla_profile.get("javaExecutable"):
+        new_profile["javaDir"] = java_executable
 
-    if vanilla_profile.get("javaArguments") is not None:
-        new_profile["javaArgs"] = " ".join(vanilla_profile["javaArguments"])
+    if java_arguments := vanilla_profile.get("javaArguments"):
+        new_profile["javaArgs"] = " ".join(java_arguments)
 
-    if vanilla_profile.get("customResolution") is not None:
+    if custom_resolution := vanilla_profile.get("customResolution"):
         new_profile["resolution"] = {
-            "height": vanilla_profile["customResolution"]["height"],
-            "width": vanilla_profile["customResolution"]["width"]
+            "height": custom_resolution["height"],
+            "width": custom_resolution["width"]
         }
 
     new_profile["created"] = datetime.datetime.now().isoformat()

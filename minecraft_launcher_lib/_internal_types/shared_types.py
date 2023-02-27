@@ -82,4 +82,20 @@ class ClientJson(TypedDict, total=False):
     releaseTime: str
     time: str
     type: str
+    complianceLevel: int
     inheritsFrom: str
+
+
+class _VersionListManifestJsonVersion(TypedDict):
+    id: str
+    type: str
+    url: str
+    time: str
+    releaseTime: str
+    sha1: str
+    complianceLevel: int
+
+
+class VersionListManifestJson(TypedDict):
+    latest: Dict[Literal["release", "snapshot"], str]
+    versions: List[_VersionListManifestJsonVersion]
