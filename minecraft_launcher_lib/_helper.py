@@ -182,7 +182,7 @@ def get_os_version() -> str:
     This doesn't work on mac yet
     """
     if platform.system() == "Windows":
-        ver = sys.getwindowsversion()
+        ver = sys.getwindowsversion()  # type: ignore
         return f"{ver.major}.{ver.minor}"
     elif platform.system == "Darwin":
         return ""
