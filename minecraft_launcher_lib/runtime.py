@@ -1,9 +1,11 @@
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
+from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson
 from ._helper import get_user_agent, download_file, empty
+from .types import CallbackDict, JvmRuntimeInformation
 from typing import List, Union, Optional
 from .exceptions import VersionNotFound
-from .types import CallbackDict
 import subprocess
+import datetime
 import requests
 import platform
 import os
@@ -38,9 +40,9 @@ def get_jvm_runtimes() -> List[str]:
     """
     Returns a list of all jvm runtimes
     """
-    manifest_data = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
+    manifest_data: RuntimeListJson = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
     jvm_list = []
-    for key, value in manifest_data[_get_jvm_platform_string()].items():
+    for key in manifest_data[_get_jvm_platform_string()].keys():
         jvm_list.append(key)
     return jvm_list
 
@@ -64,10 +66,12 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     :param jvm_version: The Name of the JVM version
     :param minecraft_directory: The path to your Minecraft directory
     :param callback: the same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
+    :raises VersionNotFound: The given JVM Version was not found
     """
     if callback is None:
         callback = {}
-    manifest_data = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
+
+    manifest_data: RuntimeListJson = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
     platform_string = _get_jvm_platform_string()
     # Check if the jvm version exists
     if jvm_version not in manifest_data[platform_string]:
@@ -75,7 +79,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     # Check if there is a platform manifest
     if len(manifest_data[platform_string][jvm_version]) == 0:
         return
-    platform_manifest = requests.get(manifest_data[platform_string][jvm_version][0]["manifest"]["url"], headers={"user-agent": get_user_agent()}).json()
+    platform_manifest: PlatformManifestJson = requests.get(manifest_data[platform_string][jvm_version][0]["manifest"]["url"], headers={"user-agent": get_user_agent()}).json()
     base_path = os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, jvm_version)
     # Download all files of the runtime
     callback.get("setMax", empty)(len(platform_manifest["files"]) - 1)
@@ -129,3 +133,24 @@ def get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.Pat
         return java_path
     else:
         return None
+
+
+def get_jvm_runtime_information(jvm_version: str) -> JvmRuntimeInformation:
+    """
+    Returns some Information about a JVM Version
+
+    :param jvm_version: A JVM Version
+    :raises VersionNotFound: The given JVM Version was not found
+    :return: A Dict with Information
+    """
+    manifest_data: RuntimeListJson = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
+    platform_string = _get_jvm_platform_string()
+
+    # Check if the jvm version exists
+    if jvm_version not in manifest_data[platform_string]:
+        raise VersionNotFound(jvm_version)
+
+    return {
+        "name": manifest_data[platform_string][jvm_version][0]["version"]["name"],
+        "released": datetime.datetime.fromisoformat(manifest_data[platform_string][jvm_version][0]["version"]["released"])
+    }

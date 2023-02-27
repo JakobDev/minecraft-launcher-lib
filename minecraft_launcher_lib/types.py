@@ -164,3 +164,10 @@ class MrpackInformation(TypedDict):
 class MrpackInstallOptions(TypedDict, total=False):
     optionalFiles: List[str]
     skipDependenciesInstall: bool
+
+
+# runtime
+
+class JvmRuntimeInformation(TypedDict):
+    name: str
+    released: datetime.datetime
