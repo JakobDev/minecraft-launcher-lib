@@ -1,7 +1,8 @@
 "natives contains a function for extracting natives libraries to a specific folder"
+from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
+from typing import List, Dict, Literal, Union
 from .exceptions import VersionNotFound
 from ._helper import parse_rule_list
-from typing import Dict, Any, Union
 import platform
 import zipfile
 import json
@@ -10,7 +11,7 @@ import os
 __all__ = ["extract_natives"]
 
 
-def get_natives(data: Dict[str, Any]) -> str:
+def get_natives(data: ClientJsonLibrary) -> str:
     """
     Returns the native part from the json data
     """
@@ -18,6 +19,7 @@ def get_natives(data: Dict[str, Any]) -> str:
         arch_type = "32"
     else:
         arch_type = "64"
+
     if "natives" in data:
         if platform.system() == 'Windows':
             if "windows" in data["natives"]:
@@ -38,7 +40,7 @@ def get_natives(data: Dict[str, Any]) -> str:
         return ""
 
 
-def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[str, Any]) -> None:
+def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[Literal["exclude"], List[str]]) -> None:
     """
     Unpack natives
     """
@@ -46,6 +48,7 @@ def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[st
         os.mkdir(extract_path)
     except Exception:
         pass
+
     zf = zipfile.ZipFile(filename, "r")
     for i in zf.namelist():
         for e in extract_data["exclude"]:
@@ -68,16 +71,21 @@ def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path:
     """
     if not os.path.isfile(os.path.join(path, "versions", versionid, versionid + ".json")):
         raise VersionNotFound(versionid)
+
     with open(os.path.join(path, "versions", versionid, versionid + ".json")) as f:
-        data = json.load(f)
+        data: ClientJson = json.load(f)
+
     for count, i in enumerate(data["libraries"]):
         # Check, if the rules allow this lib for the current system
-        if not parse_rule_list(i, "rules", {}):
+        if "rules" in i and not parse_rule_list(i["rules"], {}):
             continue
+
         current_path = os.path.join(path, "libraries")
         lib_path, name, version = i["name"].split(":")
+
         for lib_part in lib_path.split("."):
             current_path = os.path.join(current_path, lib_part)
+
         current_path = os.path.join(current_path, name, version)
         native = get_natives(i)
         if native == "":

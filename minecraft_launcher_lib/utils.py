@@ -37,7 +37,7 @@ def get_version_list() -> List[MinecraftVersionInfo]:
     Returns all versions that Mojang offers to download
     """
     vlist = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
-    returnlist = []
+    returnlist: List[MinecraftVersionInfo] = []
     for i in vlist["versions"]:
         returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": datetime.fromisoformat(i["releaseTime"]), "complianceLevel": i["complianceLevel"]})
     return returnlist
@@ -53,7 +53,8 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
         dir_list = os.listdir(os.path.join(minecraft_directory, "versions"))
     except FileNotFoundError:
         return []
-    version_list = []
+
+    version_list: List[MinecraftVersionInfo] = []
     for i in dir_list:
         if not os.path.isfile(os.path.join(minecraft_directory, "versions", i, i + ".json")):
             continue
@@ -90,14 +91,14 @@ def get_java_executable() -> str:
     Tries the find out the path to the default java executable
     """
     if platform.system() == "Windows":
-        if os.getenv("JAVA_HOME"):
-            return os.path.join(os.getenv("JAVA_HOME"), "bin", "javaw.exe")
+        if java_home := os.getenv("JAVA_HOME"):
+            return os.path.join(java_home, "bin", "javaw.exe")
         elif os.path.isfile(r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\javaw.exe"):
             return r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\javaw.exe"
         else:
             return shutil.which("javaw") or "javaw"
-    elif os.getenv("JAVA_HOME"):
-        return os.path.join(os.getenv("JAVA_HOME"), "bin", "java")
+    elif java_home := os.getenv("JAVA_HOME"):
+        return os.path.join(java_home, "bin", "java")
     elif platform.system() == "Darwin":
         return shutil.which("java") or "java"
     else:

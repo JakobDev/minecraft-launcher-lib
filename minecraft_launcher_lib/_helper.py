@@ -1,5 +1,7 @@
 "This module contains some helper functions. It should nt be used outside minecraft_launcher_lib"
-from typing import List, Dict, Union, Optional, Any
+from ._internal_types.helper_types import RequestsResponseCache, MavenMetadata
+from ._internal_types.shared_types import ClientJson, ClientJsonRule
+from typing import List, Dict, Literal, Optional, Any
 from .types import MinecraftOptions, CallbackDict
 import datetime
 import requests
@@ -52,7 +54,7 @@ def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Option
     return True
 
 
-def parse_single_rule(rule: Dict[str, Any], options: MinecraftOptions) -> bool:
+def parse_single_rule(rule: ClientJsonRule, options: MinecraftOptions) -> bool:
     """
     Parse a single rule from the versions.json
     """
@@ -60,59 +62,62 @@ def parse_single_rule(rule: Dict[str, Any], options: MinecraftOptions) -> bool:
         returnvalue = False
     elif rule["action"] == "disallow":
         returnvalue = True
-    if "os" in rule:
-        for key, value in rule["os"].items():
-            if key == "name":
-                if value == "windows" and platform.system() != 'Windows':
-                    return returnvalue
-                elif value == "osx" and platform.system() != 'Darwin':
-                    return returnvalue
-                elif value == "linux" and platform.system() != 'Linux':
-                    return returnvalue
-            elif key == "arch":
-                if value == "x86" and platform.architecture()[0] != "32bit":
-                    return returnvalue
-            elif key == "version":
-                if not re.match(value, get_os_version()):
-                    return returnvalue
-    if "features" in rule:
-        for key, value in rule["features"].items():
-            if key == "has_custom_resolution" and not options.get("customResolution", False):
+
+    for os_key, os_value in rule.get("os", {}).items():
+        if os_key == "name":
+            if os_value == "windows" and platform.system() != 'Windows':
                 return returnvalue
-            elif key == "is_demo_user" and not options.get("demo", False):
+            elif os_value == "osx" and platform.system() != 'Darwin':
                 return returnvalue
+            elif os_value == "linux" and platform.system() != 'Linux':
+                return returnvalue
+        elif os_key == "arch":
+            if os_value == "x86" and platform.architecture()[0] != "32bit":
+                return returnvalue
+        elif os_key == "version":
+            if not re.match(os_value, get_os_version()):
+                return returnvalue
+
+    for features_key in rule.get("features", {}).keys():
+        if features_key == "has_custom_resolution" and not options.get("customResolution", False):
+            return returnvalue
+        elif features_key == "is_demo_user" and not options.get("demo", False):
+            return returnvalue
+
     return not returnvalue
 
 
-def parse_rule_list(data: Dict[str, Any], rule_string: str, options: MinecraftOptions) -> bool:
+def parse_rule_list(rules: List[ClientJsonRule], options: MinecraftOptions) -> bool:
     """
     Parse a list of rules
     """
-    if rule_string not in data:
-        return True
-    for i in data[rule_string]:
+    for i in rules:
         if not parse_single_rule(i, options):
             return False
+
     return True
 
 
-def inherit_json(original_data: Dict[str, Any], path: str) -> Dict[str, Any]:
+def inherit_json(original_data: ClientJson, path: str) -> ClientJson:
     """
     Implement the inheritsFrom function
     See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
     """
     inherit_version = original_data["inheritsFrom"]
+
     with open(os.path.join(path, "versions", inherit_version, inherit_version + ".json")) as f:
-        new_data = json.load(f)
+        new_data: ClientJson = json.load(f)
+
     for key, value in original_data.items():
         if isinstance(value, list) and isinstance(new_data.get(key, None), list):
-            new_data[key] = value + new_data[key]
+            new_data[key] = value + new_data[key]  # type: ignore
         elif isinstance(value, dict) and isinstance(new_data.get(key, None), dict):
             for a, b in value.items():
                 if isinstance(b, list):
-                    new_data[key][a] = new_data[key][a] + b
+                    new_data[key][a] = new_data[key][a] + b  # type: ignore
         else:
-            new_data[key] = value
+            new_data[key] = value  # type: ignore
+
     return new_data
 
 
@@ -201,7 +206,7 @@ def get_user_agent() -> str:
             return _user_agent_cache
 
 
-def get_classpath_separator() -> str:
+def get_classpath_separator() -> Literal[":", ";"]:
     """
     Returns the classpath seperator for the current os
     """
@@ -211,7 +216,7 @@ def get_classpath_separator() -> str:
         return ":"
 
 
-_requests_response_cache = {}
+_requests_response_cache: Dict[str, RequestsResponseCache] = {}
 
 
 def get_requests_response_cache(url: str) -> requests.models.Response:
@@ -222,25 +227,26 @@ def get_requests_response_cache(url: str) -> requests.models.Response:
     if url not in _requests_response_cache or (datetime.datetime.now() - _requests_response_cache[url]["datetime"]).total_seconds() / 60 / 60 >= 1:
         r = requests.get(url, headers={"user-agent": get_user_agent()})
         if r.status_code == 200:
-            _requests_response_cache[url] = {}
-            _requests_response_cache[url]["response"] = r
-            _requests_response_cache[url]["datetime"] = datetime.datetime.now()
+            _requests_response_cache[url] = {
+                "response": r,
+                "datetime": datetime.datetime.now()
+            }
         return r
     else:
         return _requests_response_cache[url]["response"]
 
 
-def parse_maven_metadata(url: str) -> Dict[str, Union[str, List[str]]]:
+def parse_maven_metadata(url: str) -> MavenMetadata:
     """
     Parses a maven metadata file
     """
     r = get_requests_response_cache(url)
-    data = {}
     # The structure of the metadata file is simple. So you don't need a XML parser. It can be parsed using RegEx.
-    data["release"] = re.search("(?<=<release>).*?(?=</release>)", r.text, re.MULTILINE).group()
-    data["latest"] = re.search("(?<=<latest>).*?(?=</latest>)", r.text, re.MULTILINE).group()
-    data["versions"] = re.findall("(?<=<version>).*?(?=</version>)", r.text, re.MULTILINE)
-    return data
+    return {
+        "release": re.search("(?<=<release>).*?(?=</release>)", r.text, re.MULTILINE).group(),  # type: ignore
+        "latest": re.search("(?<=<latest>).*?(?=</latest>)", r.text, re.MULTILINE).group(),  # type: ignore
+        "versions": re.findall("(?<=<version>).*?(?=</version>)", r.text, re.MULTILINE)
+    }
 
 
 def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path: str) -> None:

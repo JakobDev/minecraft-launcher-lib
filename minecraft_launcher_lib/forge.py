@@ -12,13 +12,13 @@
 
 forge contains functions for dealing with the Forge modloader
 """
-from ._helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty, extract_file_from_zip
+from ._helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty, extract_file_from_zip, get_classpath_separator
 from .install import install_minecraft_version, install_libraries
-from typing import Dict, List, Any, Union, Optional
+from ._internal_types.forge_types import ForgeInstallProfile
+from typing import List, Union, Optional
 from .exceptions import VersionNotFound
 from .types import CallbackDict
 import subprocess
-import platform
 import tempfile
 import random
 import zipfile
@@ -47,27 +47,29 @@ def get_data_library_path(libname: str, path: str) -> str:
     return libpath
 
 
-def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: CallbackDict, java: str) -> None:
+def forge_processors(data: ForgeInstallProfile, minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: CallbackDict, java: str) -> None:
     """
     Run the processors of the install_profile.json
     """
     path = str(minecraft_directory)
+
     argument_vars = {"{MINECRAFT_JAR}": os.path.join(path, "versions", data["minecraft"], data["minecraft"] + ".jar")}
-    for key, value in data["data"].items():
-        if value["client"].startswith("[") and value["client"].endswith("]"):
-            argument_vars["{" + key + "}"] = get_data_library_path(value["client"], path)
+    for data_key, data_value in data["data"].items():
+        if data_value["client"].startswith("[") and data_value["client"].endswith("]"):
+            argument_vars["{" + data_key + "}"] = get_data_library_path(data_value["client"], path)
         else:
-            argument_vars["{" + key + "}"] = value["client"]
+            argument_vars["{" + data_key + "}"] = data_value["client"]
+
     root_path = os.path.join(tempfile.gettempdir(), "forge-root-" + str(random.randrange(1, 100000)))
     argument_vars["{INSTALLER}"] = installer_path
     argument_vars["{BINPATCH}"] = lzma_path
     argument_vars["{ROOT}"] = root_path
     argument_vars["{SIDE}"] = "client"
-    if platform.system() == "Windows":
-        classpath_seperator = ";"
-    else:
-        classpath_seperator = ":"
+
+    classpath_seperator = get_classpath_separator()
+
     callback.get("setMax", empty)(len(data["processors"]))
+
     for count, i in enumerate(data["processors"]):
         if "client" not in i.get("sides", ["client"]):
             # Skip server side only processors
@@ -86,11 +88,12 @@ def forge_processors(data: Dict[str, Any], minecraft_directory: Union[str, os.Pa
                 command.append(get_library_path(var[1:-1], path))
             else:
                 command.append(var)
-        for key, value in argument_vars.items():
+        for argument_key, argument_value in argument_vars.items():
             for pos in range(len(command)):
-                command[pos] = command[pos].replace(key, value)
+                command[pos] = command[pos].replace(argument_key, argument_value)
         subprocess.call(command)
         callback.get("setProgress", empty)(count)
+
     if os.path.exists(root_path):
         shutil.rmtree(root_path)
 
@@ -120,14 +123,15 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
     # Read the install_profile.json
     with zf.open("install_profile.json", "r") as f:
         version_content = f.read()
-    version_data = json.loads(version_content)
+
+    version_data: ForgeInstallProfile = json.loads(version_content)
     forge_version_id = version_data["version"]
 
     # Make sure, the base version is installed
     install_minecraft_version(version_data["minecraft"], path, callback=callback)
 
     # Install all needed libs from install_profile.json
-    install_libraries(version_data, path, callback)
+    install_libraries(version_data["minecraft"], version_data["libraries"], str(path), callback)
 
     # Extract the version.json
     version_json_path = os.path.join(path, "versions", forge_version_id, forge_version_id + ".json")

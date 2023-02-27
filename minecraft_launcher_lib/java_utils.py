@@ -28,10 +28,10 @@ def get_java_information(path: Union[str, os.PathLike]) -> JavaInformation:
             raise ValueError(os.path.abspath(os.path.join(path, "bin", "java")) + " was not found")
 
     lines = subprocess.run([os.path.join(path, "bin", "java"), "-showversion"], capture_output=True, text=True).stderr.splitlines()
-    information: JavaInformation = {}
+    information: JavaInformation = {}  # type: ignore
     information["path"] = str(path)
     information["name"] = os.path.basename(path)
-    information["version"] = re.search(r'(?<=version ")[\d|\.|_]+(?=")', lines[0]).group()
+    information["version"] = re.search(r'(?<=version ")[\d|\.|_]+(?=")', lines[0]).group()  # type: ignore
     information["is_64bit"] = "64-Bit" in lines[2]
     information["openjdk"] = lines[0].startswith("openjdk")
 

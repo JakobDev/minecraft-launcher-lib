@@ -49,7 +49,7 @@ def _generate_pkce_data() -> Tuple[str, str, Literal["plain", "S256"]]:
     code_verifier = secrets.token_urlsafe(128)[:128]
     code_challenge = urlsafe_b64encode(sha256(code_verifier.encode("ascii")).digest()).decode("ascii")[:-1]
     code_challenge_method = "S256"
-    return code_verifier, code_challenge, code_challenge_method
+    return code_verifier, code_challenge, cast(Literal["plain", "S256"], code_challenge_method)
 
 
 def generate_state() -> str:

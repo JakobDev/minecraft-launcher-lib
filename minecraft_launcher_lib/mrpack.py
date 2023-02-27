@@ -43,7 +43,7 @@ def get_mrpack_information(path: Union[str, os.PathLike]) -> MrpackInformation:
         with zf.open("modrinth.index.json", "r") as f:
             index: MrpackIndex = json.load(f)
 
-            information: MrpackInformation = {}
+            information: MrpackInformation = {}  # type: ignore
             information["name"] = index["name"]
             information["summary"] = index.get("summary", "")
             information["versionId"] = index["versionId"]

@@ -1,21 +1,24 @@
 __pycache__/
 
-#setup.py
+# setup.py
 build/
 dist/
 minecraft_launcher_lib.egg-info/
 
-#doc
+# doc
 doc/_build
 doc/_static
 doc/examples
 doc/modules
 
-#logs
+# logs
 logs/
 
-#tests
+# tests
 .pytest_cache/
 
-#pycharm
+# pycharm
 .idea/
+
+# mypy
+.mypy_cache/
