@@ -61,12 +61,14 @@ Features:
 - Easy installing
 - Get command to run Minecraft
 - Login to Microsoft account
-- Support Forge, Fabric and Liteloader
+- Supports [Forge](https://minecraftforge.net), [Fabric](https://fabricmc.net), [Quilt](https://quiltmc.org) and Liteloader
 - Old versions like alpha or beta supported
 - All functions have type annotations and docstrings
 - Only depents on [requests](https://pypi.org/project/requests)
 - Supports [PyPy](https://www.pypy.org)
 - Full Documention with tutorial online available
+- Supports reading and writing profiles of the Vanilla Launcher
+- Install of [mrpack modpacks](https://docs.modrinth.com/docs/modpacks/format_definition)
 - All public APIs are static typed
 - Examples available
 - OpenSource
