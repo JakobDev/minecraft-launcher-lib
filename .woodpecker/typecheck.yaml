@@ -2,5 +2,5 @@ pipeline:
     mypy:
         image: python:latest
         commands:
-              - pip install mypy
+              - pip install requests mypy
               - mypy minecraft_launcher_lib
