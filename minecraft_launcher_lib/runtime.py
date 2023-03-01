@@ -1,6 +1,6 @@
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
 from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson
-from ._helper import get_user_agent, download_file, empty
+from ._helper import get_user_agent, download_file, empty, get_sha1_hash
 from .types import CallbackDict, JvmRuntimeInformation
 from typing import List, Union, Optional
 from .exceptions import VersionNotFound
@@ -85,6 +85,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     callback.get("setMax", empty)(len(platform_manifest["files"]) - 1)
     count = 0
     session = requests.session()
+    file_list: List[str] = []
     for key, value in platform_manifest["files"].items():
         current_path = os.path.join(base_path, key)
         if value["type"] == "file":
@@ -99,6 +100,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
                     subprocess.run(["chmod", "+x", current_path])
                 except FileNotFoundError:
                     pass
+            file_list.append(key)
         elif value["type"] == "directory":
             try:
                 os.makedirs(current_path)
@@ -111,9 +113,19 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
                 pass
         callback.get("setProgress", empty)(count)
         count += 1
+
     # Create the .version file
     with open(os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, ".version"), "w", encoding="utf-8") as f:
         f.write(manifest_data[platform_string][jvm_version][0]["version"]["name"])
+
+    # Writes the .sha1 file
+    # It has the structure {path} /#// {sha1} {creation time in nanoseconds}
+    with open(os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, f"{jvm_version}.sha1"), "w", encoding="utf-8") as f:
+        for current_file in file_list:
+            current_path = os.path.join(base_path, current_file)
+            ctime = os.stat(current_path).st_ctime_ns
+            sha1 = get_sha1_hash(current_path)
+            f.write(f"{current_file} /#// {sha1} {ctime}\n")
 
 
 def get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[str]:
