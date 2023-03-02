@@ -55,4 +55,3 @@ def test_InvalidChecksum():
     assert ex.expected_checksum == "expected"
     assert ex.actual_checksum == "actual"
     assert isinstance(ex, minecraft_launcher_lib.exceptions.SecurityError)
-
