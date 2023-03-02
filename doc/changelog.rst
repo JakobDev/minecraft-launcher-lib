@@ -4,10 +4,11 @@ Changelog
 -------------------------
 6.0
 -------------------------
-- Add :doc:`/modules/vanilla_launcher` module
-- Add :doc:`/modules/mrpack` module
-- Add :doc:`/modules/quilt` module
-- Add :func:`~minecraft_launcher_lib.runtime.get_jvm_runtime_information`
+- Added :doc:`/modules/vanilla_launcher` module
+- Added :doc:`/modules/mrpack` module
+- Added :doc:`/modules/quilt` module
+- Added :func:`~minecraft_launcher_lib.runtime.get_jvm_runtime_information`
+- Added :class:`~minecraft_launcher_lib.exceptions.InvalidChecksum` exception
 - Remove account module (deprecated since 4.4 which was released 2022-02-16)
 - Move module documentation into Code
 - Add internal types

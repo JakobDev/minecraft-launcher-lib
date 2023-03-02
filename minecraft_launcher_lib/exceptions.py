@@ -72,6 +72,9 @@ class SecurityError(Exception):
         self.code: str = code
         "A Code to specify the Error"
 
+        self.message: str = message
+        "A Message to display"
+
         super().__init__(message)
 
 
@@ -83,7 +86,27 @@ class FileOutsideMinecraftDirectory(SecurityError):
         self.path: str = path
         "The Path of the File"
 
-        self.minecraft_direcory: str = minecraft_directory
+        self.minecraft_directory: str = minecraft_directory
         "The Minecraft directory of the File"
 
         super().__init__("FileOutsideMinecraftDirectory", f"Tried to place {path} outside {minecraft_directory}")
+
+
+class InvalidChecksum(SecurityError):
+    """
+    Raised when a File did not match the Checksum
+    """
+    def __init__(self, url: str, path: str, expected_checksum: str, actual_checksum: str) -> None:
+        self.url: str = url
+        "The URL to the File with the wrong Checksum"
+
+        self.path: str = path
+        "The Path to the File with the wrong Checksum"
+
+        self.expected_checksum: str = expected_checksum
+        "The expected Checksum"
+
+        self.actual_checksum: str = actual_checksum
+        "The actual Checksum"
+
+        super().__init__("InvalidChecksum", f"{path} has the wrong Checksum")

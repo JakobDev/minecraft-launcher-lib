@@ -32,3 +32,27 @@ def test_InvalidVanillaLauncherProfile():
     ex = minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile({"name": "test"})
     assert ex.profile == {"name": "test"}
     assert isinstance(ex, ValueError)
+
+
+def test_SecurityError():
+    ex = minecraft_launcher_lib.exceptions.SecurityError("code", "msg")
+    assert ex.code == "code"
+    assert ex.message == "msg"
+    assert isinstance(ex, Exception)
+
+
+def test_FileOutsideMinecraftDirectory():
+    ex = minecraft_launcher_lib.exceptions.FileOutsideMinecraftDirectory("path", "dir")
+    assert ex.path == "path"
+    assert ex.minecraft_directory == "dir"
+    assert isinstance(ex, minecraft_launcher_lib.exceptions.SecurityError)
+
+
+def test_InvalidChecksum():
+    ex = minecraft_launcher_lib.exceptions.InvalidChecksum("url", "path", "expected", "actual")
+    assert ex.url == "url"
+    assert ex.path == "path"
+    assert ex.expected_checksum == "expected"
+    assert ex.actual_checksum == "actual"
+    assert isinstance(ex, minecraft_launcher_lib.exceptions.SecurityError)
+

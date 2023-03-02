@@ -3,6 +3,7 @@ from ._internal_types.helper_types import RequestsResponseCache, MavenMetadata
 from ._internal_types.shared_types import ClientJson, ClientJsonRule
 from typing import List, Dict, Literal, Optional, Any
 from .types import MinecraftOptions, CallbackDict
+from .exceptions import InvalidChecksum
 import datetime
 import requests
 import platform
@@ -32,25 +33,37 @@ def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Option
             return False
         elif get_sha1_hash(path) == sha1:
             return False
+
     try:
         os.makedirs(os.path.dirname(path))
     except Exception:
         pass
+
     if not url.startswith("http"):
         return False
+
     callback.get("setStatus", empty)("Download " + os.path.basename(path))
+
     if session is None:
         r = requests.get(url, stream=True, headers={"user-agent": get_user_agent()})
     else:
         r = session.get(url, stream=True, headers={"user-agent": get_user_agent()})
+
     if r.status_code != 200:
         return False
+
     with open(path, 'wb') as f:
         r.raw.decode_content = True
         if lzma_compressed:
             f.write(lzma.decompress(r.content))
         else:
             shutil.copyfileobj(r.raw, f)
+
+    if sha1 is not None:
+        checksum = get_sha1_hash(path)
+        if checksum != sha1:
+            InvalidChecksum(url, path, sha1, checksum)
+
     return True
 
 
