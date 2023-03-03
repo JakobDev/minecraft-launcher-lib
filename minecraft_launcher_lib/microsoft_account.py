@@ -6,9 +6,9 @@ For a list of all types see :doc:`microsoft_types`.
 """
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from typing import Literal, Optional, Tuple, cast
+from ._helper import get_user_agent, assert_func
 from .exceptions import InvalidRefreshToken
 from base64 import urlsafe_b64encode
-from ._helper import get_user_agent
 from hashlib import sha256
 import urllib.parse
 import requests
@@ -128,7 +128,7 @@ def parse_auth_code_url(url: str, state: Optional[str]) -> str:
     qs = urllib.parse.parse_qs(parsed.query)
 
     if state is not None:
-        assert state == qs["state"][0]
+        assert_func(state == qs["state"][0])
 
     return qs["code"][0]
 

@@ -3,6 +3,7 @@ from ._internal_types.vanilla_launcher_types import VanillaLauncherProfilesJson,
 from .types import VanillaLauncherProfile, MinecraftOptions
 from .exceptions import InvalidVanillaLauncherProfile
 from .utils import get_latest_version
+from ._helper import assert_func
 from typing import List, Union
 import datetime
 import json
@@ -37,15 +38,15 @@ def _is_vanilla_launcher_profile_valid(vanilla_profile: VanillaLauncherProfile) 
     if (java_arguments := vanilla_profile.get("javaArguments")) is not None:
         try:
             for i in java_arguments:
-                assert isinstance(i, str)
+                assert_func(isinstance(i, str))
         except Exception:
             return False
 
     if (custom_resolution := vanilla_profile.get("customResolution")) is not None:
         try:
-            assert len(custom_resolution) == 2
-            assert isinstance(custom_resolution["height"], int)
-            assert isinstance(custom_resolution["width"], int)
+            assert_func(len(custom_resolution) == 2)
+            assert_func(isinstance(custom_resolution["height"], int))
+            assert_func(isinstance(custom_resolution["width"], int))
         except Exception:
             return False
 
