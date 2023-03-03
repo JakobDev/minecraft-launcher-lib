@@ -1,8 +1,7 @@
 "mrpack allows you to install Modpacks from the `Mrpack Format <https://docs.modrinth.com/docs/modpacks/format_definition>`_"
-from ._internal_types.mrpack_types import MrpackIndex, MrpackFile
+from ._helper import download_file, empty, check_path_inside_minecraft_directory
 from .types import MrpackInformation, MrpackInstallOptions, CallbackDict
-from ._helper import download_file, extract_file_from_zip, empty
-from .exceptions import FileOutsideMinecraftDirectory
+from ._internal_types.mrpack_types import MrpackIndex, MrpackFile
 from .install import install_minecraft_version
 from typing import List, Union, Optional
 from .forge import install_forge_version
@@ -70,7 +69,7 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
     :param modpack_directory: If you want to install the Pack in another Directory than your Minecraft directory, set it here.
     :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
     :param mrpack_install_options: Some Options to install the Pack (see below)
-    :raises FileOutsideMinecraftDirectory: Raised when a File should be placed outside the given Minecraft directory
+    :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
 
     ``mrpack_install_options`` is a dict. All Options are Optional.
 
@@ -103,8 +102,7 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
         for file in _filter_mrpack_files(index["files"], mrpack_install_options):
             full_path = os.path.abspath(os.path.join(modpack_directory, file["path"]))
 
-            if not full_path.startswith(modpack_directory):
-                raise FileOutsideMinecraftDirectory(full_path, modpack_directory)
+            check_path_inside_minecraft_directory(modpack_directory, full_path)
 
             download_file(file["downloads"][0], full_path, sha1=file["hashes"]["sha1"], callback=callback)
 
@@ -124,10 +122,9 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
             # Constructs the full Path
             full_path = os.path.abspath(os.path.join(modpack_directory, file_name))
 
-            if not full_path.startswith(modpack_directory):
-                raise FileOutsideMinecraftDirectory(full_path, modpack_directory)
+            check_path_inside_minecraft_directory(modpack_directory, full_path)
 
-            extract_file_from_zip(zf, zip_name, full_path)
+            zf.extract(zip_name, full_path)
 
         if mrpack_install_options.get("skipDependenciesInstall"):
             return

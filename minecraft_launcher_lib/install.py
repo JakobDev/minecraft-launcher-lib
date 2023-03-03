@@ -1,5 +1,5 @@
 "install allows you to install minecraft."
-from ._helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent
+from ._helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent, check_path_inside_minecraft_directory
 from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
 from .natives import extract_natives_file, get_natives
 from ._internal_types.install_types import AssetsJson
@@ -64,7 +64,7 @@ def install_libraries(id: str, libraries: List[ClientJsonLibrary], path: str, ca
 
         # Try to download the lib
         try:
-            download_file(downloadUrl, os.path.join(currentPath, jarFilename), callback=callback, session=session)
+            download_file(downloadUrl, os.path.join(currentPath, jarFilename), callback=callback, session=session, minecraft_directory=path)
         except Exception:
             pass
 
@@ -74,9 +74,9 @@ def install_libraries(id: str, libraries: List[ClientJsonLibrary], path: str, ca
             continue
 
         if "artifact" in i["downloads"]:
-            download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"], session=session)
+            download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"], session=session, minecraft_directory=path)
         if native != "":
-            download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(currentPath, jarFilenameNative), callback, sha1=i["downloads"]["classifiers"][native]["sha1"], session=session)  # type: ignore
+            download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(currentPath, jarFilenameNative), callback, sha1=i["downloads"]["classifiers"][native]["sha1"], session=session, minecraft_directory=path)  # type: ignore
             if "extract" in i:
                 extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", id, "natives"), i["extract"])
 
@@ -105,7 +105,7 @@ def install_assets(data: ClientJson, path: str, callback: CallbackDict) -> None:
     callback.get("setMax", empty)(len(assets_data["objects"]) - 1)
     count = 0
     for value in assets_data["objects"].values():
-        download_file("https://resources.download.minecraft.net/" + value["hash"][:2] + "/" + value["hash"], os.path.join(path, "assets", "objects", value["hash"][:2], value["hash"]), callback, sha1=value["hash"], session=session)
+        download_file("https://resources.download.minecraft.net/" + value["hash"][:2] + "/" + value["hash"], os.path.join(path, "assets", "objects", value["hash"][:2], value["hash"]), callback, sha1=value["hash"], session=session, minecraft_directory=path)
         count += 1
         callback.get("setProgress", empty)(count)
 
@@ -116,7 +116,7 @@ def do_version_install(versionid: str, path: str, callback: CallbackDict, url: O
     """
     # Download and read versions.json
     if url:
-        download_file(url, os.path.join(path, "versions", versionid, versionid + ".json"), callback, sha1=sha1)
+        download_file(url, os.path.join(path, "versions", versionid, versionid + ".json"), callback, sha1=sha1, minecraft_directory=path)
 
     with open(os.path.join(path, "versions", versionid, versionid + ".json")) as f:
         versiondata: ClientJson = json.load(f)
@@ -136,16 +136,18 @@ def do_version_install(versionid: str, path: str, callback: CallbackDict, url: O
     if "logging" in versiondata:
         if len(versiondata["logging"]) != 0:
             logger_file = os.path.join(path, "assets", "log_configs", versiondata["logging"]["client"]["file"]["id"])
-            download_file(versiondata["logging"]["client"]["file"]["url"], logger_file, callback, sha1=versiondata["logging"]["client"]["file"]["sha1"])
+            download_file(versiondata["logging"]["client"]["file"]["url"], logger_file, callback, sha1=versiondata["logging"]["client"]["file"]["sha1"], minecraft_directory=path)
 
     # Download minecraft.jar
     if "downloads" in versiondata:
-        download_file(versiondata["downloads"]["client"]["url"], os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar"), callback, sha1=versiondata["downloads"]["client"]["sha1"])
+        download_file(versiondata["downloads"]["client"]["url"], os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar"), callback, sha1=versiondata["downloads"]["client"]["sha1"], minecraft_directory=path)
 
     # Need to copy jar for old forge versions
     if not os.path.isfile(os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar")) and "inheritsFrom" in versiondata:
-        inheritsFrom = versiondata["inheritsFrom"]
-        shutil.copyfile(os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar"), os.path.join(path, "versions", inheritsFrom, inheritsFrom + ".jar"))
+        inherits_from = versiondata["inheritsFrom"]
+        inherit_path = os.path.join(path, "versions", inherits_from, inherits_from + ".jar")
+        check_path_inside_minecraft_directory(path, inherit_path)
+        shutil.copyfile(os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar"), inherit_path)
 
     # Install java runtime if needed
     if "javaVersion" in versiondata:
@@ -162,6 +164,8 @@ def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os
     :param versionid: The Minecraft version
     :param minecraft_directory: The path to your Minecraft directory
     :param callback: Some functions that are called to monitor the progress (see below)
+    :raises VersionNotFound: The Minecraft version was not found
+    :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
 
     ``callback`` is a dict with functions that are called with arguments to get the progress. You can use it to show the progress to the user.
 

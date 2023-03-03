@@ -1,9 +1,9 @@
 "This module contains some helper functions. It should nt be used outside minecraft_launcher_lib"
 from ._internal_types.helper_types import RequestsResponseCache, MavenMetadata
+from .exceptions import FileOutsideMinecraftDirectory, InvalidChecksum
 from ._internal_types.shared_types import ClientJson, ClientJsonRule
-from typing import List, Dict, Literal, Optional, Any
+from typing import List, Dict, Union, Literal, Optional, Any
 from .types import MinecraftOptions, CallbackDict
-from .exceptions import InvalidChecksum
 import datetime
 import requests
 import platform
@@ -24,10 +24,22 @@ def empty(arg: Any) -> None:
     pass
 
 
-def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Optional[str] = None, lzma_compressed: Optional[bool] = False, session: Optional[requests.sessions.Session] = None) -> bool:
+def check_path_inside_minecraft_directory(minecraft_directory: Union[str, os.PathLike], path: Union[str, os.PathLike]) -> None:
+    """
+    Raises a FileOutsideMinecraftDirectory if the Path is not in the given Directory
+    """
+    if not os.path.abspath(path).startswith(os.path.abspath(minecraft_directory)):
+        raise FileOutsideMinecraftDirectory(os.path.abspath(path), os.path.abspath(minecraft_directory))
+
+
+def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Optional[str] = None, lzma_compressed: Optional[bool] = False, session: Optional[requests.sessions.Session] = None, minecraft_directory: Optional[Union[str, os.PathLike]] = None) -> bool:
     """
     Downloads a file into the given path. Check sha1 if given.
     """
+    # Chek if the Path is outside the given Minecraft Directory
+    if minecraft_directory is not None:
+        check_path_inside_minecraft_directory(minecraft_directory, path)
+
     if os.path.isfile(path):
         if sha1 is None:
             return False

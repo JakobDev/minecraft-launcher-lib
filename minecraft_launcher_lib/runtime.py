@@ -1,6 +1,6 @@
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
+from ._helper import get_user_agent, download_file, empty, get_sha1_hash, check_path_inside_minecraft_directory
 from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson
-from ._helper import get_user_agent, download_file, empty, get_sha1_hash
 from .types import CallbackDict, JvmRuntimeInformation
 from typing import List, Union, Optional
 from .exceptions import VersionNotFound
@@ -67,6 +67,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     :param minecraft_directory: The path to your Minecraft directory
     :param callback: the same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
     :raises VersionNotFound: The given JVM Version was not found
+    :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
     """
     if callback is None:
         callback = {}
@@ -88,12 +89,15 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     file_list: List[str] = []
     for key, value in platform_manifest["files"].items():
         current_path = os.path.join(base_path, key)
+        check_path_inside_minecraft_directory(minecraft_directory, current_path)
+
         if value["type"] == "file":
             # Prefer downloading the compresses file
             if "lzma" in value["downloads"]:
                 download_file(value["downloads"]["lzma"]["url"], current_path, sha1=value["downloads"]["raw"]["sha1"], callback=callback, lzma_compressed=True, session=session)
             else:
                 download_file(value["downloads"]["raw"]["url"], current_path, sha1=value["downloads"]["raw"]["sha1"], callback=callback, session=session)
+
             # Make files executable on unix systems
             if value["executable"]:
                 try:
@@ -101,26 +105,34 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
                 except FileNotFoundError:
                     pass
             file_list.append(key)
+
         elif value["type"] == "directory":
             try:
                 os.makedirs(current_path)
             except Exception:
                 pass
+
         elif value["type"] == "link":
+            check_path_inside_minecraft_directory(minecraft_directory, value["target"])
             try:
                 os.symlink(value["target"], current_path)
             except Exception:
                 pass
+
         callback.get("setProgress", empty)(count)
         count += 1
 
     # Create the .version file
-    with open(os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, ".version"), "w", encoding="utf-8") as f:
+    version_path = os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, ".version")
+    check_path_inside_minecraft_directory(minecraft_directory, version_path)
+    with open(version_path, "w", encoding="utf-8") as f:
         f.write(manifest_data[platform_string][jvm_version][0]["version"]["name"])
 
     # Writes the .sha1 file
     # It has the structure {path} /#// {sha1} {creation time in nanoseconds}
-    with open(os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, f"{jvm_version}.sha1"), "w", encoding="utf-8") as f:
+    sha1_path = os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, f"{jvm_version}.sha1")
+    check_path_inside_minecraft_directory(minecraft_directory, sha1_path)
+    with open(sha1_path, "w", encoding="utf-8") as f:
         for current_file in file_list:
             current_path = os.path.join(base_path, current_file)
             ctime = os.stat(current_path).st_ctime_ns
