@@ -34,14 +34,14 @@ def _is_vanilla_launcher_profile_valid(vanilla_profile: VanillaLauncherProfile) 
     if vanilla_profile.get("javaExecutable") is not None and not isinstance(vanilla_profile.get("javaExecutable"), str):
         return False
 
-    if java_arguments := vanilla_profile.get("javaArguments"):
+    if (java_arguments := vanilla_profile.get("javaArguments")) is not None:
         try:
             for i in java_arguments:
                 assert isinstance(i, str)
         except Exception:
             return False
 
-    if custom_resolution := vanilla_profile.get("customResolution"):
+    if (custom_resolution := vanilla_profile.get("customResolution")) is not None:
         try:
             assert len(custom_resolution) == 2
             assert isinstance(custom_resolution["height"], int)
@@ -118,16 +118,16 @@ def vanilla_launcher_profile_to_minecraft_options(vanilla_profile: VanillaLaunch
 
     options: MinecraftOptions = {}
 
-    if game_directory := vanilla_profile.get("gameDirectory"):
+    if (game_directory := vanilla_profile.get("gameDirectory")) is not None:
         options["gameDirectory"] = game_directory
 
-    if java_executable := vanilla_profile.get("javaExecutable"):
+    if (java_executable := vanilla_profile.get("javaExecutable")) is not None:
         options["executablePath"] = java_executable
 
-    if java_arguments := vanilla_profile.get("javaArguments"):
+    if (java_arguments := vanilla_profile.get("javaArguments")) is not None:
         options["jvmArguments"] = java_arguments
 
-    if custom_resolution := vanilla_profile.get("customResolution"):
+    if (custom_resolution := vanilla_profile.get("customResolution")) is not None:
         options["customResolution"] = True
         options["resolutionWidth"] = str(custom_resolution["width"])
         options["resolutionHeight"] = str(custom_resolution["height"])

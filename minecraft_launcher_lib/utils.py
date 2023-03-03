@@ -98,13 +98,13 @@ def get_java_executable() -> str:
     Tries the find out the path to the default java executable
     """
     if platform.system() == "Windows":
-        if java_home := os.getenv("JAVA_HOME"):
+        if (java_home := os.getenv("JAVA_HOME")) is not None:
             return os.path.join(java_home, "bin", "javaw.exe")
         elif os.path.isfile(r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\javaw.exe"):
             return r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath\javaw.exe"
         else:
             return shutil.which("javaw") or "javaw"
-    elif java_home := os.getenv("JAVA_HOME"):
+    elif (java_home := os.getenv("JAVA_HOME")) is not None:
         return os.path.join(java_home, "bin", "java")
     elif platform.system() == "Darwin":
         return shutil.which("java") or "java"
