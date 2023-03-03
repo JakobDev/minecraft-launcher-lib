@@ -28,57 +28,57 @@ def install_libraries(id: str, libraries: List[ClientJsonLibrary], path: str, ca
             continue
 
         # Turn the name into a path
-        currentPath = os.path.join(path, "libraries")
+        current_path = os.path.join(path, "libraries")
         if "url" in i:
             if i["url"].endswith("/"):
-                downloadUrl = i["url"][:-1]
+                download_url = i["url"][:-1]
             else:
-                downloadUrl = i["url"]
+                download_url = i["url"]
         else:
-            downloadUrl = "https://libraries.minecraft.net"
+            download_url = "https://libraries.minecraft.net"
 
         try:
-            libPath, name, version = i["name"].split(":")[0:3]
+            lib_path, name, version = i["name"].split(":")[0:3]
         except ValueError:
             continue
 
-        for libPart in libPath.split("."):
-            currentPath = os.path.join(currentPath, libPart)
-            downloadUrl = downloadUrl + "/" + libPart
+        for lib_part in lib_path.split("."):
+            current_path = os.path.join(current_path, lib_part)
+            download_url = f"{download_url}/{lib_part}"
 
         try:
             version, fileend = version.split("@")
         except ValueError:
             fileend = "jar"
 
-        jarFilename = name + "-" + version + "." + fileend
-        downloadUrl = downloadUrl + "/" + name + "/" + version
-        currentPath = os.path.join(currentPath, name, version)
+        jar_filename = f"{name}-{version}.{fileend}"
+        download_url = f"{download_url}/{name}/{version}"
+        current_path = os.path.join(current_path, name, version)
         native = get_natives(i)
 
         # Check if there is a native file
         if native != "":
-            jarFilenameNative = name + "-" + version + "-" + native + ".jar"
-        jarFilename = name + "-" + version + "." + fileend
-        downloadUrl = downloadUrl + "/" + jarFilename
+            jar_filename_native = f"{name}-{version}-{native}.jar"
+        jar_filename = f"{name}-{version}.{fileend}"
+        download_url = f"{download_url}/{jar_filename}"
 
         # Try to download the lib
         try:
-            download_file(downloadUrl, os.path.join(currentPath, jarFilename), callback=callback, session=session, minecraft_directory=path)
+            download_file(download_url, os.path.join(current_path, jar_filename), callback=callback, session=session, minecraft_directory=path)
         except Exception:
             pass
 
         if "downloads" not in i:
             if "extract" in i:
-                extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", id, "natives"), i["extract"])
+                extract_natives_file(os.path.join(current_path, jar_filename_native), os.path.join(path, "versions", id, "natives"), i["extract"])
             continue
 
         if "artifact" in i["downloads"]:
             download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"], session=session, minecraft_directory=path)
         if native != "":
-            download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(currentPath, jarFilenameNative), callback, sha1=i["downloads"]["classifiers"][native]["sha1"], session=session, minecraft_directory=path)  # type: ignore
+            download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(current_path, jar_filename_native), callback, sha1=i["downloads"]["classifiers"][native]["sha1"], session=session, minecraft_directory=path)  # type: ignore
             if "extract" in i:
-                extract_natives_file(os.path.join(currentPath, jarFilenameNative), os.path.join(path, "versions", id, "natives"), i["extract"])
+                extract_natives_file(os.path.join(current_path, jar_filename_native), os.path.join(path, "versions", id, "natives"), i["extract"])
 
         callback.get("setProgress", empty)(count)
 
@@ -145,7 +145,7 @@ def do_version_install(versionid: str, path: str, callback: CallbackDict, url: O
     # Need to copy jar for old forge versions
     if not os.path.isfile(os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar")) and "inheritsFrom" in versiondata:
         inherits_from = versiondata["inheritsFrom"]
-        inherit_path = os.path.join(path, "versions", inherits_from, inherits_from + ".jar")
+        inherit_path = os.path.join(path, "versions", inherits_from, f"{inherits_from}.jar")
         check_path_inside_minecraft_directory(path, inherit_path)
         shutil.copyfile(os.path.join(path, "versions", versiondata["id"], versiondata["id"] + ".jar"), inherit_path)
 

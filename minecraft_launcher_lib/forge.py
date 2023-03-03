@@ -43,7 +43,7 @@ def get_data_library_path(libname: str, path: str) -> str:
         extra, fileend = extra.split("@")
     except ValueError:
         fileend = "jar"
-    libpath = os.path.join(libpath, libname, version, libname + "-" + version + "-" + extra + "." + fileend)
+    libpath = os.path.join(libpath, libname, version, f"{libname}-{version}-{extra}.{fileend}")
     return libpath
 
 
