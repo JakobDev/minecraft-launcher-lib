@@ -16,6 +16,7 @@ logs/
 
 # tests
 .pytest_cache/
+.coverage
 
 # pycharm
 .idea/

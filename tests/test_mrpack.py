@@ -1,15 +1,17 @@
+from typing import List, Dict, Any
 import minecraft_launcher_lib
-from typing import Dict, Any
 import requests
 import hashlib
 import pathlib
 import zipfile
 import random
+import pytest
 import json
+import copy
 import os
 
 
-def _create_test_index_pack(index: Dict[str, Any], tmp_path: pathlib.Path) -> str:
+def _create_test_index_pack(index: Dict[str, Any], tmp_path: pathlib.Path, overrides: List[str] = [], client_overrides: List[str] = []) -> str:
     while True:
         name = f"temp-pack-{random.randrange(100, 10000)}.mrpack"
         if not (tmp_path / name).exists():
@@ -18,6 +20,12 @@ def _create_test_index_pack(index: Dict[str, Any], tmp_path: pathlib.Path) -> st
 
     with zipfile.ZipFile(temp_pack, "w") as zf:
         zf.writestr("modrinth.index.json", json.dumps(index))
+
+        for i in overrides:
+            zf.writestr(f"overrides/{i}", "This is a test override")
+
+        for i in client_overrides:
+            zf.writestr(f"client-overrides/{i}", "This is a test client-override")
 
     return temp_pack
 
@@ -126,12 +134,34 @@ def test_install_mrpack(tmp_path) -> None:
     # Test without Optional File
     first_dir = _create_test_dir(tmp_path)
     minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), first_dir, mrpack_install_options={"skipDependenciesInstall": True})
-    assert os.listdir(first_dir) == ["a.txt", "b.txt"]
+    assert sorted(os.listdir(first_dir)) == sorted(["a.txt", "b.txt"])
 
     # Test with Optional File
     second_dir = _create_test_dir(tmp_path)
     minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), second_dir, mrpack_install_options={"skipDependenciesInstall": True, "optionalFiles": ["c.txt"]})
-    assert os.listdir(second_dir) == ["a.txt", "b.txt", "c.txt"]
+    assert sorted(os.listdir(second_dir)) == sorted(["a.txt", "b.txt", "c.txt"])
+
+    # Test overides
+    third_dir = _create_test_dir(tmp_path)
+    minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["overrides.txt"], client_overrides=["client/test.txt"]), third_dir, mrpack_install_options={"skipDependenciesInstall": True})
+    assert sorted(os.listdir(third_dir)) == sorted(["a.txt", "b.txt", "overrides.txt", "client"])
+    assert sorted(os.listdir(os.path.join(third_dir, "client"))) == sorted(["test.txt"])
+
+    # Test FileOutsideMinecraftDirectory Exception with Files
+    fourth_dir = _create_test_dir(tmp_path)
+    exception_index = copy.deepcopy(index)
+    exception_index["files"].append({**{
+        "path": "../error.txt"
+    },
+        **_generate_test_file("https://example.com")
+    })
+    with pytest.raises(minecraft_launcher_lib.exceptions.FileOutsideMinecraftDirectory):
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(exception_index, tmp_path), fourth_dir, mrpack_install_options={"skipDependenciesInstall": True})
+
+    # Test FileOutsideMinecraftDirectory Exception with Overrides
+    fifth_dir = _create_test_dir(tmp_path)
+    with pytest.raises(minecraft_launcher_lib.exceptions.FileOutsideMinecraftDirectory):
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["../overrides.txt"]), fifth_dir, mrpack_install_options={"skipDependenciesInstall": True})
 
 
 def test_mrpack_launch_version(tmp_path) -> None:
