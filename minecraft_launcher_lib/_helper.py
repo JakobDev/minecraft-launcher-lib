@@ -287,7 +287,7 @@ def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path:
             w.write(f.read())
 
 
-def assert_func(expression: bool):
+def assert_func(expression: bool) -> None:
     """
     The assert keyword is not available when running Python in Optimized Mode.
     This function is a drop-in replacement.
