@@ -274,14 +274,18 @@ def parse_maven_metadata(url: str) -> MavenMetadata:
     }
 
 
-def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path: str) -> None:
+def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path: str, minecraft_directory: Union[str, os.PathLike]) -> None:
     """
     Extract a file from a zip handler into the given path
     """
+    if minecraft_directory is not None:
+        check_path_inside_minecraft_directory(minecraft_directory, extract_path)
+
     try:
         os.makedirs(os.path.dirname(extract_path))
     except Exception:
         pass
+
     with handler.open(zip_path, "r") as f:
         with open(extract_path, "wb") as w:
             w.write(f.read())
@@ -294,4 +298,4 @@ def assert_func(expression: bool) -> None:
     See https://docs.python.org/3/using/cmdline.html?highlight=pythonoptimize#cmdoption-O
     """
     if not expression:
-        raise AssertionError
+        raise AssertionError()

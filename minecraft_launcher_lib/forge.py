@@ -135,20 +135,20 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
 
     # Extract the version.json
     version_json_path = os.path.join(path, "versions", forge_version_id, forge_version_id + ".json")
-    extract_file_from_zip(zf, "version.json", version_json_path)
+    extract_file_from_zip(zf, "version.json", version_json_path, minecraft_directory=path)
 
     # Extract forge libs from the installer
     forge_lib_path = os.path.join(path, "libraries", "net", "minecraftforge", "forge", versionid)
     try:
-        extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + ".jar"))
-        extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + "-universal.jar"))
+        extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + ".jar"), minecraft_directory=path)
+        extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + "-universal.jar"), minecraft_directory=path)
     except KeyError:
         pass
 
     # Extract the client.lzma
     lzma_path = os.path.join(tempfile.gettempdir(), "lzma-" + str(random.randrange(1, 100000)) + ".tmp")
     try:
-        extract_file_from_zip(zf, "data/client.lzma", lzma_path)
+        extract_file_from_zip(zf, "data/client.lzma", lzma_path, minecraft_directory=path)
     except KeyError:
         pass
 
