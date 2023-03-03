@@ -179,16 +179,16 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
     elif vanilla_profile["versionType"] == "custom":
         new_profile["lastVersionId"] = "version"
 
-    if game_directory := vanilla_profile.get("gameDirectory"):
+    if (game_directory := vanilla_profile.get("gameDirectory")) is not None:
         new_profile["gameDir"] = game_directory
 
-    if java_executable := vanilla_profile.get("javaExecutable"):
+    if (java_executable := vanilla_profile.get("javaExecutable")) is not None:
         new_profile["javaDir"] = java_executable
 
-    if java_arguments := vanilla_profile.get("javaArguments"):
+    if (java_arguments := vanilla_profile.get("javaArguments")) is not None:
         new_profile["javaArgs"] = " ".join(java_arguments)
 
-    if custom_resolution := vanilla_profile.get("customResolution"):
+    if (custom_resolution := vanilla_profile.get("customResolution")) is not None:
         new_profile["resolution"] = {
             "height": custom_resolution["height"],
             "width": custom_resolution["width"]
