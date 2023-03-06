@@ -1,6 +1,6 @@
 "java_utils contains some functions to help with Java"
+from typing import List, Union, Optional
 from .types import JavaInformation
-from typing import List, Union
 import subprocess
 import platform
 import re
@@ -63,28 +63,36 @@ def _search_java_directory(path: str) -> List[str]:
     return java_list
 
 
-def find_system_java_versions() -> List[str]:
+def find_system_java_versions(additional_directories: Optional[List[str]] = None) -> List[str]:
     """
     Try to find all Java Versions installed on the System. You can use this to e.g. let the User choose between different Java Versions in a Dropdown.
 
+    :param additional_directories: A List of additional Directories to search for Java in custom locations
     :return: A List with all Directories of Java Installations
 
     macOS is not supported yet
     """
     java_list: List[str] = []
+
     if platform.system() == "Windows":
         java_list += _search_java_directory(r"C:\Program Files (x86)\Java")
         java_list += _search_java_directory(r"C:\Program Files\Java")
     elif platform.system() == "Linux":
         java_list += _search_java_directory("/usr/lib/jvm")
         java_list += _search_java_directory("/usr/lib/sdk")
+
+    if additional_directories is not None:
+        for i in additional_directories:
+            java_list += _search_java_directory(i)
+
     return java_list
 
 
-def find_system_java_versions_information() -> List[JavaInformation]:
+def find_system_java_versions_information(additional_directories: Optional[List[str]] = None) -> List[JavaInformation]:
     """
     Same as :func:`find_system_java_version`, but uses :func:`get_java_information` to get some Information about the Installation instead of just proving a Path.
 
+    :param additional_directories: A List of additional Directories to search for Java in custom locations
     :return: A List with Information of Java Installations
 
     macOS is not supported yet
@@ -94,6 +102,6 @@ def find_system_java_versions_information() -> List[JavaInformation]:
         This Function executes the Java executable to detemine details such as the version. This might be a security risk.
     """
     java_information_list: List[JavaInformation] = []
-    for i in find_system_java_versions():
+    for i in find_system_java_versions(additional_directories=additional_directories):
         java_information_list.append(get_java_information(i))
     return java_information_list
