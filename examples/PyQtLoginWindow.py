@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile
-from PyQt5.QtWidgets import QApplication, QMessageBox
-from PyQt5.QtCore import QUrl, QLocale
+# This example shows how to use the PyQt WebEngine for the Login
+# It needs the PyQt6 and PyQt6-WebEngine packages
+from PyQt6.QtWidgets import QApplication, QMessageBox
+from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtWebEngineCore import QWebEngineProfile
+from PyQt6.QtCore import QUrl, QLocale
 import minecraft_launcher_lib
 import json
 import sys
