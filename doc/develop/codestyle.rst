@@ -13,7 +13,7 @@ minecraft-launcher-lib uses `flake8 <https://flake8.pycqa.org>`_ along with the 
 
 .. code::
 
-    pip install flake8 flake8-annotation flake8-docstring-checker
+    pip install flake8 flake8-annotation flake8-docstring-checker flake8-assert-finder
 
 To run it, open a command line in the root directory of minecraft-launcher-lib and run:
 
