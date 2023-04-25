@@ -125,30 +125,40 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
         version_content = f.read()
 
     version_data: ForgeInstallProfile = json.loads(version_content)
-    forge_version_id = version_data["version"]
+    forge_version_id = version_data["version"] if "version" in version_data else version_data["install"]["version"]
+    minecraft_version = version_data["minecraft"] if "minecraft" in version_data else version_data["install"]["minecraft"]
 
     # Make sure, the base version is installed
-    install_minecraft_version(version_data["minecraft"], path, callback=callback)
+    install_minecraft_version(minecraft_version, path, callback=callback)
 
     # Install all needed libs from install_profile.json
-    install_libraries(version_data["minecraft"], version_data["libraries"], str(path), callback)
+    if "libraries" in version_data:
+        install_libraries(minecraft_version, version_data["libraries"], str(path), callback)
 
     # Extract the version.json
     version_json_path = os.path.join(path, "versions", forge_version_id, forge_version_id + ".json")
-    extract_file_from_zip(zf, "version.json", version_json_path, minecraft_directory=path)
+    try:
+        extract_file_from_zip(zf, "version.json", version_json_path, minecraft_directory=path)
+    except KeyError:
+        if "versionInfo" in version_data:
+            with open(version_json_path, "w", encoding="utf-8") as f:
+                json.dump(version_data["versionInfo"], f, ensure_ascii=False, indent=4)
 
     # Extract forge libs from the installer
     forge_lib_path = os.path.join(path, "libraries", "net", "minecraftforge", "forge", versionid)
     try:
-        extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + ".jar"), minecraft_directory=path)
         extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + "-universal.jar"), minecraft_directory=path)
+    except KeyError:
+        pass
+    try:
+        extract_file_from_zip(zf, "forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, f"forge-{versionid}.jar"), minecraft_directory=path)
     except KeyError:
         pass
 
     # Extract the client.lzma
     lzma_path = os.path.join(tempfile.gettempdir(), "lzma-" + str(random.randrange(1, 100000)) + ".tmp")
     try:
-        extract_file_from_zip(zf, "data/client.lzma", lzma_path, minecraft_directory=path)
+        extract_file_from_zip(zf, "data/client.lzma", lzma_path)
     except KeyError:
         pass
 
@@ -158,7 +168,8 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
     install_minecraft_version(forge_version_id, str(path), callback=callback)
 
     # Run the processors
-    forge_processors(version_data, str(path), lzma_path, temp_file_path, callback, "java" if java is None else str(java))
+    if "processors" in version_data:
+        forge_processors(version_data, str(path), lzma_path, temp_file_path, callback, "java" if java is None else str(java))
 
     # Delete the temporary files
     os.remove(temp_file_path)

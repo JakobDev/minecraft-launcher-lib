@@ -113,7 +113,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
                 pass
 
         elif value["type"] == "link":
-            check_path_inside_minecraft_directory(minecraft_directory, value["target"])
+            check_path_inside_minecraft_directory(minecraft_directory, os.path.join(base_path, value["target"]))
             try:
                 os.symlink(value["target"], current_path)
             except Exception:

@@ -274,7 +274,7 @@ def parse_maven_metadata(url: str) -> MavenMetadata:
     }
 
 
-def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path: str, minecraft_directory: Union[str, os.PathLike]) -> None:
+def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path: str, minecraft_directory: Optional[Union[str, os.PathLike]] = None) -> None:
     """
     Extract a file from a zip handler into the given path
     """
