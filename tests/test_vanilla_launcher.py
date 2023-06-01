@@ -1,5 +1,37 @@
 import minecraft_launcher_lib
+import pathlib
+import shutil
 import pytest
+import os
+
+
+def _prepare_vanilla_launcher_test_env(tmp_path: pathlib.Path) -> None:
+    shutil.copytree(os.path.join(os.path.dirname(__file__), "data", "vanilla_launcher"), tmp_path / ".minecraft")
+
+
+def test_load_vanilla_launcher_profiles(tmp_path: pathlib.Path) -> None:
+    _prepare_vanilla_launcher_test_env(tmp_path)
+
+    profile_list = minecraft_launcher_lib.vanilla_launcher.load_vanilla_launcher_profiles(tmp_path / ".minecraft")
+
+    assert len(profile_list) == 2
+
+    assert profile_list[0]["name"] == "Test"
+    assert profile_list[0]["version"] is None
+    assert profile_list[0]["versionType"] == "latest-release"
+    assert profile_list[0]["gameDirectory"] is None
+    assert profile_list[0]["javaExecutable"] is None
+    assert profile_list[0]["javaArguments"] == ["-Xmx2G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseG1GC", "-XX:G1NewSizePercent=20", "-XX:G1ReservePercent=20", "-XX:MaxGCPauseMillis=50", "-XX:G1HeapRegionSize=32M"]
+    assert profile_list[0]["customResolution"]["height"] == 400
+    assert profile_list[0]["customResolution"]["width"] == 450
+
+    assert profile_list[1]["name"] == "Forge1.16.5"
+    assert profile_list[1]["version"] == "1.16.5-forge-36.1.24"
+    assert profile_list[1]["versionType"] == "custom"
+    assert profile_list[1]["gameDirectory"] == "/gametest"
+    assert profile_list[1]["javaExecutable"] == "/javatest"
+    assert profile_list[1]["javaArguments"] is None
+    assert profile_list[1]["customResolution"] is None
 
 
 def test_vanilla_launcher_profile_to_minecraft_options():

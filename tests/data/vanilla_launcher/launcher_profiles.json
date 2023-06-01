@@ -1,0 +1,41 @@
+{
+    "profiles" : {
+      "96f8d7cf8ed0bff4684ee90a1f50147c" : {
+        "created" : "2023-01-25T16:35:49.186Z",
+        "icon" : "Furnace",
+        "javaArgs" : "-Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M",
+        "lastUsed" : "1970-01-01T00:00:00.000Z",
+        "lastVersionId" : "latest-release",
+        "name" : "Test",
+        "resolution" : {
+          "height" : 400,
+          "width" : 450
+        },
+        "type" : "custom"
+      },
+      "9aa3910967e4a17f48c3bc899950d022" : {
+        "created" : "2021-06-02T19:58:15.325Z",
+        "gameDir" : "/gametest",
+        "icon" : "Furnace",
+        "javaDir" : "/javatest",
+        "lastUsed" : "2021-06-02T20:41:11.548Z",
+        "lastVersionId" : "1.16.5-forge-36.1.24",
+        "name" : "Forge1.16.5",
+        "type" : "custom"
+      }
+    },
+    "settings" : {
+      "crashAssistance" : false,
+      "enableAdvanced" : false,
+      "enableAnalytics" : true,
+      "enableHistorical" : false,
+      "enableReleases" : true,
+      "enableSnapshots" : false,
+      "keepLauncherOpen" : true,
+      "profileSorting" : "ByLastPlayed",
+      "showGameLog" : true,
+      "showMenu" : false,
+      "soundOn" : false
+    },
+    "version" : 3
+  }
