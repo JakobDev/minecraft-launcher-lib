@@ -34,7 +34,7 @@ def test_load_vanilla_launcher_profiles(tmp_path: pathlib.Path) -> None:
     assert profile_list[1]["customResolution"] is None
 
 
-def test_vanilla_launcher_profile_to_minecraft_options():
+def test_vanilla_launcher_profile_to_minecraft_options() -> None:
     test_values = {"name": "test", "versionType": "latest-release"}
     assert len(minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options(test_values)) == 0
     assert minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options({**test_values, **{"gameDirectory": "test"}}) == {"gameDirectory": "test"}
@@ -49,7 +49,7 @@ def test_vanilla_launcher_profile_to_minecraft_options():
         minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options({})
 
 
-def test_get_vanilla_launcher_profile_version():
+def test_get_vanilla_launcher_profile_version() -> None:
     latest_version = minecraft_launcher_lib.utils.get_latest_version()
 
     assert minecraft_launcher_lib.vanilla_launcher.get_vanilla_launcher_profile_version({"name": "test", "version": "test", "versionType": "latest-release"}) == latest_version["release"]
@@ -58,3 +58,9 @@ def test_get_vanilla_launcher_profile_version():
 
     with pytest.raises(minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile):
         minecraft_launcher_lib.vanilla_launcher.get_vanilla_launcher_profile_version({"name": "test", "version": "test", "versionType": "test"})
+
+
+def test_do_vanilla_launcher_profiles_exists(tmp_path: pathlib.Path) -> None:
+    assert minecraft_launcher_lib.vanilla_launcher.do_vanilla_launcher_profiles_exists(tmp_path / ".minecraft") is False
+    _prepare_vanilla_launcher_test_env(tmp_path)
+    assert minecraft_launcher_lib.vanilla_launcher.do_vanilla_launcher_profiles_exists(tmp_path / ".minecraft") is True

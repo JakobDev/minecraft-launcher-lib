@@ -209,3 +209,13 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
 
     with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+
+
+def do_vanilla_launcher_profiles_exists(minecraft_directory: Union[str, os.PathLike]) -> bool:
+    """
+    Checks if profiles from the vanilla launcher can be found
+
+    :param minecraft_directory: The Minecraft directory
+    :return: If profiles exists
+    """
+    return os.path.isfile(os.path.join(minecraft_directory, "launcher_profiles.json"))
