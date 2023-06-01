@@ -14,7 +14,8 @@ __all__ = [
     "load_vanilla_launcher_profiles",
     "vanilla_launcher_profile_to_minecraft_options",
     "get_vanilla_launcher_profile_version",
-    "add_vanilla_launcher_profile"
+    "add_vanilla_launcher_profile",
+    "do_vanilla_launcher_profiles_exists"
 ]
 
 
