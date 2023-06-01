@@ -5,7 +5,7 @@ This tutorial shows how to install forge using minecraft-launcher-lib. Please no
 -------------------------
 Get Forge Version
 -------------------------
-Before you install Forge, you need to know what Forge version you need. Use find_forge_version():
+Before you install Forge, you need to know what Forge version you need. Use :func:`~minecraft_launcher_lib.forge.find_forge_version`:
 
 .. code:: python
 
@@ -19,17 +19,17 @@ In this case we get the latest Forge version for 1.17.1.
 -------------------------
 Install Forge Version
 -------------------------
-Now we have the Forge version, so we can install it. Use install_forge_version().
+Now we have the Forge version, so we can install it. Use :func:`~minecraft_launcher_lib.forge.install_forge_version`.
 
     .. code:: python
 
         minecraft_launcher_lib.forge.install_forge_version(forge_version, minecraft_directory)
 
-install_forge_version() supports the same callbacks as install_minecraft_version(). install_forge_version() does not support versions prior to 1.12.
-Use supports_automatic_install(9 to check if your Forge version is supported by this function.
+install_forge_version() supports the same callbacks as :func:`~minecraft_launcher_lib.install.install_minecraft_version`. :func:`~minecraft_launcher_lib.forge.install_forge_version` does not support very old versions.
+Use :func:`~minecraft_launcher_lib.forge.supports_automatic_install` to check if your Forge version is supported by this function.
 
 -------------------------
 Launch Forge Version
 -------------------------
-Unfortunately, the version we got with find_forge_version() can't be used for get_minecraft_command(), because forge installs it under a little different name.
-Use get_installed_versions() to get the right version id for the launch.
+Unfortunately, the version we got with :func:`~minecraft_launcher_lib.forge.find_forge_version` can't be used for :func:`~minecraft_launcher_lib.command.get_minecraft_command`, because forge installs it under a little different name.
+Use :func:`~minecraft_launcher_lib.forge.find_forge_version` to get the right version id for the launch.

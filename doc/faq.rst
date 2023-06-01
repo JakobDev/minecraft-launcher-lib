@@ -6,7 +6,7 @@ Q: Which Minecraft versions are supported?
     Other versions can be launched after they got installed in other ways.
 
 Q: Which Python versions are supported?
-    A: minecraft-launcher-lib supports at the moment Python 3.8 and above. PyPy is also official supported.
+    A: minecraft-launcher-lib supports at the moment Python 3.8 and above. `PyPy <https://www.pypy.org>`_ is also official supported.
 
 Q: Which Operating Systems are supported?
     A: minecraft-launcher-lib official supports Windows, macOS and Linux, which are the Operating Systems that also supported by Mojang. It might work on other OS, but there is no guaranty.

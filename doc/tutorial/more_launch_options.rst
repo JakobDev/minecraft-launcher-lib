@@ -1,11 +1,11 @@
 More Launch Options
 ==========================
-minecraft-launcher-lib offers various options for launching Minecraft. This page shows the most important ones. For a full list check out the documentation of the command module.
+minecraft-launcher-lib offers various options for launching Minecraft. This page shows the most important ones. For a full list check out the documentation of the :doc:`/modules/command` module.
 
 -------------------------
 JVM Arguemnts
 -------------------------
-JVM Arguemnts are a list of strings. Each argument is a entry in the list. Here is a example:
+JVM Arguments are a list of strings. Each argument is a entry in the list. Here is a example:
 
 .. code:: python
 
@@ -18,15 +18,15 @@ JVM Arguemnts are a list of strings. Each argument is a entry in the list. Here 
     # Wrong
     options["jvmArguments"] = "-Xmx2G -Xms2G"
 
-Make sure every argument starts with a -, otherwise Minecraft will not start with a "Could not find or load main class" error.
+Make sure every argument starts with a :code:`-`, otherwise Minecraft will not start with a :code:`Could not find or load main class` error.
 
 -------------------------
 Java Executable
 -------------------------
 The Java Executable is the path the Java which is used to run Minecraft. If the version.json contains a Java Runtime, it minecraft-launcher-lib will download and use these version. Otherwise it will just use the java command.
-minecraft-launcher-lib allows to overwrite this. This can be useful, if you want to start a older version which needs a older Java and does not contain a runtime in the version.json.
+minecraft-launcher-lib allows to overwrite this. This can be useful, if you want to start a older version which needs a older Java and does not contain a runtime in the :code:`version.json`.
 
-There are 2 options to overwrite the Java Executable: executablePath and defaultExecutablePath. The difference is, that executablePath is always used. defaultExecutablePath is only used, when the version.json
+There are 2 options to overwrite the Java Executable: :code:`executablePath` and :code:`defaultExecutablePath`. The difference is, that :code:`executablePath` is always used. :code:`defaultExecutablePath` is only used, when the :code:`version.json`
 has set no Java Runtime. If the version.json contains a Runtime, the Runtime will be prefered over the defaultExecutablePath.
 
 .. code:: python

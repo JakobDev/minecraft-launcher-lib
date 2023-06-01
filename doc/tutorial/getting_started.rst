@@ -5,7 +5,7 @@ This first chapter of the documentation shows how to install and run Minecraft. 
 -------------------------
 Minecraft Directory
 -------------------------
-To get started with minecraft-launcher-lib, you need a Minecraft Directory first. You can use a new directory or the default Directory of Minecraft. You can get the default Directory with minecraft_launcher_lib.utils.get_minecraft_directory().
+To get started with minecraft-launcher-lib, you need a Minecraft Directory first. You can use a new directory or the default Directory of Minecraft. You can get the default Directory with :func:`~minecraft_launcher_lib.utils.get_minecraft_directory`.
 
 .. code:: python
 
@@ -23,13 +23,13 @@ Before you can launch launch Minecraft, you need to install it. This can be done
 
     minecraft_launcher_lib.install.install_minecraft_version("1.17", minecraft_directory)
 
-To get the information how to install Minecraft, minecraft-launcher-lib looks first for a JSON file in your Minecraft Directory. In the case of 1.17 it's minecraft_directory/versions/1.17/1.17.json. This allows installing moded versions that are not official from Mojang.
+To get the information how to install Minecraft, minecraft-launcher-lib looks first for a JSON file in your Minecraft Directory. In the case of 1.17 it's :code:`minecraft_directory/versions/1.17/1.17.json`. This allows installing moded versions that are not official from Mojang.
 If the JSON file not does exists minecraft-launcher-lib tries to download it from the Mojang Servers. install_minecraft_version ensures that the Minecraft installation is correct, so you need to call it every time before you launch Minecraft, even if you had the version already installed.
 
 -------------------------
 Get Minecraft Versions
 -------------------------
-If you don't want to start a single version like 1.17 every time you need a list of all Minecraft version. To get that list use minecraft_launcher_lib.utils.get_available_versions(minecraft_directory). It returns this list:
+If you don't want to start a single version like 1.17 every time you need a list of all Minecraft version. To get that list use :code:`minecraft_launcher_lib.utils.get_available_versions(minecraft_directory)`. It returns this list:
 
 .. code:: python
 
@@ -44,9 +44,10 @@ If you don't want to start a single version like 1.17 every time you need a list
         }
     ]
 
-The id is the Minecraft version that can be used as argument for install_minecraft_version and other versions. The type says what type the version is. Possible values are: release, snapshot, beta, alpha.
+The id is the Minecraft version that can be used as argument for install_minecraft_version and other versions. The type says what type the version is.
+Possible values are currently: :code:`release`, :code:`snapshot`, :code:`beta`, :code:`alpha`. Moded Versions can also use a custom value, so don't rely on this list.
 
-To get the latest version, use get_latest_version().
+To get the latest version, use :func:`~minecraft_launcher_lib.utils.get_latest_version`.
 
 .. code:: python
 
@@ -80,4 +81,4 @@ Now we have the options, we need to get the Minecraft command. In this case for 
 
     minecraft_command = minecraft_launcher_lib.command.get_minecraft_command("1.17", minecraft_directory, options)
 
-The command that your get is a list of strings that can be used to run Minecraft e.g. with the subprocess module.
+The command that your get is a list of strings that can be used to run Minecraft e.g. with the `subprocess module <https://docs.python.org/3/library/subprocess.html>`_.
