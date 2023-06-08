@@ -27,6 +27,10 @@ class MinecraftOptions(TypedDict, total=False):
     enableLoggingConfig: bool
     disableMultiplayer: bool
     disableChat: bool
+    quickPlayPath: Optional[str]
+    quickPlaySingleplayer: Optional[str]
+    quickPlayMultiplayer: Optional[str]
+    quickPlayRealms: Optional[str]
 
 
 class CallbackDict(TypedDict, total=False):

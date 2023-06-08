@@ -64,6 +64,10 @@ def replace_arguments(argstr: str, versionData: ClientJson, path: str, options: 
     argstr = argstr.replace("${auth_session}", options.get("token", "{token}"))
     argstr = argstr.replace("${library_directory}", os.path.join(path, "libraries"))
     argstr = argstr.replace("${classpath_separator}", get_classpath_separator())
+    argstr = argstr.replace("${quickPlayPath}", options.get("quickPlayPath", "{quickPlayPath}"))
+    argstr = argstr.replace("${quickPlaySingleplayer}", options.get("quickPlaySingleplayer", "{quickPlaySingleplayer}"))
+    argstr = argstr.replace("${quickPlayMultiplayer}", options.get("quickPlayMultiplayer", "{quickPlayMultiplayer}"))
+    argstr = argstr.replace("${quickPlayRealms}", options.get("quickPlayRealms", "{quickPlayRealms}"))
     return argstr
 
 
@@ -151,7 +155,11 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
             "nativesDirectory": "minecraft_directory/versions/version/natives", # The natives directory
             "enableLoggingConfig": False, # Enable use of the log4j configuration file
             "disableMultiplayer": False, # Disables the multiplayer
-            "disableChat": False # Disables the chat
+            "disableChat": False, # Disables the chat
+            "quickPlayPath": None, # The Quick Play Path
+            "quickPlaySingleplayer": None, # The Quick Play Singleplayer
+            "quickPlayMultiplayer": None, # The Quick Play Multiplayer
+            "quickPlayRealms": None, # The Quick Play Realms
         }
 
     You can use the :doc:`microsoft_account` module to get the needed information.

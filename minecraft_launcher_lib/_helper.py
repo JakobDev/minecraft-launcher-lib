@@ -108,6 +108,14 @@ def parse_single_rule(rule: ClientJsonRule, options: MinecraftOptions) -> bool:
             return returnvalue
         elif features_key == "is_demo_user" and not options.get("demo", False):
             return returnvalue
+        elif features_key == "has_quick_plays_support" and options.get("quickPlayPath") is None:
+            return returnvalue
+        elif features_key == "is_quick_play_singleplayer" and options.get("quickPlaySingleplayer") is None:
+            return returnvalue
+        elif features_key == "is_quick_play_multiplayer" and options.get("quickPlayMultiplayer") is None:
+            return returnvalue
+        elif features_key == "is_quick_play_realms" and options.get("quickPlayRealms") is None:
+            return returnvalue
 
     return not returnvalue
 

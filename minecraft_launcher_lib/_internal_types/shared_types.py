@@ -4,7 +4,7 @@ from typing import List, Dict, Union, Literal, TypedDict
 class ClientJsonRule(TypedDict):
     action: Literal["allow", "disallow"]
     os: Dict[Literal["name", "arch", "vesion"], str]
-    features: Dict[Literal["has_custom_resolution", "is_demo_user"], bool]
+    features: Dict[Literal["has_custom_resolution", "is_demo_user", "has_quick_plays_support", "is_quick_play_singleplayer", "is_quick_play_multiplayer", "is_quick_play_realms"], bool]
 
 
 class ClientJsonArgumentRule(TypedDict, total=False):
