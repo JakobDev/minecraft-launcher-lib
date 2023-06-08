@@ -55,7 +55,7 @@ def replace_arguments(argstr: str, versionData: ClientJson, path: str, options: 
     argstr = argstr.replace("${assets_index_name}", versionData.get("assets", versionData["id"]))
     argstr = argstr.replace("${auth_uuid}", options.get("uuid", "{uuid}"))
     argstr = argstr.replace("${auth_access_token}", options.get("token", "{token}"))
-    argstr = argstr.replace("${user_type}", "mojang")
+    argstr = argstr.replace("${user_type}", "msa")
     argstr = argstr.replace("${version_type}", versionData["type"])
     argstr = argstr.replace("${user_properties}", "{}")
     argstr = argstr.replace("${resolution_width}", options.get("resolutionWidth", "854"))
