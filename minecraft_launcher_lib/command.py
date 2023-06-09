@@ -64,10 +64,10 @@ def replace_arguments(argstr: str, versionData: ClientJson, path: str, options: 
     argstr = argstr.replace("${auth_session}", options.get("token", "{token}"))
     argstr = argstr.replace("${library_directory}", os.path.join(path, "libraries"))
     argstr = argstr.replace("${classpath_separator}", get_classpath_separator())
-    argstr = argstr.replace("${quickPlayPath}", options.get("quickPlayPath", "{quickPlayPath}"))
-    argstr = argstr.replace("${quickPlaySingleplayer}", options.get("quickPlaySingleplayer", "{quickPlaySingleplayer}"))
-    argstr = argstr.replace("${quickPlayMultiplayer}", options.get("quickPlayMultiplayer", "{quickPlayMultiplayer}"))
-    argstr = argstr.replace("${quickPlayRealms}", options.get("quickPlayRealms", "{quickPlayRealms}"))
+    argstr = argstr.replace("${quickPlayPath}", options.get("quickPlayPath") or "{quickPlayPath}")
+    argstr = argstr.replace("${quickPlaySingleplayer}", options.get("quickPlaySingleplayer") or "{quickPlaySingleplayer}")
+    argstr = argstr.replace("${quickPlayMultiplayer}", options.get("quickPlayMultiplayer") or "{quickPlayMultiplayer}")
+    argstr = argstr.replace("${quickPlayRealms}", options.get("quickPlayRealms") or "{quickPlayRealms}")
     return argstr
 
 
