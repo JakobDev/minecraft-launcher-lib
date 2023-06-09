@@ -11,6 +11,8 @@ Changelog
 - Added :class:`~minecraft_launcher_lib.exceptions.InvalidChecksum` exception
 - Remove account module (deprecated since 4.4 which was released 2022-02-16)
 - Move module documentation into Code
+- Change account type to msa
+- Add support for Quick Play
 - Add internal types
 - Refactor Code
 
