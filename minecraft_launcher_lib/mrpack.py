@@ -99,12 +99,17 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
             index: MrpackIndex = json.load(f)
 
         # Download the files
-        for file in _filter_mrpack_files(index["files"], mrpack_install_options):
+        callback.get("setProgress", empty)("Download mrpack files")
+        file_list = _filter_mrpack_files(index["files"], mrpack_install_options)
+        callback.get("setMax", empty)(len(file_list))
+        for count, file in enumerate(file_list):
             full_path = os.path.abspath(os.path.join(modpack_directory, file["path"]))
 
             check_path_inside_minecraft_directory(modpack_directory, full_path)
 
             download_file(file["downloads"][0], full_path, sha1=file["hashes"]["sha1"], callback=callback)
+
+            callback.get("setProgress", empty)(count + 1)
 
         # Extract the overrides
         for zip_name in zf.namelist():
