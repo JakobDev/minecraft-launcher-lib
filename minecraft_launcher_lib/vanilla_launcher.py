@@ -179,7 +179,7 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
     elif vanilla_profile["versionType"] == "latest-snapshot":
         new_profile["lastVersionId"] = "latest-snapshot"
     elif vanilla_profile["versionType"] == "custom":
-        new_profile["lastVersionId"] = "version"
+        new_profile["lastVersionId"] = vanilla_profile["version"]
 
     if (game_directory := vanilla_profile.get("gameDirectory")) is not None:
         new_profile["gameDir"] = game_directory
