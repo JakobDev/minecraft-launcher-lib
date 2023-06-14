@@ -99,7 +99,7 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
             index: MrpackIndex = json.load(f)
 
         # Download the files
-        callback.get("text", empty)("Download mrpack files")
+        callback.get("setStatus", empty)("Download mrpack files")
         file_list = _filter_mrpack_files(index["files"], mrpack_install_options)
         callback.get("setMax", empty)(len(file_list))
         for count, file in enumerate(file_list):
