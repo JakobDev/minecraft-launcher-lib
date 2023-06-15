@@ -179,7 +179,8 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
     elif vanilla_profile["versionType"] == "latest-snapshot":
         new_profile["lastVersionId"] = "latest-snapshot"
     elif vanilla_profile["versionType"] == "custom":
-        new_profile["lastVersionId"] = vanilla_profile["version"]
+        # _is_vanilla_launcher_profile_valid() ensures that version is not None, when versionType is set to custom, so we can ignore the mypy error here
+        new_profile["lastVersionId"] = vanilla_profile["version"]  # type: ignore
 
     if (game_directory := vanilla_profile.get("gameDirectory")) is not None:
         new_profile["gameDir"] = game_directory
