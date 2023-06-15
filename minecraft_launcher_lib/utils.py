@@ -1,7 +1,7 @@
 "utils contains a few functions for helping you that doesn't fit in any other category"
 from .types import Articles, MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
 from ._internal_types.shared_types import ClientJson, VersionListManifestJson
-from ._helper import get_requests_response_cache
+from ._helper import get_requests_response_cache, assert_func
 from typing import List, Union
 from datetime import datetime
 import platform
@@ -193,3 +193,19 @@ def is_platform_supported() -> bool:
     if platform.system() not in ["Windows", "Darwin", "Linux"]:
         return False
     return True
+
+
+def is_minecraft_installed(minecraft_directory: Union[str, os.PathLike]) -> bool:
+    """
+    Checks, if there is already a existing Minecraft Installation in the given Directory
+
+    :param minecraft_directory: The path to your Minecraft directory
+    :return: Is a Installation is found
+    """
+    try:
+        assert_func(os.path.isdir(os.path.join(minecraft_directory, "versions")))
+        assert_func(os.path.isdir(os.path.join(minecraft_directory, "libraries")))
+        assert_func(os.path.isdir(os.path.join(minecraft_directory, "assets")))
+        return True
+    except AssertionError:
+        return False

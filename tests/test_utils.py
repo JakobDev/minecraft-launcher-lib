@@ -96,3 +96,13 @@ def test_is_vanilla_version():
 
 def test_is_platform_supported():
     assert isinstance(minecraft_launcher_lib.utils.is_platform_supported(), bool)
+
+
+def test_is_minecraft_installed(tmp_path: pathlib.Path) -> None:
+    assert minecraft_launcher_lib.utils.is_minecraft_installed(tmp_path) is False
+
+    (tmp_path / "versions").mkdir()
+    (tmp_path / "libraries").mkdir()
+    (tmp_path / "assets").mkdir()
+
+    assert minecraft_launcher_lib.utils.is_minecraft_installed(tmp_path) is True
