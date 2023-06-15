@@ -5,9 +5,9 @@ You may want to read the :doc:`/tutorial/microsoft_login` tutorial before using 
 For a list of all types see :doc:`microsoft_types`.
 """
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
-from typing import Literal, Optional, Tuple, cast
+from .exceptions import InvalidRefreshToken, AzureAppNotPermitted
 from ._helper import get_user_agent, assert_func
-from .exceptions import InvalidRefreshToken
+from typing import Literal, Optional, Tuple, cast
 from base64 import urlsafe_b64encode
 from hashlib import sha256
 import urllib.parse
@@ -300,6 +300,7 @@ def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: s
     :param redirect_uri: The Redirect URI of your Azure App
     :param auth_code: The Code you get from :func:`parse_auth_code_url`
     :param code_verifier: The 3rd entry in the Tuple you get from :func:`get_secure_login_data`
+    :raises AzureAppNotPermitted: Your Azure App don't have the Permission to use the Minecraft API
 
     It returns the following:
 
@@ -331,6 +332,10 @@ def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: s
     xsts_token = xsts_request["Token"]
 
     account_request = authenticate_with_minecraft(userhash, xsts_token)
+
+    if "access_token" not in account_request:
+        raise AzureAppNotPermitted()
+
     access_token = account_request["access_token"]
 
     profile = cast(CompleteLoginResponse, get_profile(access_token))
@@ -349,6 +354,7 @@ def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri:
     :param client_secret: The Client Secret of your Azure App. This is deprecated and should not been used anymore.
     :param redirect_uri: The Redirect URI of Azure App. This Parameter only exists for backwards compatibility and is not used anymore.
     :param refresh_token: Your refresh token
+    :raises InvalidRefreshToken: Your refresh token is not valid
 
     Raises a :class:`~minecraft_launcher_lib.exceptions.InvalidRefreshToken` exception when the refresh token is invalid.
     """

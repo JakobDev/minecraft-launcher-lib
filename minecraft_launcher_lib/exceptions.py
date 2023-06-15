@@ -110,3 +110,12 @@ class InvalidChecksum(SecurityError):
         "The actual Checksum"
 
         super().__init__("InvalidChecksum", f"{path} has the wrong Checksum")
+
+
+class AzureAppNotPermitted(Exception):
+    """
+    Raised when you try to use a Azure App, that don't have the Permission to use the Minecraft API.
+    Take a look at the For more information about the options take a look at the :doc:`/tutorial/microsoft_login` tutorial to learn how to fix this.
+    """
+    def __init__(self) -> None:
+        super().__init__("It looks like your Azure App don't have the Permission to use the Minecraft API. Take a look at the Documentation for more Information.")
