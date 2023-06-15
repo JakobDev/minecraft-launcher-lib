@@ -2,6 +2,7 @@ import minecraft_launcher_lib
 import pathlib
 import shutil
 import pytest
+import json
 import os
 
 
@@ -58,6 +59,50 @@ def test_get_vanilla_launcher_profile_version() -> None:
 
     with pytest.raises(minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile):
         minecraft_launcher_lib.vanilla_launcher.get_vanilla_launcher_profile_version({"name": "test", "version": "test", "versionType": "test"})
+
+
+def _remove_none_values(none_dict: dict) -> dict:
+    new_dict = {}
+    for key, value in none_dict.items():
+        if value is not None:
+            new_dict[key] = value
+    return new_dict
+
+
+def _check_vanilla_profile_written(tmp_path: pathlib.Path, profile: minecraft_launcher_lib.types.VanillaLauncherProfile) -> None:
+    temp_dir_count = 0
+    while True:
+        if not (tmp_path / str(temp_dir_count)).is_dir():
+            break
+        else:
+            temp_dir_count += 1
+
+    current_dir = (tmp_path / str(temp_dir_count))
+    current_dir.mkdir()
+
+    with open(os.path.join(os.path.dirname(__file__), "data", "vanilla_launcher", "launcher_profiles.json"), "r", encoding="utf-8") as f:
+        json_data = json.load(f)
+
+    json_data["profiles"] = {}
+
+    with open(current_dir / "launcher_profiles.json", "w", encoding="utf-8") as f:
+        json.dump(json_data, f, ensure_ascii=False)
+
+    minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(current_dir, profile)
+    assert _remove_none_values(minecraft_launcher_lib.vanilla_launcher.load_vanilla_launcher_profiles(current_dir)[0]) == _remove_none_values(profile)
+
+
+def test_add_vanilla_launcher_profile(tmp_path: pathlib.Path) -> None:
+    _check_vanilla_profile_written(tmp_path, {"name": "test", "versionType": "latest-release"})
+    _check_vanilla_profile_written(tmp_path, {"name": "test", "versionType": "latest-snapshot"})
+    _check_vanilla_profile_written(tmp_path, {"name": "test", "versionType": "custom", "version": "test"})
+    _check_vanilla_profile_written(tmp_path, {"name": "test", "versionType": "latest-release", "gameDirectory": "testGame"})
+    _check_vanilla_profile_written(tmp_path, {"name": "test", "versionType": "latest-release", "javaExecutable": "testJava"})
+    _check_vanilla_profile_written(tmp_path, {"name": "test", "versionType": "latest-release", "javaArguments": ["a", "b", "c"]})
+    _check_vanilla_profile_written(tmp_path, {"name": "test", "versionType": "latest-release", "customResolution": {"width": 150, "height": 100}})
+
+    with pytest.raises(minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile):
+        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(tmp_path, {"name": "test", "version": "test", "versionType": "test"})
 
 
 def test_do_vanilla_launcher_profiles_exists(tmp_path: pathlib.Path) -> None:
