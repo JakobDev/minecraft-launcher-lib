@@ -4,7 +4,7 @@ While there are :doc:`automatic tests</develop/automatic_tests>` for the utils f
 
 Open a command line in the root directory of minecraft-launcher-lib and open the Python Interpreter. In the Interpreter run:
 
-.. code::
+.. code:: python
 
     >>> import minecraft_launcher_lib
     >>> print(minecraft_launcher_lib.__file___)

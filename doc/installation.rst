@@ -6,7 +6,7 @@ Here are different methods to install minecraft-launcher-lib.
     Like almost every other Python library, minecraft-launcher-lib can be installed directly from `PyPI <https://pypi.org/project/minecraft-launcher-lib/>`_.
     That is the preferred way to install it for the most people.
 
-    .. code::
+    .. code:: shell
 
         pip install -U minecraft-launcher-lib
 
@@ -17,6 +17,6 @@ Here are different methods to install minecraft-launcher-lib.
     You can also install minecraft-launcher-lib directly from source. That will give you the latest changes that are not in a release yet.
     Please do this only if you have a good reason.
 
-    .. code::
+    .. code:: shell
 
         pip install -U git+https://codeberg.org/JakobDev/minecraft-launcher-lib.git

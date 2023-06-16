@@ -7,13 +7,13 @@ Using mypy
 -------------------------
 To get started, install mypy together with requests and the types for requests:
 
-.. code::
+.. code:: shell
 
     pip install requests types-requests mypy
 
 To run mypy open a command line in the root directory of minecraft-launcher-lib and execute:
 
-.. code::
+.. code:: shell
 
     mypy minecraft_launcher_lib
 

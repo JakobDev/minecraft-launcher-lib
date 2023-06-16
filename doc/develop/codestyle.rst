@@ -11,13 +11,13 @@ Check the Codestyle
 -------------------------
 minecraft-launcher-lib uses `flake8 <https://flake8.pycqa.org>`_ along with the `flake8-annotation <https://pypi.org/project/flake8-annotations/>`_, the `flake8-docstring-checker <https://pypi.org/project/flake8-docstring-checker/>`_  plugin, and the `flake8-assert-finder <https://pypi.org/project/flake8-assert-finder/>`_  plugin to do a automatic style check. To get started, install it:
 
-.. code::
+.. code:: shell
 
     pip install flake8 flake8-annotation flake8-docstring-checker flake8-assert-finder
 
 To run it, open a command line in the root directory of minecraft-launcher-lib and run:
 
-.. code::
+.. code:: shell
 
     flake8
 

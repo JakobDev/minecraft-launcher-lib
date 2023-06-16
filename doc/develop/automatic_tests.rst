@@ -7,13 +7,13 @@ Using Pytest
 -------------------------
 To get started, install it:
 
-.. code::
+.. code:: shell
 
     pip install pytest
 
 To run the tests, open a command line in the root directory of minecraft-launcher-lib and execute:
 
-.. code::
+.. code:: shell
 
     pytest
 
@@ -26,13 +26,13 @@ To get the test coverage (which lines are executed during the tests) you will ne
 
 Install it with pip:
 
-.. code::
+.. code:: shell
 
     pip install pytest-cov
 
 Run pytest with coverage:
 
-.. code::
+.. code:: shell
 
     pytest -v --cov=minecraft_launcher_lib  --cov-report html
 
