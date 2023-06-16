@@ -39,13 +39,13 @@ def get_java_information(path: Union[str, os.PathLike]) -> JavaInformation:
         information["java_path"] = os.path.join(os.path.abspath(path), "bin", "java.exe")
         information["javaw_path"] = os.path.join(os.path.abspath(path), "bin", "javaw.exe")
     else:
-        information["java_path"] = os.path.join(os.path.abspath(path), "bin", "java.exe")
+        information["java_path"] = os.path.join(os.path.abspath(path), "bin", "java")
         information["javaw_path"] = None
 
     return information
 
 
-def _search_java_directory(path: str) -> List[str]:
+def _search_java_directory(path: Union[str, os.PathLike]) -> List[str]:
     "Used by find_system_java_versions() to parse a Directory"
     if not os.path.isdir(path):
         return []
@@ -63,7 +63,7 @@ def _search_java_directory(path: str) -> List[str]:
     return java_list
 
 
-def find_system_java_versions(additional_directories: Optional[List[str]] = None) -> List[str]:
+def find_system_java_versions(additional_directories: Optional[List[Union[str, os.PathLike]]] = None) -> List[str]:
     """
     Try to find all Java Versions installed on the System. You can use this to e.g. let the User choose between different Java Versions in a Dropdown.
 
@@ -88,7 +88,7 @@ def find_system_java_versions(additional_directories: Optional[List[str]] = None
     return java_list
 
 
-def find_system_java_versions_information(additional_directories: Optional[List[str]] = None) -> List[JavaInformation]:
+def find_system_java_versions_information(additional_directories: Optional[List[Union[str, os.PathLike]]] = None) -> List[JavaInformation]:
     """
     Same as :func:`find_system_java_version`, but uses :func:`get_java_information` to get some Information about the Installation instead of just proving a Path.
 

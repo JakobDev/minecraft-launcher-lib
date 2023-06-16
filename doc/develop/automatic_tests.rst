@@ -18,3 +18,22 @@ To run the tests, open a command line in the root directory of minecraft-launche
     pytest
 
 If a test fails, you should fix the bug.
+
+-------------------------
+Test Coverage
+-------------------------
+To get the test coverage (which lines are executed during the tests) you will need `pytest-cov <https://pypi.org/project/pytest-cov>`_.
+
+Install it with pip:
+
+.. code::
+
+    pip install pytest-cov
+
+Run pytest with coverage:
+
+.. code::
+
+    pytest -v --cov=minecraft_launcher_lib  --cov-report html
+
+A new directory called :code:`htmlcov` will be created. Open the :code:`index.html` from this dircetory with your browser to see the coverage report.

@@ -22,6 +22,22 @@
         "lastVersionId" : "1.16.5-forge-36.1.24",
         "name" : "Forge1.16.5",
         "type" : "custom"
+      },
+      "e82869b7290457d0d7cbd465db47531f" : {
+        "created" : "1970-01-02T00:00:00.000Z",
+        "icon" : "Grass",
+        "lastUsed" : "2021-06-29T14:36:19.527Z",
+        "lastVersionId" : "latest-release",
+        "name" : "",
+        "type" : "latest-release"
+      },
+      "ab9e95f21a7f8af8e0dccc9d8b43a291" : {
+        "created" : "1970-01-01T00:00:00.000Z",
+        "icon" : "Crafting_Table",
+        "lastUsed" : "2022-05-18T19:05:39.957Z",
+        "lastVersionId" : "latest-snapshot",
+        "name" : "",
+        "type" : "latest-snapshot"
       }
     },
     "settings" : {

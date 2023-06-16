@@ -167,6 +167,8 @@ def test_install_mrpack(tmp_path) -> None:
 def test_mrpack_launch_version(tmp_path) -> None:
     index = _get_test_index()
 
+    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "1.19"
+
     index["dependencies"]["forge"] = "41.1.0"
     assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "1.19-forge-41.1.0"
     del index["dependencies"]["forge"]

@@ -15,7 +15,7 @@ def test_load_vanilla_launcher_profiles(tmp_path: pathlib.Path) -> None:
 
     profile_list = minecraft_launcher_lib.vanilla_launcher.load_vanilla_launcher_profiles(tmp_path / ".minecraft")
 
-    assert len(profile_list) == 2
+    assert len(profile_list) == 4
 
     assert profile_list[0]["name"] == "Test"
     assert profile_list[0]["version"] is None
@@ -34,11 +34,28 @@ def test_load_vanilla_launcher_profiles(tmp_path: pathlib.Path) -> None:
     assert profile_list[1]["javaArguments"] is None
     assert profile_list[1]["customResolution"] is None
 
+    assert profile_list[2]["name"] == "Latest release"
+    assert profile_list[2]["version"] is None
+    assert profile_list[2]["versionType"] == "latest-release"
+    assert profile_list[2]["gameDirectory"] is None
+    assert profile_list[2]["javaExecutable"] is None
+    assert profile_list[2]["javaArguments"] is None
+    assert profile_list[2]["customResolution"] is None
+
+    assert profile_list[3]["name"] == "Latest snapshot"
+    assert profile_list[3]["version"] is None
+    assert profile_list[3]["versionType"] == "latest-snapshot"
+    assert profile_list[3]["gameDirectory"] is None
+    assert profile_list[3]["javaExecutable"] is None
+    assert profile_list[3]["javaArguments"] is None
+    assert profile_list[3]["customResolution"] is None
+
 
 def test_vanilla_launcher_profile_to_minecraft_options() -> None:
     test_values = {"name": "test", "versionType": "latest-release"}
     assert len(minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options(test_values)) == 0
     assert minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options({**test_values, **{"gameDirectory": "test"}}) == {"gameDirectory": "test"}
+    assert minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options({**test_values, **{"javaExecutable": "/testJava"}}) == {"executablePath": "/testJava"}
     assert minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options({**test_values, **{"javaArguments": ["a", "b"]}}) == {"jvmArguments": ["a", "b"]}
     assert minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options({**test_values, **{"customResolution": {"height": 100, "width": 150}}}) == {
         "customResolution": True,
@@ -102,7 +119,19 @@ def test_add_vanilla_launcher_profile(tmp_path: pathlib.Path) -> None:
     _check_vanilla_profile_written(tmp_path, {"name": "test", "versionType": "latest-release", "customResolution": {"width": 150, "height": 100}})
 
     with pytest.raises(minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile):
-        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(tmp_path, {"name": "test", "version": "test", "versionType": "test"})
+        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(tmp_path, {"name": "test", "versionType": "custom"})
+
+    with pytest.raises(minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile):
+        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(tmp_path, {"name": "test", "versionType": "latest-release", "gameDirectory": 123})
+
+    with pytest.raises(minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile):
+        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(tmp_path, {"name": "test", "versionType": "latest-release", "javaExecutable": 123})
+
+    with pytest.raises(minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile):
+        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(tmp_path, {"name": "test", "versionType": "latest-release", "javaArguments": [123]})
+
+    with pytest.raises(minecraft_launcher_lib.exceptions.InvalidVanillaLauncherProfile):
+        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(tmp_path, {"name": "test", "versionType": "latest-release", "customResolution": {"width": "abc"}})
 
 
 def test_do_vanilla_launcher_profiles_exists(tmp_path: pathlib.Path) -> None:
