@@ -147,6 +147,7 @@ def test_get_java_executable(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("JAVA_HOME", False)
     monkeypatch.setattr(platform, "system", lambda: "Linux")
     monkeypatch.setattr(os.path, "isfile", lambda path: False)
+    monkeypatch.setattr(os.path, "islink", lambda path: False)
     monkeypatch.setattr(shutil, "which", lambda name: "/testwhich" if name == "java" else None)
     assert minecraft_launcher_lib.utils.get_java_executable() == "/testwhich"
 
@@ -155,6 +156,7 @@ def test_get_java_executable(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(shutil, "which", lambda name: None)
     monkeypatch.setattr(platform, "system", lambda: "Linux")
     monkeypatch.setattr(os.path, "isfile", lambda path: False)
+    monkeypatch.setattr(os.path, "islink", lambda path: False)
     assert minecraft_launcher_lib.utils.get_java_executable() == "java"
 
 
