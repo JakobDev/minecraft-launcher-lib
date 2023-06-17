@@ -1,4 +1,5 @@
 import minecraft_launcher_lib
+from typing import List
 import subprocess
 import platform
 import pathlib
@@ -9,7 +10,7 @@ import sys
 _org_subprocess_run = subprocess.run
 
 
-def _subprocess_mock(cmd: list[str], **kwargs: dict) -> subprocess.CompletedProcess:
+def _subprocess_mock(cmd: List[str], **kwargs: dict) -> subprocess.CompletedProcess:
     return _org_subprocess_run([sys.executable, pathlib.Path(__file__).parent / "data" / "java_utils" / "java_mock.py"], **kwargs)
 
 
