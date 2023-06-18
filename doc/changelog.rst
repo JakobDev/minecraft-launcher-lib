@@ -2,6 +2,14 @@ Changelog
 ==================================================
 
 -------------------------
+6.1
+-------------------------
+- Added :class:`~minecraft_launcher_lib.exceptions.AzureAppNotPermitted` exception
+- Added :func:`~minecraft_launcher_lib.utils.is_minecraft_installed`
+- Added callbacks to the :doc:`/modules/mrpack` module
+- Fix some Bugs
+
+-------------------------
 6.0
 -------------------------
 - Added :doc:`/modules/vanilla_launcher` module
