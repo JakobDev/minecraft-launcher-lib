@@ -118,7 +118,7 @@ def do_version_install(versionid: str, path: str, callback: CallbackDict, url: O
     if url:
         download_file(url, os.path.join(path, "versions", versionid, versionid + ".json"), callback, sha1=sha1, minecraft_directory=path)
 
-    with open(os.path.join(path, "versions", versionid, versionid + ".json")) as f:
+    with open(os.path.join(path, "versions", versionid, versionid + ".json"), "r", encoding="utf-8") as f:
         versiondata: ClientJson = json.load(f)
 
     # For Forge

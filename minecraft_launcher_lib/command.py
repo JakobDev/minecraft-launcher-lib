@@ -172,7 +172,7 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
 
     options = copy.deepcopy(options)
 
-    with open(os.path.join(path, "versions", version, version + ".json")) as f:
+    with open(os.path.join(path, "versions", version, version + ".json"), "r", encoding="utf-8") as f:
         data: ClientJson = json.load(f)
 
     if "inheritsFrom" in data:

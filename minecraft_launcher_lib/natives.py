@@ -73,7 +73,7 @@ def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path:
     if not os.path.isfile(os.path.join(path, "versions", versionid, versionid + ".json")):
         raise VersionNotFound(versionid)
 
-    with open(os.path.join(path, "versions", versionid, versionid + ".json")) as f:
+    with open(os.path.join(path, "versions", versionid, versionid + ".json"), "r", encoding="utf-8") as f:
         data: ClientJson = json.load(f)
 
     for i in data["libraries"]:
