@@ -1,3 +1,4 @@
+from ._test_helper import prepare_test_versions
 import minecraft_launcher_lib
 import platform
 import hashlib
@@ -23,7 +24,7 @@ def _prepare_install_test_env(tmp_path: pathlib.Path) -> None:
 def test_install_minecraft_version(monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path) -> None:
     monkeypatch.setattr(platform, "system", lambda: "Linux")
 
-    _prepare_install_test_env(tmp_path)
+    prepare_test_versions(tmp_path)
 
     minecraft_launcher_lib.install.install_minecraft_version("test1", tmp_path)
 

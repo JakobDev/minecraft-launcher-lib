@@ -1,9 +1,9 @@
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
 from ._helper import get_user_agent, download_file, empty, get_sha1_hash, check_path_inside_minecraft_directory
 from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson
+from .exceptions import VersionNotFound, PlatformNotSupported
 from .types import CallbackDict, JvmRuntimeInformation
 from typing import List, Union, Optional
-from .exceptions import VersionNotFound
 import subprocess
 import datetime
 import requests
@@ -114,6 +114,10 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
 
         elif value["type"] == "link":
             check_path_inside_minecraft_directory(minecraft_directory, os.path.join(base_path, value["target"]))
+
+            if not os.path.isdir(os.path.dirname(current_path)):
+                os.makedirs(os.path.dirname(current_path))
+
             try:
                 os.symlink(value["target"], current_path)
             except Exception:
@@ -165,6 +169,7 @@ def get_jvm_runtime_information(jvm_version: str) -> JvmRuntimeInformation:
 
     :param jvm_version: A JVM Version
     :raises VersionNotFound: The given JVM Version was not found
+    :raises VersionNotFound: The given JVM Version is not available on this Platform
     :return: A Dict with Information
     """
     manifest_data: RuntimeListJson = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
@@ -173,6 +178,9 @@ def get_jvm_runtime_information(jvm_version: str) -> JvmRuntimeInformation:
     # Check if the jvm version exists
     if jvm_version not in manifest_data[platform_string]:
         raise VersionNotFound(jvm_version)
+
+    if len(manifest_data[platform_string][jvm_version]) == 0:
+        raise PlatformNotSupported()
 
     return {
         "name": manifest_data[platform_string][jvm_version][0]["version"]["name"],

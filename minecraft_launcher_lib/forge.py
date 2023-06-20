@@ -22,11 +22,10 @@ import subprocess
 import tempfile
 import random
 import zipfile
-import shutil
 import json
 import os
 
-__all__ = ["install_forge_version", "run_forge_installer", "list_forge_versions", "find_forge_version", "is_forge_version_valid", "supports_automatic_install"]
+__all__ = ["install_forge_version", "run_forge_installer", "list_forge_versions", "find_forge_version", "is_forge_version_valid", "supports_automatic_install", "forge_to_installed_version"]
 
 
 def get_data_library_path(libname: str, path: str) -> str:
@@ -60,42 +59,39 @@ def forge_processors(data: ForgeInstallProfile, minecraft_directory: Union[str, 
         else:
             argument_vars["{" + data_key + "}"] = data_value["client"]
 
-    root_path = os.path.join(tempfile.gettempdir(), "forge-root-" + str(random.randrange(1, 100000)))
-    argument_vars["{INSTALLER}"] = installer_path
-    argument_vars["{BINPATCH}"] = lzma_path
-    argument_vars["{ROOT}"] = root_path
-    argument_vars["{SIDE}"] = "client"
+    with tempfile.TemporaryDirectory() as root_path:
+        argument_vars["{INSTALLER}"] = installer_path
+        argument_vars["{BINPATCH}"] = lzma_path
+        argument_vars["{ROOT}"] = root_path
+        argument_vars["{SIDE}"] = "client"
 
-    classpath_seperator = get_classpath_separator()
+        classpath_seperator = get_classpath_separator()
 
-    callback.get("setMax", empty)(len(data["processors"]))
+        callback.get("setMax", empty)(len(data["processors"]))
 
-    for count, i in enumerate(data["processors"]):
-        if "client" not in i.get("sides", ["client"]):
-            # Skip server side only processors
-            continue
-        callback.get("setStatus", empty)("Running processor " + i["jar"])
-        # Get the classpath
-        classpath = ""
-        for c in i["classpath"]:
-            classpath = classpath + get_library_path(c, path) + classpath_seperator
-        classpath = classpath + get_library_path(i["jar"], path)
-        mainclass = get_jar_mainclass(get_library_path(i["jar"], path))
-        command = [java, "-cp", classpath, mainclass]
-        for c in i["args"]:
-            var = argument_vars.get(c, c)
-            if var.startswith("[") and var.endswith("]"):
-                command.append(get_library_path(var[1:-1], path))
-            else:
-                command.append(var)
-        for argument_key, argument_value in argument_vars.items():
-            for pos in range(len(command)):
-                command[pos] = command[pos].replace(argument_key, argument_value)
-        subprocess.call(command)
-        callback.get("setProgress", empty)(count)
-
-    if os.path.exists(root_path):
-        shutil.rmtree(root_path)
+        for count, i in enumerate(data["processors"]):
+            if "client" not in i.get("sides", ["client"]):
+                # Skip server side only processors
+                continue
+            callback.get("setStatus", empty)("Running processor " + i["jar"])
+            # Get the classpath
+            classpath = ""
+            for c in i["classpath"]:
+                classpath = classpath + get_library_path(c, path) + classpath_seperator
+            classpath = classpath + get_library_path(i["jar"], path)
+            mainclass = get_jar_mainclass(get_library_path(i["jar"], path))
+            command = [java, "-cp", classpath, mainclass]
+            for c in i["args"]:
+                var = argument_vars.get(c, c)
+                if var.startswith("[") and var.endswith("]"):
+                    command.append(get_library_path(var[1:-1], path))
+                else:
+                    command.append(var)
+            for argument_key, argument_value in argument_vars.items():
+                for pos in range(len(command)):
+                    command[pos] = command[pos].replace(argument_key, argument_value)
+            subprocess.run(command)
+            callback.get("setProgress", empty)(count)
 
 
 def install_forge_version(versionid: str, path: Union[str, os.PathLike], callback: Optional[CallbackDict] = None, java: Optional[Union[str, os.PathLike]] = None) -> None:
@@ -190,8 +186,10 @@ def run_forge_installer(version: str, java: Optional[Union[str, os.PathLike]] = 
     if not download_file(FORGE_DOWNLOAD_URL.format(version=version), temp_file_path, {}):
         raise VersionNotFound(version)
 
-    subprocess.call(["java" if java is None else str(java), "-jar", temp_file_path])
-    os.remove(temp_file_path)
+    try:
+        subprocess.run(["java" if java is None else str(java), "-jar", temp_file_path], check=True)
+    finally:
+        os.remove(temp_file_path)
 
 
 def list_forge_versions() -> List[str]:

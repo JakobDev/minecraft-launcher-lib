@@ -1,0 +1,38 @@
+{
+    "files": {
+        "jre.bundle/Contents/Home/COPYRIGHT": {
+            "downloads": {
+                "lzma": {
+                    "sha1": "0c7070b07da3c32900eba352d6bf97c2943acab5",
+                    "size": 1431,
+                    "url": "https://piston-data.mojang.com/v1/objects/0c7070b07da3c32900eba352d6bf97c2943acab5/COPYRIGHT"
+                },
+                "raw": {
+                    "sha1": "ef7c9aefb22bab5861a957ac0720650e4b25c6c8",
+                    "size": 3244,
+                    "url": "https://piston-data.mojang.com/v1/objects/ef7c9aefb22bab5861a957ac0720650e4b25c6c8/COPYRIGHT"
+                }
+            },
+            "executable": false,
+            "type": "file"
+        },
+        "jre.bundle/Contents/Home/LICENSE": {
+            "downloads": {
+                "raw": {
+                    "sha1": "3e86865deec0814c958bcf7fb87f790bccc0e8bd",
+                    "size": 40,
+                    "url": "https://piston-data.mojang.com/v1/objects/3e86865deec0814c958bcf7fb87f790bccc0e8bd/LICENSE"
+                }
+            },
+            "executable": true,
+            "type": "file"
+        },
+        "lib/desktop/mime": {
+            "type": "directory"
+        },
+        "links/testlink": {
+            "target": "../target",
+            "type": "link"
+        }
+    }
+}

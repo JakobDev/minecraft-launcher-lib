@@ -5,11 +5,11 @@ minecraft-launcher-lib uses `Pytest <https://pytest.org>`_ to run some automatic
 -------------------------
 Using Pytest
 -------------------------
-To get started, install it:
+To get started, install pytest together with `requests-mock <https://pypi.org/project/requests-mock>`_:
 
 .. code:: shell
 
-    pip install pytest
+    pip install pytest requests-mock
 
 To run the tests, open a command line in the root directory of minecraft-launcher-lib and execute:
 
@@ -34,6 +34,6 @@ Run pytest with coverage:
 
 .. code:: shell
 
-    pytest -v --cov=minecraft_launcher_lib  --cov-report html
+    pytest -v --cov=minecraft_launcher_lib --cov-report html
 
 A new directory called :code:`htmlcov` will be created. Open the :code:`index.html` from this dircetory with your browser to see the coverage report.

@@ -1,3 +1,4 @@
+from ._test_helper import prepare_test_versions, get_test_callbacks
 from typing import List, Dict, Any
 import minecraft_launcher_lib
 import requests
@@ -103,7 +104,7 @@ def _get_test_index() -> Dict[str, Any]:
             },
         ],
         "dependencies": {
-            "minecraft": "1.19"
+            "minecraft": "test1"
         }
     }
 
@@ -118,7 +119,7 @@ def test_get_mrpack_information(tmp_path: pathlib.Path) -> None:
     assert info["summary"] == ""
     assert info["versionId"] == "minecraft-launcher-lib.test"
     assert info["formatVersion"] == 1
-    assert info["minecraftVersion"] == "1.19"
+    assert info["minecraftVersion"] == "test1"
     assert info["optionalFiles"] == ["c.txt"]
 
     # Test with summary
@@ -163,20 +164,51 @@ def test_install_mrpack(tmp_path) -> None:
     with pytest.raises(minecraft_launcher_lib.exceptions.FileOutsideMinecraftDirectory):
         minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["../overrides.txt"]), fifth_dir, mrpack_install_options={"skipDependenciesInstall": True})
 
+    # Test with Modpack directory
+    sixth_dir = _create_test_dir(tmp_path)
+    modpack_dir = _create_test_dir(tmp_path)
+    minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), sixth_dir, modpack_directory=modpack_dir, mrpack_install_options={"skipDependenciesInstall": True})
+    assert sorted(os.listdir(modpack_dir)) == sorted(["a.txt", "b.txt"])
+    assert not os.path.isdir(sixth_dir)
+
+    # Test with forge install
+    forge_dir = _create_test_dir(tmp_path)
+    forge_index = copy.deepcopy(index)
+    forge_index["dependencies"]["forge"] = "invalid"
+    prepare_test_versions(forge_dir)
+    with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path), forge_dir, callback=get_test_callbacks())
+
+    # Test with fabric install
+    fabric_dir = _create_test_dir(tmp_path)
+    fabric_index = copy.deepcopy(index)
+    fabric_index["dependencies"]["fabric-loader"] = "invalid"
+    prepare_test_versions(fabric_dir)
+    with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(fabric_index, tmp_path), fabric_dir, callback=get_test_callbacks())
+
+    # Test with quilt install
+    quilt_dir = _create_test_dir(tmp_path)
+    quilt_index = copy.deepcopy(index)
+    quilt_index["dependencies"]["quilt-loader"] = "invalid"
+    prepare_test_versions(quilt_dir)
+    with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(quilt_index, tmp_path), quilt_dir, callback=get_test_callbacks())
+
 
 def test_mrpack_launch_version(tmp_path) -> None:
     index = _get_test_index()
 
-    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "1.19"
+    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "test1"
 
     index["dependencies"]["forge"] = "41.1.0"
-    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "1.19-forge-41.1.0"
+    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "test1-forge-41.1.0"
     del index["dependencies"]["forge"]
 
     index["dependencies"]["fabric-loader"] = "0.14.15"
-    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "fabric-loader-0.14.15-1.19"
+    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "fabric-loader-0.14.15-test1"
     del index["dependencies"]["fabric-loader"]
 
     index["dependencies"]["quilt-loader"] = "0.18.2"
-    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "quilt-loader-0.18.2-1.19"
+    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "quilt-loader-0.18.2-test1"
     del index["dependencies"]["quilt-loader"]

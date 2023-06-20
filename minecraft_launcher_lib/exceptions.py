@@ -119,3 +119,11 @@ class AzureAppNotPermitted(Exception):
     """
     def __init__(self) -> None:
         super().__init__("It looks like your Azure App don't have the Permission to use the Minecraft API. Take a look at the Documentation for more Information.")
+
+
+class PlatformNotSupported(Exception):
+    """
+    Raised, when the current Platform is not supported by a feature
+    """
+    def __init__(self) -> None:
+        super().__init__("Your Platform is not supported")

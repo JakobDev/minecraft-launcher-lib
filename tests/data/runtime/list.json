@@ -1,0 +1,39 @@
+{
+    "linux": {
+        "java-runtime-empty": [],
+        "java-runtime-test": [
+            {
+                "availability": {
+                    "group": 1661,
+                    "progress": 100
+                },
+                "manifest": {
+                    "sha1": "1c3e5a2901b3637ffff396ea19cd30a96140cd83",
+                    "size": 1328,
+                    "url": "https://test.json"
+                },
+                "version": {
+                    "name": "17.0.3",
+                    "released": "2022-04-29T11:40:02+00:00"
+                }
+            }
+        ],
+        "java-runtime-error": [
+            {
+                "availability": {
+                    "group": 1661,
+                    "progress": 100
+                },
+                "manifest": {
+                    "sha1": "9e6165ffc4526d4b105e40e1be104e58b76a6391",
+                    "size": 97,
+                    "url": "https://error.json"
+                },
+                "version": {
+                    "name": "17.0.3",
+                    "released": "2022-04-29T11:40:02+00:00"
+                }
+            }
+        ]
+    }
+}

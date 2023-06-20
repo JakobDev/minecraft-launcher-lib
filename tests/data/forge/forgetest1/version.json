@@ -1,0 +1,57 @@
+{
+    "_comment_": [
+        "Please do not automate the download and installation of Forge.",
+        "Our efforts are supported by ads from the download page.",
+        "If you MUST automate this, please consider supporting the project through https://www.patreon.com/LexManos/"
+    ],
+    "id": "1.19.4-forge-45.1.0",
+    "time": "2023-06-07T19:16:59+00:00",
+    "releaseTime": "2023-06-07T19:16:59+00:00",
+    "type": "release",
+    "mainClass": "cpw.mods.bootstraplauncher.BootstrapLauncher",
+    "arguments": {
+        "game": [
+            "--launchTarget",
+            "forgeclient",
+            "--fml.forgeVersion",
+            "45.1.0",
+            "--fml.mcVersion",
+            "1.19.4",
+            "--fml.forgeGroup",
+            "net.minecraftforge",
+            "--fml.mcpVersion",
+            "20230314.122934"
+        ],
+        "jvm": [
+            "-Djava.net.preferIPv6Addresses=system",
+            "-DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,JarJarFileSystems,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge-,${version_name}.jar",
+            "-DmergeModules=jna-5.10.0.jar,jna-platform-5.10.0.jar",
+            "-DlibraryDirectory=${library_directory}",
+            "-p",
+            "${library_directory}/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar${classpath_separator}${library_directory}/cpw/mods/securejarhandler/2.1.6/securejarhandler-2.1.6.jar${classpath_separator}${library_directory}/org/ow2/asm/asm-commons/9.5/asm-commons-9.5.jar${classpath_separator}${library_directory}/org/ow2/asm/asm-util/9.5/asm-util-9.5.jar${classpath_separator}${library_directory}/org/ow2/asm/asm-analysis/9.5/asm-analysis-9.5.jar${classpath_separator}${library_directory}/org/ow2/asm/asm-tree/9.5/asm-tree-9.5.jar${classpath_separator}${library_directory}/org/ow2/asm/asm/9.5/asm-9.5.jar${classpath_separator}${library_directory}/net/minecraftforge/JarJarFileSystems/0.3.19/JarJarFileSystems-0.3.19.jar",
+            "--add-modules",
+            "ALL-MODULE-PATH",
+            "--add-opens",
+            "java.base/java.util.jar=cpw.mods.securejarhandler",
+            "--add-opens",
+            "java.base/java.lang.invoke=cpw.mods.securejarhandler",
+            "--add-exports",
+            "java.base/sun.security.util=cpw.mods.securejarhandler",
+            "--add-exports",
+            "jdk.naming.dns/com.sun.jndi.dns=java.naming"
+        ]
+    },
+    "libraries": [
+        {
+            "name": "cpw.mods:securejarhandler:2.1.6",
+            "downloads": {
+                "artifact": {
+                    "path": "cpw/mods/securejarhandler/2.1.6/securejarhandler-2.1.6.jar",
+                    "url": "https://codeberg.org/JakobDev/minecraft-launcher-lib/raw/commit/6ad64675077eb9ea469f37770d6556ea9cbc25a6/minecraft_launcher_lib/_internal_types/forge_types.py",
+                    "sha1": "922f0aede42cdc84fdae37866d4c9b8615cd808c",
+                    "size": 903
+                }
+            }
+        }
+    ]
+}

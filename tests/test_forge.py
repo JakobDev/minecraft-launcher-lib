@@ -1,38 +1,87 @@
+from ._test_helper import prepare_test_versions, get_test_callbacks
 import minecraft_launcher_lib
+import requests_mock
+import subprocess
+import platform
+import zipfile
 import pathlib
 import pytest
+import io
 
 
-def test_install_minecraft_version_invalid_version(tmp_path: pathlib.Path):
+def _create_bytes_zip(source_dir: pathlib.Path) -> bytes:
+    buffer = io.BytesIO()
+    zf = zipfile.ZipFile(buffer, "w")
+    for current_file in source_dir.rglob("*"):
+        if current_file.is_file():
+            zf.writestr(str(current_file.relative_to(source_dir)), current_file.read_bytes())
+    zf.close()
+    return buffer.getvalue()
+
+
+def test_install_forge_version(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/forgetest1/forge-forgetest1-installer.jar", content=_create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest1"))
+    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/forgetest2/forge-forgetest2-installer.jar", content=_create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest2"))
+    requests_mock.real_http = True
+
+    monkeypatch.setattr(platform, "system", lambda: "Linux")
+    monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: None)
+
+    prepare_test_versions(tmp_path)
+
+    minecraft_launcher_lib.forge.install_forge_version("forgetest1", tmp_path, callback=get_test_callbacks())
+    minecraft_launcher_lib.forge.install_forge_version("forgetest2", tmp_path, callback=get_test_callbacks())
+
+    assert (tmp_path / "libraries" / "net" / "minecraftforge" / "forge" / "forgetest1" / "forge-forgetest1.jar").is_file()
+
+
+def test_install_forge_version_invalid_version(requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/invalid/forge-invalid-installer.jar", status_code=404)
+
     # Checks if the VersionNotFound exception raised
+    with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound) as ex:
+        minecraft_launcher_lib.forge.install_forge_version("invalid", str(tmp_path))
+
+    assert ex.value.version == "invalid"
+
+
+def test_run_forge_installer(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker) -> None:
+    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/test/forge-test-installer.jar", text="Hello")
+    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/invalid/forge-invalid-installer.jar", text="World", status_code=404)
+    monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: exec("raise subprocess.CalledProcessError(1, [])") if cmd[0] != "java" else None)
+
+    minecraft_launcher_lib.forge.run_forge_installer("test")
+
+    with pytest.raises(subprocess.CalledProcessError):
+        minecraft_launcher_lib.forge.run_forge_installer("test", java="test")
+
     with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
-        minecraft_launcher_lib.forge.install_forge_version("InvalidVersion", str(tmp_path))
+        minecraft_launcher_lib.forge.run_forge_installer("invalid")
 
 
-def test_list_forge_versions():
+def test_list_forge_versions() -> None:
     version_list = minecraft_launcher_lib.forge.list_forge_versions()
     assert isinstance(version_list[0], str)
 
 
-def test_find_forge_version():
+def test_find_forge_version() -> None:
     assert isinstance(minecraft_launcher_lib.forge.find_forge_version("1.16.2"), str)
     assert minecraft_launcher_lib.forge.find_forge_version("Test123") is None
 
 
-def test_is_forge_version_valid():
+def test_is_forge_version_valid() -> None:
     assert minecraft_launcher_lib.forge.is_forge_version_valid("1.16.5-36.1.32") is True
     assert minecraft_launcher_lib.forge.is_forge_version_valid("Test123") is False
 
 
-def test_supports_automatic_install():
+def test_supports_automatic_install() -> None:
     assert minecraft_launcher_lib.forge.supports_automatic_install("1.16.5-36.1.32") is True
     assert minecraft_launcher_lib.forge.supports_automatic_install("1.12-14.21.1.2443") is False
+    assert minecraft_launcher_lib.forge.supports_automatic_install("invalid") is False
 
 
-def test_forge_to_installed_version():
+def test_forge_to_installed_version() -> None:
     assert minecraft_launcher_lib.forge.forge_to_installed_version("1.19-41.0.105") == "1.19-forge-41.0.105"
 
-
-def test__forge_to_installed_version_invalid_version():
     with pytest.raises(ValueError):
         minecraft_launcher_lib.forge.forge_to_installed_version("Test123")

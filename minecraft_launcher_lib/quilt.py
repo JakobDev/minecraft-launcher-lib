@@ -137,11 +137,9 @@ def install_quilt(minecraft_version: str, minecraft_directory: Union[str, os.Pat
         if result.returncode != 0:
             raise ExternalProgramError(command, result.stdout, result.stderr)
     finally:
-        # Delete the installer we don't need them anymore
-        try:
+        # Delete the installer as we don't need them anymore
+        if os.path.isfile(installer_path):
             os.remove(installer_path)
-        except Exception:
-            pass
 
     # Install all libs of quilt
     quilt_minecraft_version = f"quilt-loader-{loader_version}-{minecraft_version}"

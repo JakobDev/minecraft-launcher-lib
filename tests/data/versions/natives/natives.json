@@ -1,0 +1,79 @@
+{
+    "assets": "natives",
+    "complianceLevel": 0,
+    "downloads": {
+        "client": {
+            "sha1": "77aa70ac5054cbf1140b6449b579e950d5050c4a",
+            "size": 5225771,
+            "url": "https://launcher.mojang.com/v1/objects/77aa70ac5054cbf1140b6449b579e950d5050c4a/client.jar"
+        }
+    },
+    "id": "natives",
+    "libraries": [
+        {
+            "downloads": {
+                "classifiers": {
+                    "natives-linux": {
+                        "path": "org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-linux.jar",
+                        "sha1": "2ba5dcb11048147f1a74eff2deb192c001321f77",
+                        "size": 569061,
+                        "url": "https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-linux.jar"
+                    },
+                    "natives-osx": {
+                        "path": "org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-osx.jar",
+                        "sha1": "6621b382cb14cc409b041d8d72829156a87c31aa",
+                        "size": 518924,
+                        "url": "https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-osx.jar"
+                    },
+                    "natives-windows-32": {
+                        "path": "org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-windows.jar",
+                        "sha1": "3f11873dc8e84c854ec7c5a8fd2e869f8aaef764",
+                        "size": 609967,
+                        "url": "https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-windows.jar"
+                    },
+                    "natives-windows-64": {
+                        "path": "org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-windows.jar",
+                        "sha1": "3f11873dc8e84c854ec7c5a8fd2e869f8aaef764",
+                        "size": 609967,
+                        "url": "https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-windows.jar"
+                    }
+                }
+            },
+            "extract": {
+                "exclude": [
+                    "META-INF/"
+                ]
+            },
+            "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.0",
+            "natives": {
+                "linux": "natives-linux",
+                "osx": "natives-osx",
+                "windows": "natives-windows-${arch}"
+            }
+        },
+        {
+            "downloads": {
+                "classifiers": {}
+            },
+            "name": "org.lwjgl.lwjgl:lwjgl-platform:2.8.0",
+            "natives": {}
+        },
+        {
+            "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1",
+            "rules": [
+                {
+                    "action": "disallow",
+                    "os": {
+                        "name": "windows"
+                    }
+                }
+            ]
+        }
+    ],
+    "mainClass": "net.minecraft.client.main.Main",
+    "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
+    "minimumLauncherVersion": 13,
+    "releaseTime": "2014-02-26T09:22:17+00:00",
+    "time": "2014-02-26T09:22:17+00:00",
+    "type": "release"
+}

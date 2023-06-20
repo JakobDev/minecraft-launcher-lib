@@ -10,5 +10,5 @@ pipeline:
     pytest:
         image: ${PYTHON_IMAGE}
         commands:
-            - pip install pytest pytest-cov requests
+            - pip install pytest pytest-cov requests requests-mock
             - pytest -v --cov=minecraft_launcher_lib
