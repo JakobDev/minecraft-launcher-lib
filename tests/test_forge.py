@@ -25,7 +25,7 @@ def test_install_forge_version(monkeypatch: pytest.MonkeyPatch, requests_mock: r
     requests_mock.real_http = True
 
     monkeypatch.setattr(platform, "system", lambda: "Linux")
-    monkeypatch.setattr(platform, "architecture", lambda:  ("64bit", "ELF"))
+    monkeypatch.setattr(platform, "architecture", lambda: ("64bit", "ELF"))
     monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: None)
 
     prepare_test_versions(tmp_path)
