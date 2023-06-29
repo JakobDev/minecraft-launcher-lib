@@ -1,7 +1,8 @@
 import minecraft_launcher_lib
-from typing import Union
+from typing import Union, Any
 import pathlib
 import shutil
+import json
 import os
 
 
@@ -20,3 +21,8 @@ def get_test_callbacks() -> minecraft_launcher_lib.types.CallbackDict:
         "setProgress": lambda value: assert_func(isinstance(value, int)),
         "setMax": lambda value: assert_func(isinstance(value, int))
     }
+
+
+def read_test_json_file(name: str) -> Any:
+    with open(os.path.join(os.path.dirname(__file__), "data", name), "r", encoding="utf-8") as f:
+        return json.load(f)
