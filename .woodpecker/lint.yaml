@@ -1,4 +1,4 @@
-pipeline:
+steps:
     flake8:
         image: python:latest
         commands:

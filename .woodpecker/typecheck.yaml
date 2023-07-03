@@ -1,4 +1,4 @@
-pipeline:
+steps:
     mypy:
         image: python:latest
         commands:

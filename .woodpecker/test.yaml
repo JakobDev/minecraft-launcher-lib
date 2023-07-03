@@ -6,7 +6,7 @@ matrix:
         - python:3.11
         - pypy:latest
 
-pipeline:
+steps:
     pytest:
         image: ${PYTHON_IMAGE}
         commands:

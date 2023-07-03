@@ -3,7 +3,7 @@ depends_on:
     - test
     - typecheck
 
-pipeline:
+steps:
     pip_deploy:
         image: python:latest
         commands:
