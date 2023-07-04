@@ -26,3 +26,9 @@ Q: Minecraft does not start
 
 Q: Minecraft is creating a logs folder inside my project directory
     A: Minecraft is using the working directory for it's logs. You should run Minecraft with a other working directory.
+
+Q: I get a :class:`~minecraft_launcher_lib.exceptions.AzureAppNotPermitted` Exception
+    A: Please take a look at the :doc:`/tutorial/microsoft_login` tutorial
+
+Q: Does minecraft-launcher-lib supports the Bedrock Edition?
+    A:  Only the Java Edition is supported and there are no plans to support Bedrock

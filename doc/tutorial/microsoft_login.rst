@@ -13,8 +13,8 @@ Apply for Permission
 -------------------------
 As stated here, `here <https://help.minecraft.net/hc/en-us/articles/16254801392141p>`_ new created Azure Apps need to apply for Permission using `this Form <https://aka.ms/mce-reviewappid>`_ before they can use the Minecraft API.
 Apps that have been created before this change keeps working without a chance.
-:func:`~minecraft_launcher_lib.microsoft_account.complete_login` will raise a  :class:`~minecraft_launcher_lib.exceptions.AzureAppNotPermitted` Exception if your App don't have the Permission to use the Minecraft API.
-If you get any other Exception, that propably means something else with your Azure App is not right.
+:func:`~minecraft_launcher_lib.microsoft_account.complete_login` will raise a :class:`~minecraft_launcher_lib.exceptions.AzureAppNotPermitted` Exception if your App don't have the Permission to use the Minecraft API.
+If you get any other Exception, that probably means something else with your Azure App is not right.
 
 -------------------------
 Let the User log in

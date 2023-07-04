@@ -67,6 +67,10 @@ add_module_names = False
 
 default_dark_mode = False
 
+html_theme_options = {
+    "style_external_links": True
+}
+
 
 def add_optional_extension(name: str) -> None:
     try:

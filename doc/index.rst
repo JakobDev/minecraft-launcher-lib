@@ -11,6 +11,7 @@ minecraft-launcher-lib is a easy to use Python library for creating your own Min
 .. toctree::
     :maxdepth: 2
 
+    introduction
     installation
     tutorial/index
     modules/index
@@ -21,5 +22,6 @@ minecraft-launcher-lib is a easy to use Python library for creating your own Min
     develop/index
     showcase
     changelog
+    history
     Issues <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues>
     Source <https://codeberg.org/JakobDev/minecraft-launcher-lib/>
