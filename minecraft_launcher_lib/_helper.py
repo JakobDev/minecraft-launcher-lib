@@ -51,9 +51,6 @@ def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Option
     except Exception:
         pass
 
-    if not url.startswith("http"):
-        return False
-
     callback.get("setStatus", empty)("Download " + os.path.basename(path))
 
     if session is None:
@@ -74,7 +71,7 @@ def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Option
     if sha1 is not None:
         checksum = get_sha1_hash(path)
         if checksum != sha1:
-            InvalidChecksum(url, path, sha1, checksum)
+            raise InvalidChecksum(url, path, sha1, checksum)
 
     return True
 

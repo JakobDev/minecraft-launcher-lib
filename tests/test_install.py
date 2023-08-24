@@ -1,11 +1,10 @@
-from ._test_helper import prepare_test_versions, read_test_json_file
+from ._test_helper import prepare_test_versions, prepare_requests_mock
 import minecraft_launcher_lib
 import requests_mock
 import platform
 import hashlib
 import pathlib
 import pytest
-import shutil
 import os
 
 
@@ -16,10 +15,6 @@ def _assert_downloaded_file(path: pathlib.Path, size: int, hash: str) -> None:
 
     with open(path, "rb") as f:
         assert hashlib.sha1(f.read()).hexdigest() == hash
-
-
-def _prepare_install_test_env(tmp_path: pathlib.Path) -> None:
-    shutil.copytree(os.path.join(os.path.dirname(__file__), "data", "versions"), tmp_path / "versions")
 
 
 def test_install_minecraft_version(monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path) -> None:
@@ -40,11 +35,7 @@ def test_install_minecraft_version_assets(monkeypatch: pytest.MonkeyPatch, reque
 
     prepare_test_versions(tmp_path)
 
-    requests_mock.get("https://resources.download.minecraft.net/86/86f7e437faa5a7fce15d1ddcb9eaeaea377667b8", content=b"a")
-    requests_mock.get("https://resources.download.minecraft.net/e9/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98", content=b"b")
-    requests_mock.get("https://resources.download.minecraft.net/84/84a516841ba77a5b4648de2cd0dfcb30ea46dbb4", content=b"c")
-    requests_mock.get("https://assets.json", json=read_test_json_file("install/assets.json"))
-    requests_mock.real_http = True
+    prepare_requests_mock(requests_mock)
 
     minecraft_launcher_lib.install.install_minecraft_version("assets", tmp_path)
 
@@ -59,7 +50,7 @@ def test_install_minecraft_version_assets(monkeypatch: pytest.MonkeyPatch, reque
 def test_install_minecraft_version_inherit(monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path) -> None:
     monkeypatch.setattr(platform, "system", lambda: "Linux")
 
-    _prepare_install_test_env(tmp_path)
+    prepare_test_versions(tmp_path)
 
     minecraft_launcher_lib.install.install_minecraft_version("inherit", tmp_path)
 
@@ -69,6 +60,17 @@ def test_install_minecraft_version_inherit(monkeypatch: pytest.MonkeyPatch, tmp_
     _assert_downloaded_file(tmp_path / "assets" / "log_configs" / "client-1.12.xml", 888, "bd65e7d2e3c237be76cfbef4c2405033d7f91521")
     _assert_downloaded_file(tmp_path / "versions" / "inherit" / "inherit.jar", 3259, "1a34a92bf766c61eb83edaf7ff632cf0c862f958")
     _assert_downloaded_file(tmp_path / "versions" / "test1" / "test1.jar", 3259, "1a34a92bf766c61eb83edaf7ff632cf0c862f958")
+
+
+def test_install_minecraft_version_invalid_checksum(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    monkeypatch.setattr(platform, "system", lambda: "Linux")
+
+    prepare_test_versions(tmp_path)
+
+    prepare_requests_mock(requests_mock)
+
+    with pytest.raises(minecraft_launcher_lib.exceptions.InvalidChecksum):
+        minecraft_launcher_lib.install.install_minecraft_version("checksum", tmp_path)
 
 
 def test_install_minecraft_version_invalid_version(tmp_path: pathlib.Path) -> None:

@@ -109,7 +109,7 @@ class InvalidChecksum(SecurityError):
         self.actual_checksum: str = actual_checksum
         "The actual Checksum"
 
-        super().__init__("InvalidChecksum", f"{path} has the wrong Checksum")
+        super().__init__("InvalidChecksum", f"{path} has the wrong Checksum (expected {expected_checksum} got {actual_checksum})")
 
 
 class AzureAppNotPermitted(Exception):
