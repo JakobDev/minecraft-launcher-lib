@@ -7,3 +7,7 @@ Sitemap: https://minecraft-launcher-lib.readthedocs.io/sitemap.xml
 # Block ChatGPT
 User-agent: GPTBot
 Disallow: /
+
+# Block CCBot
+User-agent: CCBot
+Disallow: /
