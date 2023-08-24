@@ -2,6 +2,11 @@ Changelog
 ==================================================
 
 -------------------------
+6.2
+-------------------------
+- Fix raising InvalidChecksum exception
+
+-------------------------
 6.1
 -------------------------
 - Added :class:`~minecraft_launcher_lib.exceptions.AzureAppNotPermitted` exception
