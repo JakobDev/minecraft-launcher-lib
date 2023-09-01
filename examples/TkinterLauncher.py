@@ -22,7 +22,7 @@ def main():
         }
         minecraft_command = minecraft_launcher_lib.command.get_minecraft_command(version_select.get(), minecraft_directory, options)
 
-        subprocess.call(minecraft_command)
+        subprocess.run(minecraft_command)
 
         sys.exit(0)
 
