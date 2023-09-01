@@ -11,9 +11,9 @@ I released it and called it `jdMinecraftLauncher <https://codeberg.org/JakobDev/
 
 I knew, this was not a good solution so I kept working on a Python code that can launch and install Minecraft. I was able to archive this and install and launch the latest version at this time.
 I tried to use the code with older versions, but I realized that the Way how to launch Minecraft changed a bit over time. I also got this part working.
-I remembered, how hard it was for me to do this, so I decided to move all the functions that could also be used by others out of jdMinecarftLauncher into a library.
+I remembered, how hard it was for me to do this, so I decided to move all the functions that could also be used by others out of jdMinecraftLauncher into a library.
 I am not very creative when it comes to names, so I just called the library minecraft-launcher-lib, because it's a library for Minecraft launchers.
-minecraft-launcher-lib was primarily made to meet the needs of jdMinecarftLauncher, but I designed to library in a Way that it could be used by anyone out there and with any GUI toolkit.
+minecraft-launcher-lib was primarily made to meet the needs of jdMinecraftLauncher, but I designed to library in a Way that it could be used by anyone out there and with any GUI toolkit.
 
 Version 0.1 was published on `2019-11-18 on GitLab <https://gitlab.com/JakobDev/minecraft-launcher-lib/-/tree/0.1>`_ together with a
 `very minimalistic documentation <https://minecraft-launcher-lib.readthedocs.io/en/0.1>`_ and `uploaded to PyPI <https://pypi.org/project/minecraft-launcher-lib/0.1>`_.
