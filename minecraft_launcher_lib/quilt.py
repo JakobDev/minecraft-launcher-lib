@@ -124,7 +124,7 @@ def install_quilt(minecraft_version: str, minecraft_directory: Union[str, os.Pat
     installer_download_url = f"https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/{installer_version}/quilt-installer-{installer_version}.jar"
 
     # Generate a temporary path for downloading the installer
-    installer_path = os.path.join(tempfile.gettempdir(), f"quilt-installer-{random.randrange(100,10000)}.tmp")
+    installer_path = os.path.join(tempfile.gettempdir(), f"quilt-installer-{random.randrange(100, 10000)}.tmp")
 
     try:
         # Download the installer

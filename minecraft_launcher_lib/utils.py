@@ -138,7 +138,7 @@ def generate_test_options() -> MinecraftOptions:
     Generates options to launch minecraft. Useful for testing. Do not use in production.
     """
     return {
-        "username": f"Player{random.randrange(100,1000)}",
+        "username": f"Player{random.randrange(100, 1000)}",
         "uuid": str(uuid.uuid4()),
         "token": ""
     }

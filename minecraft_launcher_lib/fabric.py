@@ -120,7 +120,7 @@ def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.Pa
     installer_download_url = f"https://maven.fabricmc.net/net/fabricmc/fabric-installer/{installer_version}/fabric-installer-{installer_version}.jar"
 
     # Generate a temporary path for downloading the installer
-    installer_path = os.path.join(tempfile.gettempdir(), f"fabric-installer-{random.randrange(100,10000)}.tmp")
+    installer_path = os.path.join(tempfile.gettempdir(), f"fabric-installer-{random.randrange(100, 10000)}.tmp")
 
     # Download the installer
     download_file(installer_download_url, installer_path, callback=callback)
