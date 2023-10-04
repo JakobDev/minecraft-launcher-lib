@@ -11,3 +11,7 @@ Disallow: /
 # Block CCBot
 User-agent: CCBot
 Disallow: /
+
+# Block Google AI Bots
+User-agent: Google-Extended
+Disallow: /
