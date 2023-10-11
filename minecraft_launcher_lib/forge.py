@@ -146,8 +146,14 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
         extract_file_from_zip(zf, "maven/net/minecraftforge/forge/{version}/forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, "forge-" + versionid + "-universal.jar"), minecraft_directory=path)
     except KeyError:
         pass
+
     try:
         extract_file_from_zip(zf, "forge-{version}-universal.jar".format(version=versionid), os.path.join(forge_lib_path, f"forge-{versionid}.jar"), minecraft_directory=path)
+    except KeyError:
+        pass
+
+    try:
+        extract_file_from_zip(zf, f"maven/net/minecraftforge/forge/{versionid}/forge-{versionid}.jar", os.path.join(forge_lib_path, f"forge-{versionid}.jar"), minecraft_directory=path)
     except KeyError:
         pass
 

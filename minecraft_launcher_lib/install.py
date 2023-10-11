@@ -73,7 +73,7 @@ def install_libraries(id: str, libraries: List[ClientJsonLibrary], path: str, ca
                 extract_natives_file(os.path.join(current_path, jar_filename_native), os.path.join(path, "versions", id, "natives"), i["extract"])
             continue
 
-        if "artifact" in i["downloads"]:
+        if "artifact" in i["downloads"] and i["downloads"]["artifact"]["url"] != "":
             download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"], session=session, minecraft_directory=path)
         if native != "":
             download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(current_path, jar_filename_native), callback, sha1=i["downloads"]["classifiers"][native]["sha1"], session=session, minecraft_directory=path)  # type: ignore
