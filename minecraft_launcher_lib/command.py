@@ -187,7 +187,6 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
         command.append(options["executablePath"])
     elif "javaVersion" in data:
         java_path = get_executable_path(data["javaVersion"]["component"], path)
-        print(java_path)
         if java_path is None:
             command.append("java")
         else:
