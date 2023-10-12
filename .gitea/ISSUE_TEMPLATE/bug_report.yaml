@@ -1,6 +1,6 @@
 name: Bug report
 description: Write a Bug report
-labels: [Bug]
+labels: ["type/bug", "bug/unconfirmed"]
 body:
   - type: textarea
     id: bug_description
@@ -13,13 +13,13 @@ body:
     id: code
     attributes:
         label: Python code
-        description: Please post a example Python code that causes the Bug here. The code should be full working, not part of a bigger code.
+        description: Please post a example Python code that causes the Bug here. The code should be full working, not part of a bigger code. See [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example).
         render: python
   - type: textarea
     id: output
     attributes:
         label: Output
-        description: If minecraft-launcher-lib crashes with a error message/traceback or yor code outputs something, paste it here. If not, please remove this section.
+        description: If minecraft-launcher-lib crashes with a error message/traceback or your code outputs something, paste it here.
         render: plaintext
     validations:
         required: false
@@ -39,3 +39,9 @@ body:
         placeholder: e.g. 3.11.0
     validations:
         required: true
+  - type: input
+    id: minecraft_version
+    attributes:
+        label: Minecraft version
+        description: If your bug affects a specific Minecraft version, please enter it here. If you use a custom version, please post the Link to your custom version here.
+        placeholder: e.g. 1.20
