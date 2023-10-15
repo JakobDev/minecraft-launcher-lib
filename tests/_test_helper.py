@@ -40,3 +40,5 @@ def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
     requests_mock.get("https://resources.download.minecraft.net/86/86f7e437faa5a7fce15d1ddcb9eaeaea377667b8", content=b"a")
     requests_mock.get("https://resources.download.minecraft.net/e9/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98", content=b"b")
     requests_mock.get("https://resources.download.minecraft.net/84/84a516841ba77a5b4648de2cd0dfcb30ea46dbb4", content=b"c")
+
+    requests_mock.get("https://libraries.minecraft.net/ca/weblite/java-objc-bridge/1.1/java-objc-bridge-1.1.jar", content=b"a")

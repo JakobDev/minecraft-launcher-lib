@@ -62,6 +62,18 @@ def test_install_minecraft_version_inherit(monkeypatch: pytest.MonkeyPatch, tmp_
     _assert_downloaded_file(tmp_path / "versions" / "test1" / "test1.jar", 3259, "1a34a92bf766c61eb83edaf7ff632cf0c862f958")
 
 
+def test_install_minecraft_version_extended(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    monkeypatch.setattr(platform, "system", lambda: "Linux")
+
+    prepare_test_versions(tmp_path)
+
+    prepare_requests_mock(requests_mock)
+
+    minecraft_launcher_lib.install.install_minecraft_version("test2", tmp_path)
+
+    _assert_downloaded_file(tmp_path / "libraries" / "ca" / "weblite" / "java-objc-bridge" / "1.1" / "java-objc-bridge-1.1.jar", 1, "86f7e437faa5a7fce15d1ddcb9eaeaea377667b8")
+
+
 def test_install_minecraft_version_invalid_checksum(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
     monkeypatch.setattr(platform, "system", lambda: "Linux")
 

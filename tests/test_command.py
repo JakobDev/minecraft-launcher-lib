@@ -225,6 +225,14 @@ def test_get_minecraft_command_inherit(tmp_path: pathlib.Path) -> None:
     minecraft_launcher_lib.command.get_minecraft_command("inherit", str(tmp_path), options)
 
 
+def test_get_minecraft_command_extended(tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(platform, "system", lambda: "Linux")
+
+    prepare_test_versions(tmp_path)
+
+    minecraft_launcher_lib.command.get_minecraft_command("test2", str(tmp_path), {})
+
+
 def test_get_minecraft_command_invalid_version(tmp_path: pathlib.Path) -> None:
     # Checks if the VersionNotFound exception raised
     with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
