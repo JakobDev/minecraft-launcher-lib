@@ -45,7 +45,7 @@ def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Option
             return False
         elif get_sha1_hash(path) == sha1:
             return False
-    print(url)
+
     try:
         os.makedirs(os.path.dirname(path))
     except Exception:
