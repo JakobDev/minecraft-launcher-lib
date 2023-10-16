@@ -2,6 +2,12 @@ Changelog
 ==================================================
 
 -------------------------
+6.3
+-------------------------
+- Fixed `#92 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/92>`_
+- Fixed `#93 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/93>`_
+
+-------------------------
 6.2
 -------------------------
 - Fix raising InvalidChecksum exception
