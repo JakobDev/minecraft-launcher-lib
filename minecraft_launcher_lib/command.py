@@ -27,7 +27,7 @@ def get_libraries(data: ClientJson, path: str) -> str:
         libstr += get_library_path(i["name"], path) + classpath_seperator
         native = get_natives(i)
         if native != "":
-            if "downloads" in i and "path" in i["downloads"]["classifiers"][native]:
+            if "downloads" in i and "path" in i["downloads"]["classifiers"][native]:  # type: ignore
                 libstr += os.path.join(path, "libraries", i["downloads"]["classifiers"][native]["path"]) + classpath_seperator  # type: ignore
             else:
                 libstr += get_library_path(i["name"] + "-" + native, path) + classpath_seperator
