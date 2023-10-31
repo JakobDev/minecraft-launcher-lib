@@ -46,8 +46,12 @@ Source = "https://codeberg.org/JakobDev/minecraft-launcher-lib"
 Changelog = "https://minecraft-launcher-lib.readthedocs.io/en/stable/changelog.html"
 Donation = "https://ko-fi.com/jakobdev"
 
+[project.optional-dependencies]
+test = ["pytest", "pytest-cov", "requests-mock"]
+
 [tool.setuptools.dynamic]
 version = { file = "minecraft_launcher_lib/version.txt" }
 
 [tool.pytest.ini_options]
+addopts = "-v --basetemp=pytest-temp --durations=10 --cov=minecraft_launcher_lib --cov-report html --cov-report term --cov-report term-missing"
 testpaths = ["tests"]
