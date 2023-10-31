@@ -63,9 +63,9 @@
     "complianceLevel": 1,
     "downloads": {
       "client": {
-        "sha1": "1a34a92bf766c61eb83edaf7ff632cf0c862f958",
-        "size": 3259,
-        "url": "https://codeberg.org/JakobDev/minecraft-launcher-lib/raw/commit/f59f13e9b04743735571db49c6c3369a6855f4f9/README.md"
+        "sha1": "173219a75174abb3e3a7bfd36148129df03f9123",
+        "size": 7,
+        "url": "minecraft-launcher-lib-test://client-inherit.txt"
       }
     },
     "id": "inherit",
@@ -75,9 +75,9 @@
         "downloads": {
           "artifact": {
             "path": "com/ibm/icu/icu4j/71.1/icu4j-71.1.jar",
-            "sha1": "c02d7272de43e27c6b12b288d037608cc6d37f15",
-            "size": 1318,
-            "url": "https://codeberg.org/JakobDev/minecraft-launcher-lib/raw/commit/f59f13e9b04743735571db49c6c3369a6855f4f9/LICENSE"
+            "sha1": "78ef2a15d1afad3e435cdcaf12c502ac290ca707",
+            "size": 14,
+            "url": "minecraft-launcher-lib-test://libraries/icu4j.txt"
           }
         },
         "name": "com.ibm.icu:icu4j:71.1"
@@ -90,7 +90,7 @@
           "id": "client-1.12.xml",
           "sha1": "bd65e7d2e3c237be76cfbef4c2405033d7f91521",
           "size": 888,
-          "url": "https://piston-data.mojang.com/v1/objects/bd65e7d2e3c237be76cfbef4c2405033d7f91521/client-1.12.xml"
+          "url": "minecraft-launcher-lib-test://client-1.12.xml"
         },
         "type": "log4j2-xml"
       }

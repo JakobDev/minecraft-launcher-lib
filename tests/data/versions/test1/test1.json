@@ -119,9 +119,9 @@
   "complianceLevel": 1,
   "downloads": {
     "client": {
-      "sha1": "1a34a92bf766c61eb83edaf7ff632cf0c862f958",
-      "size": 3259,
-      "url": "https://codeberg.org/JakobDev/minecraft-launcher-lib/raw/commit/f59f13e9b04743735571db49c6c3369a6855f4f9/README.md"
+      "sha1": "173219a75174abb3e3a7bfd36148129df03f9123",
+      "size": 7,
+      "url": "minecraft-launcher-lib-test://client.txt"
     }
   },
   "id": "test1",
@@ -130,9 +130,9 @@
       "downloads": {
         "artifact": {
           "path": "ca/weblite/java-objc-bridge/1.1/java-objc-bridge-1.1.jar",
-          "sha1": "c02d7272de43e27c6b12b288d037608cc6d37f15",
-          "size": 1318,
-          "url": "https://codeberg.org/JakobDev/minecraft-launcher-lib/raw/commit/f59f13e9b04743735571db49c6c3369a6855f4f9/LICENSE"
+          "sha1": "2f8a26755f00bc8dc54cbf5e613f6d00f02a099e",
+          "size": 20,
+          "url": "minecraft-launcher-lib-test://libraries/java-objc-bridge.txt"
         }
       },
       "name": "ca.weblite:java-objc-bridge:1.1"
@@ -141,9 +141,9 @@
       "downloads": {
         "artifact": {
           "path": "org/slf4j/slf4j-api/2.0.1/slf4j-api-2.0.1.jar",
-          "sha1": "c55c4428b2bec60461d3416b17a54fa8cfe20677",
-          "size": 117,
-          "url": "https://codeberg.org/JakobDev/minecraft-launcher-lib/raw/commit/f59f13e9b04743735571db49c6c3369a6855f4f9/MANIFEST.in"
+          "sha1": "03b7e695aa5cd7ca418ee6710e304d64d0491929",
+          "size": 25,
+          "url": "minecraft-launcher-lib-test://libraries/slf4j-api.txt"
         }
       },
       "name": "org.slf4j:slf4j-api:2.0.1"
@@ -156,7 +156,7 @@
         "id": "client-1.12.xml",
         "sha1": "bd65e7d2e3c237be76cfbef4c2405033d7f91521",
         "size": 888,
-        "url": "https://piston-data.mojang.com/v1/objects/bd65e7d2e3c237be76cfbef4c2405033d7f91521/client-1.12.xml"
+        "url": "minecraft-launcher-lib-test://client-1.12.xml"
       },
       "type": "log4j2-xml"
     }

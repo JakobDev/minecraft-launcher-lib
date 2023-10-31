@@ -1,4 +1,4 @@
-from ._test_helper import prepare_test_versions, get_test_callbacks
+from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock
 import minecraft_launcher_lib
 import requests_mock
 import subprocess
@@ -60,6 +60,7 @@ def test_install_fabric(monkeypatch: pytest.MonkeyPatch, requests_mock: requests
     requests_mock.real_http = True
 
     prepare_test_versions(tmp_path)
+    prepare_requests_mock(requests_mock)
 
     shutil.copytree(tmp_path / "versions" / "test1", tmp_path / "versions" / "fabric-loader-testloader-test1")
     (tmp_path / "versions" / "fabric-loader-testloader-test1" / "test1.json").rename(tmp_path / "versions" / "fabric-loader-testloader-test1" / "fabric-loader-testloader-test1.json")

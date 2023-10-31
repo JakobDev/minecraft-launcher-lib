@@ -1,6 +1,8 @@
-from ._test_helper import prepare_test_versions, get_test_callbacks
+from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock
 from typing import List, Dict, Any
 import minecraft_launcher_lib
+import pytest_subtests
+import requests_mock
 import requests
 import hashlib
 import pathlib
@@ -70,7 +72,7 @@ def _get_test_index() -> Dict[str, Any]:
                 **{
                     "path": "a.txt"
                 },
-                **_generate_test_file("https://example.com")
+                **_generate_test_file("minecraft-launcher-lib-test://text.txt")
             },
             {
                 **{
@@ -80,7 +82,7 @@ def _get_test_index() -> Dict[str, Any]:
                         "server": "required"
                     }
                 },
-                **_generate_test_file("https://example.com")
+                **_generate_test_file("minecraft-launcher-lib-test://text.txt")
             },
             {
                 **{
@@ -90,7 +92,7 @@ def _get_test_index() -> Dict[str, Any]:
                         "server": "optional"
                     }
                 },
-                **_generate_test_file("https://example.com")
+                **_generate_test_file("minecraft-launcher-lib-test://text.txt")
             },
             {
                 **{
@@ -100,7 +102,7 @@ def _get_test_index() -> Dict[str, Any]:
                         "server": "unsupported"
                     }
                 },
-                **_generate_test_file("https://example.com")
+                **_generate_test_file("minecraft-launcher-lib-test://text.txt")
             },
         ],
         "dependencies": {
@@ -109,7 +111,9 @@ def _get_test_index() -> Dict[str, Any]:
     }
 
 
-def test_get_mrpack_information(tmp_path: pathlib.Path) -> None:
+def test_get_mrpack_information(requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    prepare_requests_mock(requests_mock)
+
     index = _get_test_index()
 
     # Test without summary
@@ -129,86 +133,95 @@ def test_get_mrpack_information(tmp_path: pathlib.Path) -> None:
     assert info_summary["summary"] == "Summary"
 
 
-def test_install_mrpack(tmp_path) -> None:
+def test_install_mrpack(subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    prepare_requests_mock(requests_mock)
+
     index = _get_test_index()
 
-    # Test without Optional File
-    first_dir = _create_test_dir(tmp_path)
-    minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), first_dir, mrpack_install_options={"skipDependenciesInstall": True})
-    assert sorted(os.listdir(first_dir)) == sorted(["a.txt", "b.txt"])
+    with subtests.test("Without optional file"):
+        first_dir = _create_test_dir(tmp_path)
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), first_dir, mrpack_install_options={"skipDependenciesInstall": True})
+        assert sorted(os.listdir(first_dir)) == sorted(["a.txt", "b.txt"])
 
-    # Test with Optional File
-    second_dir = _create_test_dir(tmp_path)
-    minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), second_dir, mrpack_install_options={"skipDependenciesInstall": True, "optionalFiles": ["c.txt"]})
-    assert sorted(os.listdir(second_dir)) == sorted(["a.txt", "b.txt", "c.txt"])
+    with subtests.test("With optional file"):
+        second_dir = _create_test_dir(tmp_path)
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), second_dir, mrpack_install_options={"skipDependenciesInstall": True, "optionalFiles": ["c.txt"]})
+        assert sorted(os.listdir(second_dir)) == sorted(["a.txt", "b.txt", "c.txt"])
 
-    # Test overides
-    third_dir = _create_test_dir(tmp_path)
-    minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["overrides.txt"], client_overrides=["client/test.txt"]), third_dir, mrpack_install_options={"skipDependenciesInstall": True})
-    assert sorted(os.listdir(third_dir)) == sorted(["a.txt", "b.txt", "overrides.txt", "client"])
-    assert sorted(os.listdir(os.path.join(third_dir, "client"))) == sorted(["test.txt"])
+    with subtests.test("Overrides"):
+        third_dir = _create_test_dir(tmp_path)
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["overrides.txt"], client_overrides=["client/test.txt"]), third_dir, mrpack_install_options={"skipDependenciesInstall": True})
+        assert sorted(os.listdir(third_dir)) == sorted(["a.txt", "b.txt", "overrides.txt", "client"])
+        assert sorted(os.listdir(os.path.join(third_dir, "client"))) == sorted(["test.txt"])
 
-    # Test FileOutsideMinecraftDirectory Exception with Files
-    fourth_dir = _create_test_dir(tmp_path)
-    exception_index = copy.deepcopy(index)
-    exception_index["files"].append({**{
-        "path": "../error.txt"
-    },
-        **_generate_test_file("https://example.com")
-    })
-    with pytest.raises(minecraft_launcher_lib.exceptions.FileOutsideMinecraftDirectory):
-        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(exception_index, tmp_path), fourth_dir, mrpack_install_options={"skipDependenciesInstall": True})
+    with subtests.test("FileOutsideMinecraftDirectory Exception with files"):
+        fourth_dir = _create_test_dir(tmp_path)
+        exception_index = copy.deepcopy(index)
+        exception_index["files"].append({**{
+            "path": "../error.txt"
+        },
+            **_generate_test_file("minecraft-launcher-lib-test://text.txt")
+        })
+        with pytest.raises(minecraft_launcher_lib.exceptions.FileOutsideMinecraftDirectory):
+            minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(exception_index, tmp_path), fourth_dir, mrpack_install_options={"skipDependenciesInstall": True})
 
-    # Test FileOutsideMinecraftDirectory Exception with Overrides
-    fifth_dir = _create_test_dir(tmp_path)
-    with pytest.raises(minecraft_launcher_lib.exceptions.FileOutsideMinecraftDirectory):
-        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["../overrides.txt"]), fifth_dir, mrpack_install_options={"skipDependenciesInstall": True})
+    with subtests.test("FileOutsideMinecraftDirectory Exception with overrides"):
+        fifth_dir = _create_test_dir(tmp_path)
+        with pytest.raises(minecraft_launcher_lib.exceptions.FileOutsideMinecraftDirectory):
+            minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["../overrides.txt"]), fifth_dir, mrpack_install_options={"skipDependenciesInstall": True})
 
-    # Test with Modpack directory
-    sixth_dir = _create_test_dir(tmp_path)
-    modpack_dir = _create_test_dir(tmp_path)
-    minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), sixth_dir, modpack_directory=modpack_dir, mrpack_install_options={"skipDependenciesInstall": True})
-    assert sorted(os.listdir(modpack_dir)) == sorted(["a.txt", "b.txt"])
-    assert not os.path.isdir(sixth_dir)
+    with subtests.test("Modpack directory"):
+        sixth_dir = _create_test_dir(tmp_path)
+        modpack_dir = _create_test_dir(tmp_path)
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path), sixth_dir, modpack_directory=modpack_dir, mrpack_install_options={"skipDependenciesInstall": True})
+        assert sorted(os.listdir(modpack_dir)) == sorted(["a.txt", "b.txt"])
+        assert not os.path.isdir(sixth_dir)
 
-    # Test with forge install
-    forge_dir = _create_test_dir(tmp_path)
-    forge_index = copy.deepcopy(index)
-    forge_index["dependencies"]["forge"] = "invalid"
-    prepare_test_versions(forge_dir)
-    with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
-        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path), forge_dir, callback=get_test_callbacks())
+    with subtests.test("Forge"):
+        forge_dir = _create_test_dir(tmp_path)
+        forge_index = copy.deepcopy(index)
+        forge_index["dependencies"]["forge"] = "invalid"
+        prepare_test_versions(forge_dir)
+        requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/test1-invalid/forge-test1-invalid-installer.jar", status_code=404)
+        with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
+            minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path), forge_dir, callback=get_test_callbacks())
 
-    # Test with fabric install
-    fabric_dir = _create_test_dir(tmp_path)
-    fabric_index = copy.deepcopy(index)
-    fabric_index["dependencies"]["fabric-loader"] = "invalid"
-    prepare_test_versions(fabric_dir)
-    with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
-        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(fabric_index, tmp_path), fabric_dir, callback=get_test_callbacks())
+    with subtests.test("Fabric"):
+        fabric_dir = _create_test_dir(tmp_path)
+        fabric_index = copy.deepcopy(index)
+        fabric_index["dependencies"]["fabric-loader"] = "invalid"
+        prepare_test_versions(fabric_dir)
+        with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
+            minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(fabric_index, tmp_path), fabric_dir, callback=get_test_callbacks())
 
-    # Test with quilt install
-    quilt_dir = _create_test_dir(tmp_path)
-    quilt_index = copy.deepcopy(index)
-    quilt_index["dependencies"]["quilt-loader"] = "invalid"
-    prepare_test_versions(quilt_dir)
-    with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
-        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(quilt_index, tmp_path), quilt_dir, callback=get_test_callbacks())
+    with subtests.test("Quilt"):
+        quilt_dir = _create_test_dir(tmp_path)
+        quilt_index = copy.deepcopy(index)
+        quilt_index["dependencies"]["quilt-loader"] = "invalid"
+        prepare_test_versions(quilt_dir)
+        with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
+            minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(quilt_index, tmp_path), quilt_dir, callback=get_test_callbacks())
 
 
-def test_mrpack_launch_version(tmp_path) -> None:
+def test_mrpack_launch_version(subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    prepare_requests_mock(requests_mock)
+
     index = _get_test_index()
 
-    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "test1"
+    with subtests.test("Vanilla"):
+        assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "test1"
 
-    index["dependencies"]["forge"] = "41.1.0"
-    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "test1-forge-41.1.0"
-    del index["dependencies"]["forge"]
+    with subtests.test("Forge"):
+        index["dependencies"]["forge"] = "41.1.0"
+        assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "test1-forge-41.1.0"
+        del index["dependencies"]["forge"]
 
-    index["dependencies"]["fabric-loader"] = "0.14.15"
-    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "fabric-loader-0.14.15-test1"
-    del index["dependencies"]["fabric-loader"]
+    with subtests.test("Fabric"):
+        index["dependencies"]["fabric-loader"] = "0.14.15"
+        assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "fabric-loader-0.14.15-test1"
+        del index["dependencies"]["fabric-loader"]
 
-    index["dependencies"]["quilt-loader"] = "0.18.2"
-    assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "quilt-loader-0.18.2-test1"
-    del index["dependencies"]["quilt-loader"]
+    with subtests.test("Quilt"):
+        index["dependencies"]["quilt-loader"] = "0.18.2"
+        assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path)) == "quilt-loader-0.18.2-test1"
+        del index["dependencies"]["quilt-loader"]

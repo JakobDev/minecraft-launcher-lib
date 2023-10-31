@@ -29,11 +29,15 @@ def read_test_file(name: str) -> bytes:
 
 
 def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
+    requests_mock.get("minecraft-launcher-lib-test://text.txt", text="Hello World")
+
     requests_mock.get("minecraft-launcher-lib-test://assets.json", content=read_test_file("downloads/assets.json"))
     requests_mock.get("minecraft-launcher-lib-test://client.txt", content=read_test_file("downloads/client.txt"))
+    requests_mock.get("minecraft-launcher-lib-test://client-inherit.txt", text="inherit")
 
     requests_mock.get("minecraft-launcher-lib-test://libraries/java-objc-bridge.txt", content=read_test_file("downloads/libraries/java-objc-bridge.txt"))
     requests_mock.get("minecraft-launcher-lib-test://libraries/slf4j-api.txt", content=read_test_file("downloads/libraries/slf4j-api.txt"))
+    requests_mock.get("minecraft-launcher-lib-test://libraries/icu4j.txt", text="icu4j-71.1.jar")
 
     requests_mock.get("minecraft-launcher-lib-test://client-1.12.xml", content=read_test_file("downloads/client-1.12.xml"))
 
@@ -42,3 +46,10 @@ def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
     requests_mock.get("https://resources.download.minecraft.net/84/84a516841ba77a5b4648de2cd0dfcb30ea46dbb4", content=b"c")
 
     requests_mock.get("https://libraries.minecraft.net/ca/weblite/java-objc-bridge/1.1/java-objc-bridge-1.1.jar", content=b"a")
+
+    fabric_quilt_versions = [
+        {"version": "unstable", "stable": False},
+        {"version": "test2", "stable": True}
+    ]
+    requests_mock.get("https://meta.fabricmc.net/v2/versions/game", json=fabric_quilt_versions)
+    requests_mock.get("https://meta.quiltmc.org/v3/versions/game", json=fabric_quilt_versions)

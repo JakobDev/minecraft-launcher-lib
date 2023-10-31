@@ -1,4 +1,4 @@
-from ._test_helper import prepare_test_versions, get_test_callbacks
+from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock
 import minecraft_launcher_lib
 import requests_mock
 import subprocess
@@ -29,6 +29,7 @@ def test_install_forge_version(monkeypatch: pytest.MonkeyPatch, requests_mock: r
     monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: None)
 
     prepare_test_versions(tmp_path)
+    prepare_requests_mock(requests_mock)
 
     minecraft_launcher_lib.forge.install_forge_version("forgetest1", tmp_path, callback=get_test_callbacks())
     minecraft_launcher_lib.forge.install_forge_version("forgetest2", tmp_path, callback=get_test_callbacks())

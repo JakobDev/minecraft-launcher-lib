@@ -47,7 +47,7 @@ Changelog = "https://minecraft-launcher-lib.readthedocs.io/en/stable/changelog.h
 Donation = "https://ko-fi.com/jakobdev"
 
 [project.optional-dependencies]
-test = ["pytest", "pytest-cov", "requests-mock"]
+test = ["pytest", "pytest-cov", "requests-mock", "pytest-subtests"]
 
 [tool.setuptools.dynamic]
 version = { file = "minecraft_launcher_lib/version.txt" }
