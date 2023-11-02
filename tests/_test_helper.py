@@ -3,6 +3,7 @@ from typing import Union
 import requests_mock
 import pathlib
 import shutil
+import lzma
 import os
 
 
@@ -30,6 +31,7 @@ def read_test_file(name: str) -> bytes:
 
 def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
     requests_mock.get("minecraft-launcher-lib-test://text.txt", text="Hello World")
+    requests_mock.get("minecraft-launcher-lib-test://text.txt.lzma", content=lzma.compress(b"Hello World"))
 
     requests_mock.get("minecraft-launcher-lib-test://assets.json", content=read_test_file("downloads/assets.json"))
     requests_mock.get("minecraft-launcher-lib-test://client.txt", content=read_test_file("downloads/client.txt"))
@@ -46,6 +48,11 @@ def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
     requests_mock.get("https://resources.download.minecraft.net/84/84a516841ba77a5b4648de2cd0dfcb30ea46dbb4", content=b"c")
 
     requests_mock.get("https://libraries.minecraft.net/ca/weblite/java-objc-bridge/1.1/java-objc-bridge-1.1.jar", content=b"a")
+
+    # Runtime
+    requests_mock.get("https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json", content=read_test_file("runtime/list.json"))
+    requests_mock.get("https://test.json", content=read_test_file("runtime/runtime.json"))
+    requests_mock.get("https://error.json", content=read_test_file("runtime/error.json"))
 
     fabric_quilt_versions = [
         {"version": "unstable", "stable": False},

@@ -1,5 +1,6 @@
 from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock
 import minecraft_launcher_lib
+import pytest_subtests
 import requests_mock
 import subprocess
 import platform
@@ -60,7 +61,7 @@ def test_quilt_get_latest_installer_version() -> None:
     assert isinstance(minecraft_launcher_lib.quilt.get_latest_installer_version(), str)
 
 
-def test_install_quilt(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+def test_install_quilt(monkeypatch: pytest.MonkeyPatch, subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
     monkeypatch.setattr(minecraft_launcher_lib.quilt, "is_minecraft_version_supported", lambda version: True if version == "test1" else False)
     monkeypatch.setattr(minecraft_launcher_lib.quilt, "get_latest_installer_version", lambda: "testinstaller")
     monkeypatch.setattr(minecraft_launcher_lib.quilt, "get_latest_loader_version", lambda: "testloader")
@@ -76,15 +77,19 @@ def test_install_quilt(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_
     shutil.copytree(tmp_path / "versions" / "test1", tmp_path / "versions" / "quilt-loader-testloader-test1")
     (tmp_path / "versions" / "quilt-loader-testloader-test1" / "test1.json").rename(tmp_path / "versions" / "quilt-loader-testloader-test1" / "quilt-loader-testloader-test1.json")
 
-    minecraft_launcher_lib.quilt.install_quilt("test1", tmp_path, callback=get_test_callbacks())
+    with subtests.test("Install"):
+        minecraft_launcher_lib.quilt.install_quilt("test1", tmp_path, callback=get_test_callbacks())
 
-    monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: subprocess.CompletedProcess([], 1))
+    with subtests.test("ExternalProgramError"):
+        monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: subprocess.CompletedProcess([], 1))
 
-    with pytest.raises(minecraft_launcher_lib.exceptions.ExternalProgramError):
-        minecraft_launcher_lib.quilt.install_quilt("test1", tmp_path)
+        with pytest.raises(minecraft_launcher_lib.exceptions.ExternalProgramError):
+            minecraft_launcher_lib.quilt.install_quilt("test1", tmp_path)
 
-    with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
-        minecraft_launcher_lib.quilt.install_quilt("natives", tmp_path)
+    with subtests.test("UnsupportedVersion"):
+        with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
+            minecraft_launcher_lib.quilt.install_quilt("natives", tmp_path)
 
-    with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
-        minecraft_launcher_lib.quilt.install_quilt("invalid", tmp_path)
+    with subtests.test("VersionNotFound"):
+        with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
+            minecraft_launcher_lib.quilt.install_quilt("invalid", tmp_path)

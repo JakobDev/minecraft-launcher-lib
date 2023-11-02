@@ -47,6 +47,17 @@ def test_install_minecraft_version_assets(monkeypatch: pytest.MonkeyPatch, reque
     assert len(os.listdir(tmp_path / "assets" / "objects")) == 3
 
 
+def test_install_minecraft_version_runtime(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    monkeypatch.setattr(platform, "system", lambda: "Linux")
+
+    prepare_test_versions(tmp_path)
+    prepare_requests_mock(requests_mock)
+
+    minecraft_launcher_lib.install.install_minecraft_version("runtime", tmp_path)
+
+    assert (tmp_path / "runtime" / "java-runtime-test" / "linux" / ".version").read_text().strip() == "17.0.3"
+
+
 def test_install_minecraft_version_inherit(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
     monkeypatch.setattr(platform, "system", lambda: "Linux")
 

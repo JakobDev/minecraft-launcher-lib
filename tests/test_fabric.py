@@ -1,5 +1,6 @@
 from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock
 import minecraft_launcher_lib
+import pytest_subtests
 import requests_mock
 import subprocess
 import platform
@@ -49,7 +50,7 @@ def test_fabric_get_latest_installer_version() -> None:
     assert isinstance(minecraft_launcher_lib.fabric.get_latest_installer_version(), str)
 
 
-def test_install_fabric(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+def test_install_fabric(monkeypatch: pytest.MonkeyPatch, subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
     monkeypatch.setattr(minecraft_launcher_lib.fabric, "is_minecraft_version_supported", lambda version: True if version == "test1" else False)
     monkeypatch.setattr(minecraft_launcher_lib.fabric, "get_latest_installer_version", lambda: "testinstaller")
     monkeypatch.setattr(minecraft_launcher_lib.fabric, "get_latest_loader_version", lambda: "testloader")
@@ -67,13 +68,19 @@ def test_install_fabric(monkeypatch: pytest.MonkeyPatch, requests_mock: requests
 
     minecraft_launcher_lib.fabric.install_fabric("test1", tmp_path, callback=get_test_callbacks())
 
-    monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: subprocess.CompletedProcess([], 1))
+    with subtests.test("Install"):
+        monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: subprocess.CompletedProcess([], 1))
 
-    with pytest.raises(minecraft_launcher_lib.exceptions.ExternalProgramError):
-        minecraft_launcher_lib.fabric.install_fabric("test1", tmp_path)
+    with subtests.test("ExternalProgramError"):
+        monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: subprocess.CompletedProcess([], 1))
 
-    with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
-        minecraft_launcher_lib.fabric.install_fabric("natives", tmp_path)
+        with pytest.raises(minecraft_launcher_lib.exceptions.ExternalProgramError):
+            minecraft_launcher_lib.fabric.install_fabric("test1", tmp_path)
 
-    with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
-        minecraft_launcher_lib.fabric.install_fabric("invalid", tmp_path)
+    with subtests.test("UnsupportedVersion"):
+        with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
+            minecraft_launcher_lib.fabric.install_fabric("natives", tmp_path)
+
+    with subtests.test("VersionNotFound"):
+        with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
+            minecraft_launcher_lib.fabric.install_fabric("invalid", tmp_path)
