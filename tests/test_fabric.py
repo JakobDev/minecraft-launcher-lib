@@ -66,10 +66,8 @@ def test_install_fabric(monkeypatch: pytest.MonkeyPatch, subtests: pytest_subtes
     shutil.copytree(tmp_path / "versions" / "test1", tmp_path / "versions" / "fabric-loader-testloader-test1")
     (tmp_path / "versions" / "fabric-loader-testloader-test1" / "test1.json").rename(tmp_path / "versions" / "fabric-loader-testloader-test1" / "fabric-loader-testloader-test1.json")
 
-    minecraft_launcher_lib.fabric.install_fabric("test1", tmp_path, callback=get_test_callbacks())
-
     with subtests.test("Install"):
-        monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: subprocess.CompletedProcess([], 1))
+        minecraft_launcher_lib.fabric.install_fabric("test1", tmp_path, callback=get_test_callbacks())
 
     with subtests.test("ExternalProgramError"):
         monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: subprocess.CompletedProcess([], 1))
