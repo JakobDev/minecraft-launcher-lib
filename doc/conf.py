@@ -73,6 +73,9 @@ html_theme_options = {
     "style_external_links": True
 }
 
+if os.environ.get("READTHEDOCS_CANONICAL_URL") is not None:
+    html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
+
 
 def add_optional_extension(name: str) -> None:
     try:
@@ -86,6 +89,7 @@ add_optional_extension("sphinx_reredirects")
 add_optional_extension("notfound.extension")
 add_optional_extension("sphinx_rtd_dark_mode")
 add_optional_extension("sphinx_copybutton")
+add_optional_extension("sphinxext.opengraph")
 
 redirects = {
     "command": "modules/command.html",
