@@ -3,4 +3,4 @@ steps:
         image: python:latest
         commands:
               - pip install requests types-requests mypy
-              - mypy minecraft_launcher_lib
+              - mypy
