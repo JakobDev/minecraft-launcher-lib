@@ -22,6 +22,9 @@ class MicrosoftRequestsMock:
             if kwargs["headers"]["Authorization"] != "Bearer minecraft_access_token":
                 return MicrosoftRequestsResponseMock(500, {})
 
+            if self._mode == "not_own_minecraft":
+                return MicrosoftRequestsResponseMock(400, {"error": "NOT_FOUND", "errorMessage": "Not Found"})
+
             return MicrosoftRequestsResponseMock(200, {"id": "minecraft_uuid", "name": "minecraft_name", "skins": [], "capes": []})
 
         elif url == "https://api.minecraftservices.com/entitlements/mcstore":
@@ -137,6 +140,16 @@ def test_complete_login(monkeypatch: pytest.MonkeyPatch) -> None:
     assert login_data["refresh_token"] == "refresh_token"
 
 
+def test_complete_login_not_own_minecraft(monkeypatch: pytest.MonkeyPatch) -> None:
+    requests_mock = MicrosoftRequestsMock("not_own_minecraft")
+
+    monkeypatch.setattr(requests, "get", requests_mock.get)
+    monkeypatch.setattr(requests, "post", requests_mock.post)
+
+    with pytest.raises(minecraft_launcher_lib.exceptions.AccountNotOwnMinecraft):
+        minecraft_launcher_lib.microsoft_account.complete_login("client_id", None, "redirect_url", "auth_code")
+
+
 def test_complete_login_not_permitted_azure_app(monkeypatch: pytest.MonkeyPatch) -> None:
     requests_mock = MicrosoftRequestsMock("not_permitted_app")
 
@@ -159,6 +172,16 @@ def test_complete_refresh(monkeypatch: pytest.MonkeyPatch) -> None:
     assert login_data["name"] == "minecraft_name"
     assert login_data["access_token"] == "minecraft_access_token"
     assert login_data["refresh_token"] == "refresh_token"
+
+
+def test_complete_refresh_not_own_minecraft(monkeypatch: pytest.MonkeyPatch) -> None:
+    requests_mock = MicrosoftRequestsMock("not_own_minecraft")
+
+    monkeypatch.setattr(requests, "get", requests_mock.get)
+    monkeypatch.setattr(requests, "post", requests_mock.post)
+
+    with pytest.raises(minecraft_launcher_lib.exceptions.AccountNotOwnMinecraft):
+        minecraft_launcher_lib.microsoft_account.complete_refresh("client_id", "client_secret", None, "refresh_token")
 
 
 def test_complete_refresh_invalid_token(monkeypatch: pytest.MonkeyPatch) -> None:

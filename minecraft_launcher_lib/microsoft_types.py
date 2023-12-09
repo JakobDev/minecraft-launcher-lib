@@ -73,6 +73,8 @@ class MinecraftProfileResponse(TypedDict):
     name: str
     skins: List[_MinecraftProfileSkin]
     capes: List[_MinecraftProfileCape]
+    error: str
+    errorMessage: str
 
 
 class CompleteLoginResponse(MinecraftProfileResponse):

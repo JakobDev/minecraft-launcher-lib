@@ -5,7 +5,7 @@ You may want to read the :doc:`/tutorial/microsoft_login` tutorial before using 
 For a list of all types see :doc:`microsoft_types`.
 """
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
-from .exceptions import InvalidRefreshToken, AzureAppNotPermitted
+from .exceptions import InvalidRefreshToken, AzureAppNotPermitted, AccountNotOwnMinecraft
 from ._helper import get_user_agent, assert_func
 from typing import Literal, Optional, Tuple, cast
 from base64 import urlsafe_b64encode
@@ -301,6 +301,7 @@ def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: s
     :param auth_code: The Code you get from :func:`parse_auth_code_url`
     :param code_verifier: The 3rd entry in the Tuple you get from :func:`get_secure_login_data`
     :raises AzureAppNotPermitted: Your Azure App don't have the Permission to use the Minecraft API
+    :raises AccountNotOwnMinecraft: The Account does not own Minecraft
 
     It returns the following:
 
@@ -338,7 +339,12 @@ def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: s
 
     access_token = account_request["access_token"]
 
-    profile = cast(CompleteLoginResponse, get_profile(access_token))
+    profile = get_profile(access_token)
+
+    if "error" in profile and profile["error"] == "NOT_FOUND":
+        raise AccountNotOwnMinecraft()
+
+    profile = cast(CompleteLoginResponse, profile)
 
     profile["access_token"] = account_request["access_token"]
     profile["refresh_token"] = token_request["refresh_token"]
@@ -355,8 +361,7 @@ def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri:
     :param redirect_uri: The Redirect URI of Azure App. This Parameter only exists for backwards compatibility and is not used anymore.
     :param refresh_token: Your refresh token
     :raises InvalidRefreshToken: Your refresh token is not valid
-
-    Raises a :class:`~minecraft_launcher_lib.exceptions.InvalidRefreshToken` exception when the refresh token is invalid.
+    :raises AccountNotOwnMinecraft: The Account does not own Minecraft
     """
     token_request = refresh_authorization_token(client_id, client_secret, redirect_uri, refresh_token)
 
@@ -375,7 +380,12 @@ def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri:
     account_request = authenticate_with_minecraft(userhash, xsts_token)
     access_token = account_request["access_token"]
 
-    profile = cast(CompleteLoginResponse, get_profile(access_token))
+    profile = get_profile(access_token)
+
+    if "error" in profile and profile["error"] == "NOT_FOUND":
+        raise AccountNotOwnMinecraft()
+
+    profile = cast(CompleteLoginResponse, profile)
 
     profile["access_token"] = account_request["access_token"]
     profile["refresh_token"] = token_request["refresh_token"]

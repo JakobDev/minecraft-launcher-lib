@@ -127,3 +127,11 @@ class PlatformNotSupported(Exception):
     """
     def __init__(self) -> None:
         super().__init__("Your Platform is not supported")
+
+
+class AccountNotOwnMinecraft(Exception):
+    """
+    Raised by :func:`~minecraft_launcher_lib.microsoft_account.complete_login` and :func:`~minecraft_launcher_lib.microsoft_account.complete_login` when the Account does not own Minecraft
+    """
+    def __init__(self) -> None:
+        super().__init__("This Account does not own Minecraft")
