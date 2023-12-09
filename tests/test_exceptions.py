@@ -65,3 +65,8 @@ def test_AzureAppNotPermitted() -> None:
 def test_PlatformNotSupported() -> None:
     ex = minecraft_launcher_lib.exceptions.PlatformNotSupported()
     assert ex.args[0] == "Your Platform is not supported"
+
+
+def test_AccountNotOwnMinecraft() -> None:
+    ex = minecraft_launcher_lib.exceptions.AccountNotOwnMinecraft()
+    assert ex.args[0] == "This Account does not own Minecraft"
