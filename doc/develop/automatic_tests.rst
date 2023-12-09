@@ -9,7 +9,7 @@ To get started, install all test dependencies
 
 .. code:: shell
 
-    pip install .[test]
+    pip install -r requirements-test.txt
 
 To run the tests, open a command line in the root directory of minecraft-launcher-lib and execute:
 

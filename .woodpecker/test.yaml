@@ -11,5 +11,5 @@ steps:
     pytest:
         image: ${PYTHON_IMAGE}
         commands:
-            - pip install .[test]
+            - pip install -r requirements-test.txt
             - pytest
