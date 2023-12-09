@@ -2,6 +2,11 @@ Changelog
 ==================================================
 
 -------------------------
+6.4
+-------------------------
+- Added :class:`~minecraft_launcher_lib.exceptions.AccountNotOwnMinecraft` exception
+
+-------------------------
 6.3
 -------------------------
 - Fixed `#92 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/92>`_
