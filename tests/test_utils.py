@@ -1,4 +1,6 @@
+from ._test_helper import prepare_requests_mock
 import minecraft_launcher_lib
+import requests_mock
 import platform
 import datetime
 import pathlib
@@ -171,10 +173,12 @@ def test_generate_test_options() -> None:
     assert isinstance(options["token"], str)
 
 
-def test_is_version_valid(tmp_path: pathlib.Path) -> None:
+def test_is_version_valid(requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
     _create_test_version_files(tmp_path)
-    assert minecraft_launcher_lib.utils.is_version_valid("1.16", tmp_path) is True
-    assert minecraft_launcher_lib.utils.is_version_valid("1.16", str(tmp_path)) is True
+    prepare_requests_mock(requests_mock)
+
+    assert minecraft_launcher_lib.utils.is_version_valid("online-release", tmp_path) is True
+    assert minecraft_launcher_lib.utils.is_version_valid("online-release", str(tmp_path)) is True
     assert minecraft_launcher_lib.utils.is_version_valid("utilstest", tmp_path) is True
     assert minecraft_launcher_lib.utils.is_version_valid("utilstest", str(tmp_path)) is True
     assert minecraft_launcher_lib.utils.is_version_valid("Test123", str(tmp_path)) is False
@@ -186,8 +190,10 @@ def test_get_minecraft_news() -> None:
     assert len(minecraft_launcher_lib.utils.get_minecraft_news(page_size=50)["article_grid"]) == 50
 
 
-def test_is_vanilla_version() -> None:
-    assert minecraft_launcher_lib.utils.is_vanilla_version("1.18") is True
+def test_is_vanilla_version(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
+    assert minecraft_launcher_lib.utils.is_vanilla_version("online-release") is True
     assert minecraft_launcher_lib.utils.is_vanilla_version("test") is False
 
 
