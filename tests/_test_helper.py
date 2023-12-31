@@ -1,8 +1,10 @@
 import minecraft_launcher_lib
-from typing import Union
+from typing import Union, Any
 import requests_mock
+import hashlib
 import pathlib
 import shutil
+import json
 import lzma
 import os
 
@@ -27,6 +29,11 @@ def get_test_callbacks() -> minecraft_launcher_lib.types.CallbackDict:
 def read_test_file(name: str) -> bytes:
     with open(os.path.join(os.path.dirname(__file__), "data", name), "rb") as f:
         return f.read()
+
+
+def read_test_json_file(name: str) -> Any:
+    with open(os.path.join(os.path.dirname(__file__), "data", name), "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
@@ -60,3 +67,27 @@ def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
     ]
     requests_mock.get("https://meta.fabricmc.net/v2/versions/game", json=fabric_quilt_versions)
     requests_mock.get("https://meta.quiltmc.org/v3/versions/game", json=fabric_quilt_versions)
+
+    online_release_version = read_test_json_file("versions/test1/test1.json")
+    online_release_version["id"] = "online-release"
+    online_release_version_bytes = json.dumps(online_release_version).encode("utf-8")
+    requests_mock.get("minecraft-launcher-lib-test://versions/online-release.json", content=online_release_version_bytes)
+
+    version_list = {
+        "latest": {
+            "release": "online-release",
+            "snapshot": "online-snapshot"
+        },
+        "versions": [
+            {
+                "id": "online-release",
+                "type": "release",
+                "url": "minecraft-launcher-lib-test://versions/online-release.json",
+                "time": "2023-12-18T15:46:45+00:00",
+                "releaseTime": "2023-12-18T15:46:45+00:00",
+                "sha1": hashlib.sha1(online_release_version_bytes).hexdigest(),
+                "complianceLevel": 1
+            }
+        ]
+    }
+    requests_mock.get("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json", json=version_list)

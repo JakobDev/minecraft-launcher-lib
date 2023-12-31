@@ -1,6 +1,6 @@
 "This module contains some helper functions. It should nt be used outside minecraft_launcher_lib"
+from .exceptions import FileOutsideMinecraftDirectory, InvalidChecksum, VersionNotFound
 from ._internal_types.helper_types import RequestsResponseCache, MavenMetadata
-from .exceptions import FileOutsideMinecraftDirectory, InvalidChecksum
 from ._internal_types.shared_types import ClientJson, ClientJsonRule
 from typing import List, Dict, Union, Literal, Optional, Any
 from .types import MinecraftOptions, CallbackDict
@@ -304,3 +304,23 @@ def assert_func(expression: bool) -> None:
     """
     if not expression:
         raise AssertionError()
+
+
+def get_client_json(version: str, minecraft_directory: Union[str, os.PathLike]) -> ClientJson:
+    "Load the client.json for the given version"
+    local_path = os.path.join(minecraft_directory, "versions", version, f"{version}.json")
+    if os.path.isfile(local_path):
+        with open(local_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        if "inheritsFrom" in data:
+            data = inherit_json(data, minecraft_directory)
+
+        return data
+
+    version_list = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
+    for i in version_list["versions"]:
+        if i["id"] == version:
+            return get_requests_response_cache(i["url"]).json()
+
+    raise VersionNotFound(version)

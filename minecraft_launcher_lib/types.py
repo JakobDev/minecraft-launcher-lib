@@ -175,3 +175,8 @@ class MrpackInstallOptions(TypedDict, total=False):
 class JvmRuntimeInformation(TypedDict):
     name: str
     released: datetime.datetime
+
+
+class VersionRuntimeInformation(TypedDict):
+    name: str
+    javaMajorVersion: int

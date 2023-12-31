@@ -1,4 +1,4 @@
-from ._test_helper import prepare_requests_mock
+from ._test_helper import prepare_requests_mock, prepare_test_versions
 import minecraft_launcher_lib
 import pytest_subtests
 import requests_mock
@@ -142,3 +142,20 @@ def test_get_jvm_runtime_information(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.undo()
     with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
         minecraft_launcher_lib.runtime.get_jvm_runtime_information("InvalidVersion")
+
+
+def test_get_version_runtime_information(subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+    prepare_test_versions(tmp_path)
+    prepare_requests_mock(requests_mock)
+
+    with subtests.test("JavaVersion"):
+        information = minecraft_launcher_lib.runtime.get_version_runtime_information("inherit-runtime", tmp_path)
+        assert information["name"] == "java-runtime-test"
+        assert information["javaMajorVersion"] == 17
+
+    with subtests.test("NoJavaVersion"):
+        assert minecraft_launcher_lib.runtime.get_version_runtime_information("online-release", tmp_path) is None
+
+    with subtests.test("InvalidVersion"):
+        with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
+            minecraft_launcher_lib.runtime.get_version_runtime_information("invalid-version", tmp_path)

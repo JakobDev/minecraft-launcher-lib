@@ -1,8 +1,8 @@
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
-from ._helper import get_user_agent, download_file, empty, get_sha1_hash, check_path_inside_minecraft_directory
+from ._helper import get_user_agent, download_file, empty, get_sha1_hash, check_path_inside_minecraft_directory, get_client_json
+from .types import CallbackDict, JvmRuntimeInformation, VersionRuntimeInformation
 from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson
 from .exceptions import VersionNotFound, PlatformNotSupported
-from .types import CallbackDict, JvmRuntimeInformation
 from typing import List, Union, Optional
 import subprocess
 import datetime
@@ -185,4 +185,24 @@ def get_jvm_runtime_information(jvm_version: str) -> JvmRuntimeInformation:
     return {
         "name": manifest_data[platform_string][jvm_version][0]["version"]["name"],
         "released": datetime.datetime.fromisoformat(manifest_data[platform_string][jvm_version][0]["version"]["released"])
+    }
+
+
+def get_version_runtime_information(version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[VersionRuntimeInformation]:
+    """
+    Returns inforation about the runtime used by a version
+
+    :param jvm_version: The Minecraft version
+    :param minecraft_directory: The path to your Minecraft directory
+    :raises VersionNotFound: The Minecraft version was not found
+    :return: A Dict with Information. None if the vserion has no runtime information.
+    """
+    data = get_client_json(version, minecraft_directory)
+
+    if "javaVersion" not in data:
+        return None
+
+    return {
+        "name": data["javaVersion"]["component"],
+        "javaMajorVersion": data["javaVersion"]["majorVersion"]
     }
