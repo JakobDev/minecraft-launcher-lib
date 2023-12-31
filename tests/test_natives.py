@@ -84,6 +84,22 @@ def test_extract_natives_windows(monkeypatch: pytest.MonkeyPatch, tmp_path: path
     assert not os.path.isdir(tmp_path / "extract64" / "META-INF")
 
 
+def test_extract_natives_inherit(monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path) -> None:
+    _prepare_natives_test_env(tmp_path)
+
+    monkeypatch.setattr(platform, "system", lambda: "Linux")
+
+    minecraft_launcher_lib.install.install_minecraft_version("inherit-natives", tmp_path)
+
+    minecraft_launcher_lib.natives.extract_natives("inherit-natives", tmp_path, tmp_path / "extract")
+
+    assert os.path.isfile(tmp_path / "extract" / "liblwjgl.so")
+    assert os.path.isfile(tmp_path / "extract" / "liblwjgl64.so")
+    assert os.path.isfile(tmp_path / "extract" / "libopenal.so")
+    assert os.path.isfile(tmp_path / "extract" / "liblwjgl64.so")
+    assert not os.path.isdir(tmp_path / "extract" / "META-INF")
+
+
 def test_extract_natives_invalid_version(tmp_path: pathlib.Path) -> None:
     # Checks if the VersionNotFound exception raised
     with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):

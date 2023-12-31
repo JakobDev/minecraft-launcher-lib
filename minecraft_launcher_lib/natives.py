@@ -1,5 +1,5 @@
 "natives contains a function for extracting natives libraries to a specific folder"
-from ._helper import parse_rule_list, check_path_inside_minecraft_directory
+from ._helper import parse_rule_list, check_path_inside_minecraft_directory, inherit_json
 from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
 from typing import List, Dict, Literal, Union
 from .exceptions import VersionNotFound
@@ -75,6 +75,9 @@ def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path:
 
     with open(os.path.join(path, "versions", versionid, versionid + ".json"), "r", encoding="utf-8") as f:
         data: ClientJson = json.load(f)
+
+    if "inheritsFrom" in data:
+        data = inherit_json(data, path)
 
     for i in data["libraries"]:
         # Check, if the rules allow this lib for the current system
