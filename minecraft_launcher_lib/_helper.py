@@ -128,7 +128,7 @@ def parse_rule_list(rules: List[ClientJsonRule], options: MinecraftOptions) -> b
     return True
 
 
-def inherit_json(original_data: ClientJson, path: str) -> ClientJson:
+def inherit_json(original_data: ClientJson, path: Union[str, os.PathLike]) -> ClientJson:
     """
     Implement the inheritsFrom function
     See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
