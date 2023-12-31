@@ -60,7 +60,6 @@ def is_minecraft_version_supported(version: str) -> bool:
     """
     minecraft_versions = get_all_minecraft_versions()
     for i in minecraft_versions:
-        print(i)
         if i["version"] == version:
             return True
     return False
