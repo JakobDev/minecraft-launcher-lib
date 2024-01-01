@@ -98,5 +98,4 @@ def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path:
 
         jar_filename_native = name + "-" + version + "-" + native + ".jar"
         if "extract" in i:
-            check_path_inside_minecraft_directory(path, extract_path)
             extract_natives_file(os.path.join(current_path, jar_filename_native), extract_path, i["extract"])
