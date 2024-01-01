@@ -1,6 +1,6 @@
 "natives contains a function for extracting natives libraries to a specific folder"
-from ._helper import parse_rule_list, check_path_inside_minecraft_directory, inherit_json
 from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
+from ._helper import parse_rule_list, inherit_json
 from typing import List, Dict, Literal, Union
 from .exceptions import VersionNotFound
 import platform
@@ -97,5 +97,4 @@ def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path:
             continue
 
         jar_filename_native = name + "-" + version + "-" + native + ".jar"
-        if "extract" in i:
-            extract_natives_file(os.path.join(current_path, jar_filename_native), extract_path, i["extract"])
+        extract_natives_file(os.path.join(current_path, jar_filename_native), extract_path, i.get("extract", {"exclude": []}))
