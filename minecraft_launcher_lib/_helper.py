@@ -151,7 +151,7 @@ def inherit_json(original_data: ClientJson, path: Union[str, os.PathLike]) -> Cl
     return new_data
 
 
-def get_library_path(name: str, path: str) -> str:
+def get_library_path(name: str, path: Union[str, os.PathLike]) -> str:
     """
     Returns the path from a libname
     """

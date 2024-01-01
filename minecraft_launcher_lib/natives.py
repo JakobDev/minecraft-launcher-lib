@@ -1,6 +1,6 @@
 "natives contains a function for extracting natives libraries to a specific folder"
 from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
-from ._helper import parse_rule_list, inherit_json
+from ._helper import parse_rule_list, inherit_json, get_library_path
 from typing import List, Dict, Literal, Union
 from .exceptions import VersionNotFound
 import platform
@@ -84,17 +84,11 @@ def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path:
         if "rules" in i and not parse_rule_list(i["rules"], {}):
             continue
 
-        current_path = os.path.join(path, "libraries")
-        lib_path, name, version = i["name"].split(":")
-
-        for lib_part in lib_path.split("."):
-            current_path = os.path.join(current_path, lib_part)
-
-        current_path = os.path.join(current_path, name, version)
+        current_path = get_library_path(i["name"], path)
         native = get_natives(i)
 
         if native == "":
             continue
 
-        jar_filename_native = name + "-" + version + "-" + native + ".jar"
-        extract_natives_file(os.path.join(current_path, jar_filename_native), extract_path, i.get("extract", {"exclude": []}))
+        lib_path, extension = os.path.splitext(current_path)
+        extract_natives_file(f"{lib_path}-{native}{extension}", extract_path, i.get("extract", {"exclude": []}))
