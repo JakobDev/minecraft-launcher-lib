@@ -5,8 +5,10 @@ from ._internal_types.mrpack_types import MrpackIndex, MrpackFile
 from .install import install_minecraft_version
 from typing import List, Union, Optional
 from .forge import install_forge_version
+from .exceptions import VersionNotFound
 from .fabric import install_fabric
 from .quilt import install_quilt
+import requests
 import zipfile
 import json
 import os
@@ -141,7 +143,15 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
         install_minecraft_version(index["dependencies"]["minecraft"], minecraft_directory, callback=callback)
 
         if "forge" in index["dependencies"]:
-            forge_version = index["dependencies"]["minecraft"] + "-" + index["dependencies"]["forge"]
+            forge_version = None
+            FORGE_DOWNLOAD_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
+            for current_forge_version in (index["dependencies"]["minecraft"] + "-" + index["dependencies"]["forge"], index["dependencies"]["minecraft"] + "-" + index["dependencies"]["forge"] + "-" + index["dependencies"]["minecraft"]):
+                if requests.head(FORGE_DOWNLOAD_URL.replace("{version}", current_forge_version)).status_code == 200:
+                    forge_version = current_forge_version
+                    break
+            else:
+                raise VersionNotFound(index["dependencies"]["forge"])
+
             callback.get("setStatus", empty)(f"Installing Forge {forge_version}")
             install_forge_version(forge_version, minecraft_directory, callback=callback)
 

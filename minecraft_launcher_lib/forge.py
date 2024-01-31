@@ -108,7 +108,7 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
     if callback is None:
         callback = {}
 
-    FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
+    FORGE_DOWNLOAD_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
     temp_file_path = os.path.join(tempfile.gettempdir(), "forge-installer-" + str(random.randrange(1, 100000)) + ".tmp")
 
     if not download_file(FORGE_DOWNLOAD_URL.format(version=versionid), temp_file_path, callback):
@@ -186,7 +186,7 @@ def run_forge_installer(version: str, java: Optional[Union[str, os.PathLike]] = 
     :param version: A Forge Version. You can get a List of Forge versions using :func:`list_forge_versions`
     :param java: A Path to a custom Java executable
     """
-    FORGE_DOWNLOAD_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
+    FORGE_DOWNLOAD_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
     temp_file_path = os.path.join(tempfile.gettempdir(), "forge-" + str(random.randrange(1, 100000)) + ".tmp")
 
     if not download_file(FORGE_DOWNLOAD_URL.format(version=version), temp_file_path, {}):
@@ -202,7 +202,7 @@ def list_forge_versions() -> List[str]:
     """
     Returns a list of all forge versions
     """
-    MAVEN_METADATA_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/maven-metadata.xml"
+    MAVEN_METADATA_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml"
     return parse_maven_metadata(MAVEN_METADATA_URL)["versions"]
 
 

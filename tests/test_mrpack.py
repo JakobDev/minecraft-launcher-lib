@@ -1,4 +1,4 @@
-from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock
+from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock, create_bytes_zip
 from typing import List, Dict, Any
 import minecraft_launcher_lib
 import pytest_subtests
@@ -177,14 +177,24 @@ def test_install_mrpack(subtests: pytest_subtests.SubTests, requests_mock: reque
         assert sorted(os.listdir(modpack_dir)) == sorted(["a.txt", "b.txt"])
         assert not os.path.isdir(sixth_dir)
 
-    with subtests.test("Forge"):
+    with subtests.test("ForgeInvalid"):
         forge_dir = _create_test_dir(tmp_path)
         forge_index = copy.deepcopy(index)
         forge_index["dependencies"]["forge"] = "invalid"
         prepare_test_versions(forge_dir)
-        requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/test1-invalid/forge-test1-invalid-installer.jar", status_code=404)
+        requests_mock.head("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-invalid/forge-test1-invalid-installer.jar", status_code=404)
+        requests_mock.head("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-invalid-test1/forge-test1-invalid-test1-installer.jar", status_code=404)
         with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
             minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path), forge_dir, callback=get_test_callbacks())
+
+    with subtests.test("ForgeValid"):
+        forge_dir = _create_test_dir(tmp_path)
+        forge_index = copy.deepcopy(index)
+        forge_index["dependencies"]["forge"] = "forgetest1"
+        prepare_test_versions(forge_dir)
+        requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-forgetest1/forge-test1-forgetest1-installer.jar", content=create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest1"))
+        requests_mock.head("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-forgetest1/forge-test1-forgetest1-installer.jar", status_code=200)
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path), forge_dir, callback=get_test_callbacks())
 
     with subtests.test("Fabric"):
         fabric_dir = _create_test_dir(tmp_path)

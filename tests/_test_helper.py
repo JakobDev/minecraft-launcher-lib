@@ -1,12 +1,14 @@
 import minecraft_launcher_lib
 from typing import Union, Any
 import requests_mock
+import zipfile
 import hashlib
 import pathlib
 import shutil
 import json
 import lzma
 import os
+import io
 
 
 def prepare_test_versions(tmp_path: Union[str, os.PathLike]) -> None:
@@ -91,3 +93,16 @@ def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
         ]
     }
     requests_mock.get("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json", json=version_list)
+
+    requests_mock.get("minecraft-launcher-lib-test://libraries/empty.jar", content=b"")
+    requests_mock.get("minecraft-launcher-lib-test://libraries/mainclass.jar", content=read_test_file("forge/mainclass.zip"))
+
+
+def create_bytes_zip(source_dir: pathlib.Path) -> bytes:
+    buffer = io.BytesIO()
+    zf = zipfile.ZipFile(buffer, "w")
+    for current_file in source_dir.rglob("*"):
+        if current_file.is_file():
+            zf.writestr(str(current_file.relative_to(source_dir)), current_file.read_bytes())
+    zf.close()
+    return buffer.getvalue()

@@ -47,9 +47,9 @@
             "downloads": {
                 "artifact": {
                     "path": "cpw/mods/securejarhandler/2.1.6/securejarhandler-2.1.6.jar",
-                    "url": "https://codeberg.org/JakobDev/minecraft-launcher-lib/raw/commit/6ad64675077eb9ea469f37770d6556ea9cbc25a6/minecraft_launcher_lib/_internal_types/forge_types.py",
-                    "sha1": "922f0aede42cdc84fdae37866d4c9b8615cd808c",
-                    "size": 903
+                    "url": "minecraft-launcher-lib-test://libraries/empty.jar",
+                    "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                    "size": 0
                 }
             }
         }

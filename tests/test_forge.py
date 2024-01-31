@@ -1,28 +1,15 @@
-from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock
+from ._test_helper import prepare_test_versions, get_test_callbacks, prepare_requests_mock, create_bytes_zip
 import minecraft_launcher_lib
 import requests_mock
 import subprocess
 import platform
-import zipfile
 import pathlib
 import pytest
-import io
-
-
-def _create_bytes_zip(source_dir: pathlib.Path) -> bytes:
-    buffer = io.BytesIO()
-    zf = zipfile.ZipFile(buffer, "w")
-    for current_file in source_dir.rglob("*"):
-        if current_file.is_file():
-            zf.writestr(str(current_file.relative_to(source_dir)), current_file.read_bytes())
-    zf.close()
-    return buffer.getvalue()
 
 
 def test_install_forge_version(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
-    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/forgetest1/forge-forgetest1-installer.jar", content=_create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest1"))
-    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/forgetest2/forge-forgetest2-installer.jar", content=_create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest2"))
-    requests_mock.real_http = True
+    requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/forgetest1/forge-forgetest1-installer.jar", content=create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest1"))
+    requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/forgetest2/forge-forgetest2-installer.jar", content=create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest2"))
 
     monkeypatch.setattr(platform, "system", lambda: "Linux")
     monkeypatch.setattr(platform, "architecture", lambda: ("64bit", "ELF"))
@@ -38,7 +25,7 @@ def test_install_forge_version(monkeypatch: pytest.MonkeyPatch, requests_mock: r
 
 
 def test_install_forge_version_invalid_version(requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
-    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/invalid/forge-invalid-installer.jar", status_code=404)
+    requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/invalid/forge-invalid-installer.jar", status_code=404)
 
     # Checks if the VersionNotFound exception raised
     with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound) as ex:
@@ -48,8 +35,8 @@ def test_install_forge_version_invalid_version(requests_mock: requests_mock.Mock
 
 
 def test_run_forge_installer(monkeypatch: pytest.MonkeyPatch, requests_mock: requests_mock.Mocker) -> None:
-    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/test/forge-test-installer.jar", text="Hello")
-    requests_mock.get("https://files.minecraftforge.net/maven/net/minecraftforge/forge/invalid/forge-invalid-installer.jar", text="World", status_code=404)
+    requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/test/forge-test-installer.jar", text="Hello")
+    requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/invalid/forge-invalid-installer.jar", text="World", status_code=404)
     monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: exec("raise subprocess.CalledProcessError(1, [])") if cmd[0] != "java" else None)
 
     minecraft_launcher_lib.forge.run_forge_installer("test")
