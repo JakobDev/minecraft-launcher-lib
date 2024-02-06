@@ -3,6 +3,8 @@ from typing import List, Dict, Any
 import minecraft_launcher_lib
 import pytest_subtests
 import requests_mock
+import subprocess
+import platform
 import requests
 import hashlib
 import pathlib
@@ -133,7 +135,7 @@ def test_get_mrpack_information(requests_mock: requests_mock.Mocker, tmp_path: p
     assert info_summary["summary"] == "Summary"
 
 
-def test_install_mrpack(subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
+def test_install_mrpack(monkeypatch: pytest.MonkeyPatch, subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
     prepare_requests_mock(requests_mock)
 
     index = _get_test_index()
@@ -188,6 +190,10 @@ def test_install_mrpack(subtests: pytest_subtests.SubTests, requests_mock: reque
             minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path), forge_dir, callback=get_test_callbacks())
 
     with subtests.test("ForgeValid"):
+        monkeypatch.setattr(platform, "system", lambda: "Linux")
+        monkeypatch.setattr(platform, "architecture", lambda: ("64bit", "ELF"))
+        monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: None)
+
         forge_dir = _create_test_dir(tmp_path)
         forge_index = copy.deepcopy(index)
         forge_index["dependencies"]["forge"] = "forgetest1"
@@ -195,6 +201,8 @@ def test_install_mrpack(subtests: pytest_subtests.SubTests, requests_mock: reque
         requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-forgetest1/forge-test1-forgetest1-installer.jar", content=create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest1"))
         requests_mock.head("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-forgetest1/forge-test1-forgetest1-installer.jar", status_code=200)
         minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path), forge_dir, callback=get_test_callbacks())
+
+        monkeypatch.undo()
 
     with subtests.test("Fabric"):
         fabric_dir = _create_test_dir(tmp_path)
