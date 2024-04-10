@@ -28,24 +28,6 @@ import os
 __all__ = ["install_forge_version", "run_forge_installer", "list_forge_versions", "find_forge_version", "is_forge_version_valid", "supports_automatic_install", "forge_to_installed_version"]
 
 
-def get_data_library_path(libname: str, path: str) -> str:
-    """
-    Turns the libname into a path
-    """
-    # Remove the []
-    libname = libname[1:-1]
-    libpath = os.path.join(path, "libraries")
-    base_path, libname, version, extra = libname.split(":")
-    for i in base_path.split("."):
-        libpath = os.path.join(libpath, i)
-    try:
-        extra, fileend = extra.split("@")
-    except ValueError:
-        fileend = "jar"
-    libpath = os.path.join(libpath, libname, version, f"{libname}-{version}-{extra}.{fileend}")
-    return libpath
-
-
 def forge_processors(data: ForgeInstallProfile, minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: CallbackDict, java: str) -> None:
     """
     Run the processors of the install_profile.json
@@ -55,7 +37,7 @@ def forge_processors(data: ForgeInstallProfile, minecraft_directory: Union[str, 
     argument_vars = {"{MINECRAFT_JAR}": os.path.join(path, "versions", data["minecraft"], data["minecraft"] + ".jar")}
     for data_key, data_value in data["data"].items():
         if data_value["client"].startswith("[") and data_value["client"].endswith("]"):
-            argument_vars["{" + data_key + "}"] = get_data_library_path(data_value["client"], path)
+            argument_vars["{" + data_key + "}"] = get_library_path(data_value["client"][1:-1], path)
         else:
             argument_vars["{" + data_key + "}"] = data_value["client"]
 
