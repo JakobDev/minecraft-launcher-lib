@@ -2,6 +2,14 @@ Changelog
 ==================================================
 
 -------------------------
+6.5
+-------------------------
+- Add :func:`~minecraft_launcher_lib.runtime.get_version_runtime_information`
+- Fix :func:`~minecraft_launcher_lib.natives.extract_natives` for newer versions
+- Fix installation of Forge 1.20.4
+- Add examples to documentation
+
+-------------------------
 6.4
 -------------------------
 - Added :class:`~minecraft_launcher_lib.exceptions.AccountNotOwnMinecraft` exception
