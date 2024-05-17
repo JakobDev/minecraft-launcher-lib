@@ -13,18 +13,22 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+import subprocess
 import importlib
 import pathlib
+import inspect
 import shutil
 import sys
 import os
 
 sys.path.insert(0, os.path.abspath('..'))
 
+import minecraft_launcher_lib  # noqa: E402
+
 # -- Project information -----------------------------------------------------
 
 project = 'minecraft-launcher-lib'
-copyright = '2019-2023, JakobDev'
+copyright = '2019-2024, JakobDev'
 author = 'JakobDev'
 
 # The full version, including alpha/beta/rc tags
@@ -38,7 +42,7 @@ master_doc = 'index'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.coverage", "sphinx.ext.napoleon"]
+extensions = ["sphinx.ext.coverage", "sphinx.ext.napoleon", "sphinx.ext.linkcode", "sphinx.ext.extlinks"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -59,9 +63,11 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ["_static"]
 
 html_extra_path = ["robots.txt"]
+
+html_css_files = ["custom.css"]
 
 autodoc_member_order = "bysource"
 autodoc_typehints = "both"
@@ -75,6 +81,36 @@ html_theme_options = {
 
 if os.environ.get("READTHEDOCS_CANONICAL_URL") is not None:
     html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
+
+try:
+    commit = subprocess.run(["git", "log", "-n1", "--pretty=format:%H"], check=True, capture_output=True).stdout.decode("utf-8").strip()
+except Exception as ex:
+    print(ex, file=sys.stderr)
+    commit = None
+
+
+if commit is not None:
+    extlinks = {"repolink": (f"https://codeberg.org/JakobDev/minecraft-launcher-lib/src/commit/{commit}/%s", "repofile %s")}
+else:
+    extlinks = {"repolink": ("https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/%s", "repofile %s")}
+
+
+def linkcode_resolve(domain: str, info: dict[str, str]):
+    if domain != "py":
+        return None
+
+    if "." in info["fullname"]:
+        return None
+
+    if commit is None:
+        return None
+
+    module_name = info["module"].removeprefix("minecraft_launcher_lib.")
+
+    obj = getattr(getattr(minecraft_launcher_lib, module_name), info["fullname"])
+    source_line = inspect.getsourcelines(obj)[1]
+
+    return f"https://codeberg.org/JakobDev/minecraft-launcher-lib/src/commit/{commit}/minecraft_launcher_lib/{module_name}.py#L{source_line}"
 
 
 def add_optional_extension(name: str) -> None:
@@ -114,7 +150,7 @@ def write_module_file(in_path: pathlib.Path, out_dir: pathlib.Path) -> None:
         f.write("  :show-inheritance:\n")
         f.write("  :undoc-members:\n")
         f.write("  :members:\n")
-        f.write(f"\n\n`View the source code of this module <https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/minecraft_launcher_lib/{in_path.name}>`_\n")
+        f.write(f"\n\n:repolink:`View the source code of this module <minecraft_launcher_lib/{in_path.name}>`\n")
 
 
 def write_modules() -> None:
@@ -161,7 +197,7 @@ def write_examples_file(in_path: pathlib.Path, out_dir: pathlib.Path) -> None:
         f.write("\n.. code:: python\n\n")
         for i in file_content.splitlines():
             f.write("    " + i + "\n")
-        f.write(f"\n\n`View this example on Codeberg <https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/examples/{in_path.name}>`_")
+        f.write(f"\n\n:repolink:`View this example on Codeberg <examples/{in_path.name}>`")
 
 
 def write_examples() -> None:

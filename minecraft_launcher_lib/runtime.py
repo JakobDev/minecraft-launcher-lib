@@ -39,6 +39,13 @@ def _get_jvm_platform_string() -> str:
 def get_jvm_runtimes() -> List[str]:
     """
     Returns a list of all jvm runtimes
+
+    Example:
+
+    .. code:: python
+
+        for runtime in minecraft_launcher_lib.runtime.get_jvm_runtimes():
+            print(runtime)
     """
     manifest_data: RuntimeListJson = requests.get(_JVM_MANIFEST_URL, headers={"user-agent": get_user_agent()}).json()
     jvm_list = []
@@ -51,6 +58,13 @@ def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> 
     """
     Returns a list of all installed jvm runtimes
 
+    Example:
+
+    .. code:: python
+
+        for runtime in minecraft_launcher_lib.runtime.get_installed_jvm_runtimes():
+            print(runtime)
+
     :param minecraft_directory: The path to your Minecraft directory
     """
     try:
@@ -62,6 +76,14 @@ def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> 
 def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.PathLike], callback: Optional[CallbackDict] = None) -> None:
     """
     Installs the given jvm runtime. callback is the same dict as in the install module.
+
+    Example:
+
+    .. code:: python
+
+        runtime_version = "java-runtime-gamma"
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        minecraft_launcher_lib.runtime.install_jvm_runtime(runtime_version, minecraft_directory)
 
     :param jvm_version: The Name of the JVM version
     :param minecraft_directory: The path to your Minecraft directory
@@ -148,6 +170,18 @@ def get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.Pat
     """
     Returns the path to the executable. Returns None if none is found.
 
+    Example:
+
+    .. code:: python
+
+        runtime_version = "java-runtime-gamma"
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        executable_path = minecraft_launcher_lib.runtime.get_executable_path(runtime_version, minecraft_directory)
+        if executable_path is not None:
+            print(f"Executable path: {executable_path}")
+        else:
+            print("The executable path was not found")
+
     :param jvm_version: The Name of the JVM version
     :param minecraft_directory: The path to your Minecraft directory
     """
@@ -166,6 +200,15 @@ def get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.Pat
 def get_jvm_runtime_information(jvm_version: str) -> JvmRuntimeInformation:
     """
     Returns some Information about a JVM Version
+
+    Example:
+
+    .. code:: python
+
+        runtime_version = "java-runtime-gamma"
+        information = minecraft_launcher_lib.runtime.get_jvm_runtime_information(runtime_version)
+        print("Java version: " + information["name"])
+        print("Release date: " + information["released"].isoformat())
 
     :param jvm_version: A JVM Version
     :raises VersionNotFound: The given JVM Version was not found
@@ -190,9 +233,18 @@ def get_jvm_runtime_information(jvm_version: str) -> JvmRuntimeInformation:
 
 def get_version_runtime_information(version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[VersionRuntimeInformation]:
     """
-    Returns inforation about the runtime used by a version
+    Returns information about the runtime used by a version
 
-    :param jvm_version: The Minecraft version
+    Example:
+
+    .. code:: python
+
+        minecraft_version = "1.20"
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        information = minecraft_launcher_lib.runtime.get_version_runtime_information(minecraft_version, minecraft_directory)
+        print("Name: " + information["name"])
+        print("Java version: " + str(information["javaMajorVersion"]))
+
     :param minecraft_directory: The path to your Minecraft directory
     :raises VersionNotFound: The Minecraft version was not found
     :return: A Dict with Information. None if the vserion has no runtime information.

@@ -17,6 +17,13 @@ import os
 def get_minecraft_directory() -> str:
     """
     Returns the default path to the .minecraft directory
+
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        print(f"The default minecraft directory is {minecraft_directory}")
     """
     if platform.system() == "Windows":
         return os.path.join(os.getenv("APPDATA", os.path.join(pathlib.Path.home(), "AppData", "Roaming")), ".minecraft")
@@ -29,6 +36,14 @@ def get_minecraft_directory() -> str:
 def get_latest_version() -> LatestMinecraftVersions:
     """
     Returns the latest version of Minecraft
+
+    Example:
+
+    .. code:: python
+
+        latest_version = minecraft_launcher_lib.utils.get_latest_version()
+        print("Latest Release " + latest_version["release"])
+        print("Latest Snapshot " + latest_version["snapshot"])
     """
     return get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()["latest"]
 
@@ -36,6 +51,13 @@ def get_latest_version() -> LatestMinecraftVersions:
 def get_version_list() -> List[MinecraftVersionInfo]:
     """
     Returns all versions that Mojang offers to download
+
+    Example:
+
+    .. code:: python
+
+        for version in minecraft_launcher_lib.utils.get_version_list():
+            print(version["id"])
     """
     vlist: VersionListManifestJson = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
     returnlist: List[MinecraftVersionInfo] = []
@@ -47,6 +69,14 @@ def get_version_list() -> List[MinecraftVersionInfo]:
 def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List[MinecraftVersionInfo]:
     """
     Returns all installed versions
+
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        for version in minecraft_launcher_lib.utils.get_installed_versions(minecraft_directory):
+            print(version["id"])
 
     :param minecraft_directory: The path to your Minecraft directory
     """
@@ -77,6 +107,14 @@ def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     """
     Returns all installed versions and all versions that Mojang offers to download
 
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        for version in minecraft_launcher_lib.utils.get_available_versions(minecraft_directory):
+            print(version["id"])
+
     :param minecraft_directory: The path to your Minecraft directory
     """
     version_list = []
@@ -95,7 +133,14 @@ def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List
 
 def get_java_executable() -> str:
     """
-    Tries the find out the path to the default java executable
+    Tries the find out the path to the default java executable.
+    Returns :code:`java`, if no path was found.
+
+    Example:
+
+    .. code:: python
+
+        print("The path to Java is " + minecraft_launcher_lib.utils.get_java_executable())
     """
     if platform.system() == "Windows":
         if (java_home := os.getenv("JAVA_HOME")) is not None:
@@ -123,6 +168,12 @@ _version_cache = None
 def get_library_version() -> str:
     """
     Returns the version of minecraft-launcher-lib
+
+    Example:
+
+    .. code:: python
+
+        print(f"You are using version {minecraft_launcher_lib.utils.get_library_version()} of minecraft-launcher-lib")
     """
     global _version_cache
     if _version_cache is not None:
@@ -135,7 +186,23 @@ def get_library_version() -> str:
 
 def generate_test_options() -> MinecraftOptions:
     """
-    Generates options to launch minecraft. Useful for testing. Do not use in production.
+    Generates test options to launch minecraft.
+    This includes a random name and a random uuid.
+
+    .. note::
+        This function is just for debugging and testing, if Minecraft works.
+        The behavior of this function may change in the future.
+        Do not use it in production.
+
+    Example:
+
+    .. code:: python
+
+        version = "1.0"
+        options = minecraft_launcher_lib.utils.generate_test_options()
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        command = minecraft_launcher_lib.command.get_minecraft_command(version, minecraft_directory, options)
+        subprocess.run(command)
     """
     return {
         "username": f"Player{random.randrange(100, 1000)}",
@@ -146,7 +213,20 @@ def generate_test_options() -> MinecraftOptions:
 
 def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike]) -> bool:
     """
-    Checks if the given version exists
+    Checks if the given version exists.
+    This checks if the given version is installed or offered to download by Mojang.
+    Basically you can use this tho check, if the given version can be used with :func:`~minecraft_launcher_lib.install.install_minecraft_version`.
+
+    Example:
+
+    .. code:: python
+
+        version = "1.0"
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        if minecraft_launcher_lib.utils.is_version_valid(version, minecraft_directory):
+            print(f"{version} is a valid version")
+        else:
+            print(f"{version} is not a valid version")
 
     :param version: A Minecraft version
     :param minecraft_directory: The path to your Minecraft directory
@@ -161,7 +241,20 @@ def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike])
 
 def get_minecraft_news(page_size: int = 20) -> Articles:
     """
-    Get the news from minecraft.net
+    Get the news from `minecraft.net <https://www.minecraft.net>`_
+
+    .. note::
+        This function returns the data of an API which may change at any time.
+        Use it with caution.
+        If you need a more stable solution, you can use the `RSS Feed <https://www.minecraft.net/en-us/feeds/community-content/rss>`_ instead.
+
+    Example:
+
+    .. code:: python
+
+        news = minecraft_launcher_lib.utils.get_minecraft_news()
+        for article in news["article_grid"]:
+            print(article["default_tile"]["sub_header"] + ": https://minecraft.net" + article["article_url"])
 
     :param page_size: The Page Size (default 20)
     """
@@ -178,6 +271,16 @@ def is_vanilla_version(version: str) -> bool:
     """
     Checks if the given version is a vanilla version
 
+    Example:
+
+    .. code:: python
+
+        version = "1.0"
+        if minecraft_launcher_lib.utils.is_vanilla_version(version):
+            print(f"{version} is a vanilla version")
+        else:
+            print(f"{version} is not a vanilla version")
+
     :param version: A Minecraft version
     """
     for i in get_version_list():
@@ -189,6 +292,14 @@ def is_vanilla_version(version: str) -> bool:
 def is_platform_supported() -> bool:
     """
     Checks if the current platform is supported
+
+    Example:
+
+    .. code:: python
+
+        if not minecraft_launcher_lib.utils.is_platform_supported():
+            print("Your platform is not supported", file=sys.stderr)
+            sys.exit(1)
     """
     if platform.system() not in ["Windows", "Darwin", "Linux"]:
         return False
@@ -198,6 +309,16 @@ def is_platform_supported() -> bool:
 def is_minecraft_installed(minecraft_directory: Union[str, os.PathLike]) -> bool:
     """
     Checks, if there is already a existing Minecraft Installation in the given Directory
+
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        if minecraft_launcher_lib.utils.is_minecraft_installed(minecraft_directory):
+            print("Minecraft is installed")
+        else:
+            print("Minecraft is not installed")
 
     :param minecraft_directory: The path to your Minecraft directory
     :return: Is a Installation is found

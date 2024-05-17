@@ -108,7 +108,7 @@ def load_vanilla_launcher_profiles(minecraft_directory: Union[str, os.PathLike])
 
 def vanilla_launcher_profile_to_minecraft_options(vanilla_profile: VanillaLauncherProfile) -> MinecraftOptions:
     """
-    Converts a VanillaLauncherProfile into a Options dict, that can be used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`.
+    Converts a VanillaLauncherProfile into a Options dict, that can be used by :func:`~minecraft_launcher_lib.command.get_minecraft_command`.
     You still need to add the Login Data to the Options before you can use it.
 
     :param vanilla_profile: The profile as returned by :func:`load_vanilla_launcher_profiles`

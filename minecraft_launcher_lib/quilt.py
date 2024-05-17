@@ -19,6 +19,13 @@ import os
 def get_all_minecraft_versions() -> List[QuiltMinecraftVersion]:
     """
     Returns all available Minecraft Versions for Quilt
+
+    Example:
+
+    .. code:: python
+
+        for version in minecraft_launcher_lib.quilt.get_all_minecraft_versions():
+            print(version["version"])
     """
     QUILT_MINECARFT_VERSIONS_URL = "https://meta.quiltmc.org/v3/versions/game"
     return get_requests_response_cache(QUILT_MINECARFT_VERSIONS_URL).json()
@@ -27,6 +34,13 @@ def get_all_minecraft_versions() -> List[QuiltMinecraftVersion]:
 def get_stable_minecraft_versions() -> List[str]:
     """
     Returns a list which only contains the stable Minecraft versions that supports Quilt
+
+    Example:
+
+    .. code:: python
+
+        for version in minecraft_launcher_lib.quilt.get_stable_minecraft_versions():
+            print(version)
     """
     minecraft_versions = get_all_minecraft_versions()
     stable_versions = []
@@ -39,6 +53,12 @@ def get_stable_minecraft_versions() -> List[str]:
 def get_latest_minecraft_version() -> str:
     """
     Returns the latest unstable Minecraft versions that supports Quilt. This could be a snapshot.
+
+    Example:
+
+    .. code:: python
+
+        print("Latest Minecraft version: " + minecraft_launcher_lib.quilt.get_latest_minecraft_version())
     """
     minecraft_versions = get_all_minecraft_versions()
     return minecraft_versions[0]["version"]
@@ -47,6 +67,12 @@ def get_latest_minecraft_version() -> str:
 def get_latest_stable_minecraft_version() -> str:
     """
     Returns the latest stable Minecraft version that supports Quilt
+
+    Example:
+
+    .. code:: python
+
+        print("Latest stable Minecraft version: " + minecraft_launcher_lib.quilt.get_latest_stable_minecraft_version())
     """
     stable_versions = get_stable_minecraft_versions()
     return stable_versions[0]
@@ -55,6 +81,16 @@ def get_latest_stable_minecraft_version() -> str:
 def is_minecraft_version_supported(version: str) -> bool:
     """
     Checks if a Minecraft version supported by Quilt
+
+    Example:
+
+    .. code:: python
+
+        version = "1.20"
+        if minecraft_launcher_lib.quilt.is_minecraft_version_supported(version):
+            print(f"{version} is supported by quilt")
+        else:
+            print(f"{version} is not supported by quilt")
 
     :param version: A vanilla version
     """
@@ -68,6 +104,13 @@ def is_minecraft_version_supported(version: str) -> bool:
 def get_all_loader_versions() -> List[QuiltLoader]:
     """
     Returns all loader versions
+
+    Example:
+
+    .. code:: python
+
+        for version in minecraft_launcher_lib.quilt.get_all_loader_versions():
+            print(version["version"])
     """
     QUILT_LOADER_VERSIONS_URL = "https://meta.quiltmc.org/v3/versions/loader"
     return get_requests_response_cache(QUILT_LOADER_VERSIONS_URL).json()
@@ -76,6 +119,13 @@ def get_all_loader_versions() -> List[QuiltLoader]:
 def get_latest_loader_version() -> str:
     """
     Get the latest loader version
+
+
+    Example:
+
+    .. code:: python
+
+        print("Latest loader version: " + minecraft_launcher_lib.quilt.get_latest_loader_version())
     """
     loader_versions = get_all_loader_versions()
     return loader_versions[0]["version"]
@@ -84,6 +134,12 @@ def get_latest_loader_version() -> str:
 def get_latest_installer_version() -> str:
     """
     Returns the latest installer version
+
+    Example:
+
+    .. code:: python
+
+        print("Latest installer version: " + minecraft_launcher_lib.quilt.get_latest_installer_version())
     """
     QUILT_INSTALLER_MAVEN_URL = "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/maven-metadata.xml"
     return parse_maven_metadata(QUILT_INSTALLER_MAVEN_URL)["latest"]
@@ -93,11 +149,20 @@ def install_quilt(minecraft_version: str, minecraft_directory: Union[str, os.Pat
     """
     Installs the Quilt modloader.
 
+    Example:
+
+    .. code:: python
+
+        minecraft_version = "1.20"
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        minecraft_launcher_lib.quilt.install_quilt(minecraft_version, minecraft_directory)
+
     :param minecraft_version: A vanilla version that is supported by Quilt
     :param minecraft_directory: The path to your Minecraft directory
     :param loader_version: The Quilt loader version. If not given it will use the latest
     :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
     :param java: A Path to a custom Java executable
+    :raises VersionNotFound: The given Minecraft does not exists
     :raises UnsupportedVersion: The given Minecraft version is not supported by Quilt
     """
     path = str(minecraft_directory)

@@ -24,4 +24,4 @@ minecraft-launcher-lib is a easy to use Python library for creating your own Min
     changelog
     history
     Issues <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues>
-    Source <https://codeberg.org/JakobDev/minecraft-launcher-lib/>
+    Source <https://codeberg.org/JakobDev/minecraft-launcher-lib>

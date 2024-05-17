@@ -25,7 +25,7 @@ These are the main goals of minecraft-launcher-lib:
 - minecraft-launcher-lib should stay backwards compatible. This is not always possible because of changes on the side of Mojang/Microsoft e.g. the switch from Mojang to Microsoft accounts,
   but if minecraft-launcher-lib is not forced, it should never break backwards compatibility. A program that is written using an older version should also work on the latest version without changes.
   To ensure this, minecraft-launcher-lib has a test coverage of over 95%.
-- minecraft-laucnher-lib is fully static typed. It helps you develop with an IDE and you can use type checkers like `mypy <https://www.mypy-lang.org/>`_.
+- minecraft-launcher-lib is fully static typed. It helps you develop with an IDE and you can use type checkers like `mypy <https://www.mypy-lang.org/>`_.
 
 -------------------------
 Getting Started

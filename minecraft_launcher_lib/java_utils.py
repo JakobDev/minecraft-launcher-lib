@@ -11,14 +11,22 @@ def get_java_information(path: Union[str, os.PathLike]) -> JavaInformation:
     """
     Returns Some Information about the given Java Installation
 
-    :param path: The Path to the Installation. It must be the Directory. If your Java executbale is e.g. /usr/lib/jvm/java-19-openjdk-amd64/bin/java this Parameter must be /usr/lib/jvm/java-19-openjdk-amd64.
-    :return: A dict with Information about the given java installation
-
-    Raises a ValueError on the worng Path
-
     .. note::
+        This Function executes the Java executable to determine details such as the version. This might be a security risk.
 
-        This Function executes the Java executable to detemine details such as the version. This might be a security risk.
+    Example:
+
+    .. code:: python
+
+        java_path = "<path>"
+        information = minecraft_launcher_lib.java_utils.get_java_information(java_path)
+        print("Name: " + information["name"])
+        print("Version: " + information["version"])
+        print("Java path: " + information["java_path"])
+
+    :param path: The Path to the Installation. It must be the Directory. If your Java executable is e.g. /usr/lib/jvm/java-19-openjdk-amd64/bin/java this Parameter must be /usr/lib/jvm/java-19-openjdk-amd64.
+    :return: A dict with Information about the given java installation
+    :raises ValueError: Wrong path
     """
     if platform.system() == "Windows":
         if not os.path.isfile(os.path.join(path, "bin", "java.exe")):
@@ -66,11 +74,17 @@ def _search_java_directory(path: Union[str, os.PathLike]) -> List[str]:
 def find_system_java_versions(additional_directories: Optional[List[Union[str, os.PathLike]]] = None) -> List[str]:
     """
     Try to find all Java Versions installed on the System. You can use this to e.g. let the User choose between different Java Versions in a Dropdown.
+    macOS is not supported yet.
+
+    Example:
+
+    .. code:: python
+
+        for version in minecraft_launcher_lib.java_utils.find_system_java_versions():
+            print(version)
 
     :param additional_directories: A List of additional Directories to search for Java in custom locations
     :return: A List with all Directories of Java Installations
-
-    macOS is not supported yet
     """
     java_list: List[str] = []
 
@@ -91,15 +105,24 @@ def find_system_java_versions(additional_directories: Optional[List[Union[str, o
 def find_system_java_versions_information(additional_directories: Optional[List[Union[str, os.PathLike]]] = None) -> List[JavaInformation]:
     """
     Same as :func:`find_system_java_version`, but uses :func:`get_java_information` to get some Information about the Installation instead of just proving a Path.
-
-    :param additional_directories: A List of additional Directories to search for Java in custom locations
-    :return: A List with Information of Java Installations
-
     macOS is not supported yet
 
     .. note::
+        This Function executes the Java executable to determine details such as the version. This might be a security risk.
 
-        This Function executes the Java executable to detemine details such as the version. This might be a security risk.
+    Example:
+
+    .. code:: python
+
+        for version_information in minecraft_launcher_lib.java_utils.find_system_java_versions_information():
+            print("Path: " + version_information["path"])
+            print("Name: " + version_information["name"])
+            print("Version: " + version_information["version"])
+            print("Java path: " + version_information["java_path"])
+            print()
+
+    :param additional_directories: A List of additional Directories to search for Java in custom locations
+    :return: A List with Information of Java Installations
     """
     java_information_list: List[JavaInformation] = []
     for i in find_system_java_versions(additional_directories=additional_directories):

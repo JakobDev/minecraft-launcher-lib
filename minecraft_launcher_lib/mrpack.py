@@ -1,4 +1,7 @@
-"mrpack allows you to install Modpacks from the `Mrpack Format <https://docs.modrinth.com/docs/modpacks/format_definition>`_"
+"""
+mrpack allows you to install Modpacks from the `Mrpack Format <https://docs.modrinth.com/docs/modpacks/format_definition>`_.
+You should also take a look at the :doc:`complete example </examples/Mrpack>`.
+"""
 from ._helper import download_file, empty, check_path_inside_minecraft_directory
 from .types import MrpackInformation, MrpackInstallOptions, CallbackDict
 from ._internal_types.mrpack_types import MrpackIndex, MrpackFile
@@ -36,6 +39,15 @@ def get_mrpack_information(path: Union[str, os.PathLike]) -> MrpackInformation:
     """
     Gets some Information from a .mrpack file
 
+    Example:
+
+    .. code:: python
+
+        path = "/path/to/mrpack"
+        information = minecraft_launcher_lib.mrpack.get_mrpack_information(path)
+        print("Name: " + information["name"])
+        print("Summary: " + information["summary"])
+
     :param path: The Path the the .mrpack file
     :type path: Union[str, os.PathLike]
     :return: The Information about the given Mrpack
@@ -66,13 +78,6 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
     """
     Installs a .mrpack file
 
-    :param path: The Path the the .mrpack file
-    :param minecraft_directory: he path to your Minecraft directory
-    :param modpack_directory: If you want to install the Pack in another Directory than your Minecraft directory, set it here.
-    :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
-    :param mrpack_install_options: Some Options to install the Pack (see below)
-    :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
-
     ``mrpack_install_options`` is a dict. All Options are Optional.
 
     .. code:: python
@@ -81,6 +86,21 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
             "optionalFiles": [], # List with all Optional files
             "skipDependenciesInstall": False # If you want to skip the Dependencie install. Only used for testing purposes.
         }
+
+    Example:
+
+    .. code:: python
+
+        path = "/path/to/mrpack"
+        minecraft_directory = minecraft_directory.utils.get_minecraft_directory()
+        minecraft_launcher_lib.mrpack.install_mrpack(path, minecraft_directory)
+
+    :param path: The Path the the .mrpack file
+    :param minecraft_directory: he path to your Minecraft directory
+    :param modpack_directory: If you want to install the Pack in another Directory than your Minecraft directory, set it here.
+    :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
+    :param mrpack_install_options: Some Options to install the Pack (see below)
+    :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
     """
     minecraft_directory = os.path.abspath(minecraft_directory)
     path = os.path.abspath(path)
@@ -167,6 +187,13 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
 def get_mrpack_launch_version(path: Union[str, os.PathLike]) -> str:
     """
     Returns that Version that needs to be used with :func:`~minecraft_launcher_lib.command.get_minecraft_command`.
+
+    Example:
+
+    .. code:: python
+
+        path = "/path/to/mrpack"
+        print("Launch version: " + minecraft_launcher_lib.mrpack.get_mrpack_launch_version(path))
 
     :param path: The Path the the .mrpack file
     :return: The version

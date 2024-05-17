@@ -12,7 +12,7 @@ Q: Which Operating Systems are supported?
     A: minecraft-launcher-lib official supports Windows, macOS and Linux, which are the Operating Systems that also supported by Mojang. It might work on other OS, but there is no guaranty.
 
 Q: Can I use minecraft-launcher-lib in my project?
-    A: minecraft-launcher-lib is licensed under `BSD 2-Clause <https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/LICENSE>`_ what means it is OpenSource and it can be used in any of your projects.
+    A: minecraft-launcher-lib is licensed under :repolink:`BSD 2-Clause <LICENSE>` what means it is OpenSource and it can be used in any of your projects.
     For more information check out the license.
 
 Q: How can I make a cracked launcher?
