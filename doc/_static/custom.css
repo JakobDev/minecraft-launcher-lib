@@ -1,0 +1,7 @@
+.toctree-l1 a.reference.external::after {
+    font-family: FontAwesome;
+    content: "\f08e";
+    vertical-align: super;
+    font-size: 60%;
+    margin: 0 .2em;
+  }
