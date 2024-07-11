@@ -32,7 +32,7 @@ def check_path_inside_minecraft_directory(minecraft_directory: Union[str, os.Pat
         raise FileOutsideMinecraftDirectory(os.path.abspath(path), os.path.abspath(minecraft_directory))
 
 
-def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Optional[str] = None, lzma_compressed: Optional[bool] = False, session: Optional[requests.sessions.Session] = None, minecraft_directory: Optional[Union[str, os.PathLike]] = None) -> bool:
+def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Optional[str] = None, lzma_compressed: Optional[bool] = False, session: Optional[requests.sessions.Session] = None, minecraft_directory: Optional[Union[str, os.PathLike]] = None, overwrite: Optional[bool] = False) -> bool:
     """
     Downloads a file into the given path. Check sha1 if given.
     """
@@ -40,7 +40,7 @@ def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Option
     if minecraft_directory is not None:
         check_path_inside_minecraft_directory(minecraft_directory, path)
 
-    if os.path.isfile(path):
+    if os.path.isfile(path) and not overwrite:
         if sha1 is None:
             return False
         elif get_sha1_hash(path) == sha1:

@@ -7,7 +7,6 @@ from typing import List, Optional, Union
 from .utils import is_version_valid
 import subprocess
 import tempfile
-import random
 import os
 
 
@@ -183,21 +182,16 @@ def install_fabric(minecraft_version: str, minecraft_directory: Union[str, os.Pa
     installer_version = get_latest_installer_version()
     installer_download_url = f"https://maven.fabricmc.net/net/fabricmc/fabric-installer/{installer_version}/fabric-installer-{installer_version}.jar"
 
-    # Generate a temporary path for downloading the installer
-    installer_path = os.path.join(tempfile.gettempdir(), f"fabric-installer-{random.randrange(100, 10000)}.tmp")
+    with tempfile.NamedTemporaryFile(prefix="minecraft-launcher-lib-fabric-install-") as installer_file:
+        # Download the installer
+        download_file(installer_download_url, installer_file.name, callback=callback, overwrite=True)
 
-    # Download the installer
-    download_file(installer_download_url, installer_path, callback=callback)
-
-    # Run the installer see https://fabricmc.net/wiki/install#cli_installation
-    callback.get("setStatus", empty)("Running fabric installer")
-    command = ["java" if java is None else str(java), "-jar", installer_path, "client", "-dir", path, "-mcversion", minecraft_version, "-loader", loader_version, "-noprofile", "-snapshot"]
-    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if result.returncode != 0:
-        raise ExternalProgramError(command, result.stdout, result.stderr)
-
-    # Delete the installer we don't need them anymore
-    os.remove(installer_path)
+        # Run the installer see https://fabricmc.net/wiki/install#cli_installation
+        callback.get("setStatus", empty)("Running fabric installer")
+        command = ["java" if java is None else str(java), "-jar", installer_file.name, "client", "-dir", path, "-mcversion", minecraft_version, "-loader", loader_version, "-noprofile", "-snapshot"]
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            raise ExternalProgramError(command, result.stdout, result.stderr)
 
     # Install all libs of fabric
     fabric_minecraft_version = f"fabric-loader-{loader_version}-{minecraft_version}"

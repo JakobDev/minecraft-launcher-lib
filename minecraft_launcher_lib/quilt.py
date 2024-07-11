@@ -12,7 +12,6 @@ from typing import List, Optional, Union
 from .utils import is_version_valid
 import subprocess
 import tempfile
-import random
 import os
 
 
@@ -188,23 +187,16 @@ def install_quilt(minecraft_version: str, minecraft_directory: Union[str, os.Pat
     installer_version = get_latest_installer_version()
     installer_download_url = f"https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/{installer_version}/quilt-installer-{installer_version}.jar"
 
-    # Generate a temporary path for downloading the installer
-    installer_path = os.path.join(tempfile.gettempdir(), f"quilt-installer-{random.randrange(100, 10000)}.tmp")
-
-    try:
+    with tempfile.NamedTemporaryFile(prefix="minecraft-launcher-lib-quilt-install-") as installer_file:
         # Download the installer
-        download_file(installer_download_url, installer_path, callback=callback)
+        download_file(installer_download_url, installer_file.name, callback=callback, overwrite=True)
 
         # Run the installer
         callback.get("setStatus", empty)("Running quilt installer")
-        command = ["java" if java is None else str(java), "-jar", installer_path, "install", "client", minecraft_version, loader_version, f"--install-dir={path}", "--no-profile"]
+        command = ["java" if java is None else str(java), "-jar", installer_file.name, "install", "client", minecraft_version, loader_version, f"--install-dir={path}", "--no-profile"]
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode != 0:
             raise ExternalProgramError(command, result.stdout, result.stderr)
-    finally:
-        # Delete the installer as we don't need them anymore
-        if os.path.isfile(installer_path):
-            os.remove(installer_path)
 
     # Install all libs of quilt
     quilt_minecraft_version = f"quilt-loader-{loader_version}-{minecraft_version}"
