@@ -1,5 +1,5 @@
 """
-mrpack allows you to install Modpacks from the `Mrpack Format <https://docs.modrinth.com/docs/modpacks/format_definition>`_.
+mrpack allows you to install Modpacks from the `Mrpack Format <https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack>`_.
 You should also take a look at the :doc:`complete example </examples/Mrpack>`.
 """
 from ._helper import download_file, empty, check_path_inside_minecraft_directory
