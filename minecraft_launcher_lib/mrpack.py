@@ -153,7 +153,14 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
             check_path_inside_minecraft_directory(modpack_directory, full_path)
 
             callback.get("setStatus", empty)(f"Extract {zip_name}]")
-            zf.extract(zip_name, full_path)
+
+            try:
+                os.makedirs(os.path.dirname(full_path))
+            except FileExistsError:
+                pass
+
+            with open(full_path, 'wb') as f:
+                f.write(zf.read(zip_name))
 
         if mrpack_install_options.get("skipDependenciesInstall"):
             return

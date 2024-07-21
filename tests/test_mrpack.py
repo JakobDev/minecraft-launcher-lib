@@ -152,8 +152,9 @@ def test_install_mrpack(monkeypatch: pytest.MonkeyPatch, subtests: pytest_subtes
 
     with subtests.test("Overrides"):
         third_dir = _create_test_dir(tmp_path)
-        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["overrides.txt"], client_overrides=["client/test.txt"]), third_dir, mrpack_install_options={"skipDependenciesInstall": True})
-        assert sorted(os.listdir(third_dir)) == sorted(["a.txt", "b.txt", "overrides.txt", "client"])
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(index, tmp_path, overrides=["overrides.txt", "subdir/overrides.txt"], client_overrides=["client/test.txt"]), third_dir, mrpack_install_options={"skipDependenciesInstall": True})
+        assert sorted(os.listdir(third_dir)) == sorted(["a.txt", "b.txt", "overrides.txt", "client", "subdir"])
+        assert sorted(os.listdir(os.path.join(third_dir, "subdir"))) == sorted(["overrides.txt"])
         assert sorted(os.listdir(os.path.join(third_dir, "client"))) == sorted(["test.txt"])
 
     with subtests.test("FileOutsideMinecraftDirectory Exception with files"):
