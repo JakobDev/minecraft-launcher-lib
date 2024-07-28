@@ -44,4 +44,4 @@ options = {
 minecraft_command = minecraft_launcher_lib.command.get_minecraft_command(latest_version, minecraft_directory, options)
 
 # Start Minecraft
-subprocess.run(minecraft_command)
+subprocess.run(minecraft_command, cwd=minecraft_directory)
