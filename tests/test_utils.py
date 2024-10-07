@@ -185,11 +185,6 @@ def test_is_version_valid(requests_mock: requests_mock.Mocker, tmp_path: pathlib
     assert minecraft_launcher_lib.utils.is_version_valid("Test123", tmp_path) is False
 
 
-def test_get_minecraft_news() -> None:
-    assert len(minecraft_launcher_lib.utils.get_minecraft_news()["article_grid"]) == 20
-    assert len(minecraft_launcher_lib.utils.get_minecraft_news(page_size=50)["article_grid"]) == 50
-
-
 def test_is_vanilla_version(requests_mock: requests_mock.Mocker) -> None:
     prepare_requests_mock(requests_mock)
 

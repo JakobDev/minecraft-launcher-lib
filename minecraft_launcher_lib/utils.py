@@ -1,13 +1,12 @@
 "utils contains a few functions for helping you that doesn't fit in any other category"
-from .types import Articles, MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
+from .types import MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
 from ._internal_types.shared_types import ClientJson, VersionListManifestJson
 from ._helper import get_requests_response_cache, assert_func
 from typing import List, Union
 from datetime import datetime
 import platform
-import requests
-import random
 import pathlib
+import random
 import shutil
 import uuid
 import json
@@ -237,34 +236,6 @@ def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike])
         if i["id"] == version:
             return True
     return False
-
-
-def get_minecraft_news(page_size: int = 20) -> Articles:
-    """
-    Get the news from `minecraft.net <https://www.minecraft.net>`_
-
-    .. note::
-        This function returns the data of an API which may change at any time.
-        Use it with caution.
-        If you need a more stable solution, you can use the `RSS Feed <https://www.minecraft.net/en-us/feeds/community-content/rss>`_ instead.
-
-    Example:
-
-    .. code:: python
-
-        news = minecraft_launcher_lib.utils.get_minecraft_news()
-        for article in news["article_grid"]:
-            print(article["default_tile"]["sub_header"] + ": https://minecraft.net" + article["article_url"])
-
-    :param page_size: The Page Size (default 20)
-    """
-    parameters = {
-        "pageSize": page_size
-    }
-    header = {
-        "user-agent": f"minecraft-launcher-lib/{get_library_version()}"
-    }
-    return requests.get("https://www.minecraft.net/content/minecraft-net/_jcr_content.articles.grid", params=parameters, headers=header).json()
 
 
 def is_vanilla_version(version: str) -> bool:
