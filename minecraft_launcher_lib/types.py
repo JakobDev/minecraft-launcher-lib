@@ -135,3 +135,55 @@ class JvmRuntimeInformation(TypedDict):
 class VersionRuntimeInformation(TypedDict):
     name: str
     javaMajorVersion: int
+
+
+class _NewsEntryPlayPageImage(TypedDict):
+    title: str
+    url: str
+
+
+class _NewsEntryNewsPageImageDimensions(TypedDict):
+    width: int
+    height: int
+
+
+class _NewsEntryNewsPageImage(TypedDict):
+    title: str
+    url: str
+    dimensions: _NewsEntryNewsPageImageDimensions
+
+
+class _NewsEntry(TypedDict):
+    title: str
+    category: str
+    date: str
+    text: str
+    playPageImage: _NewsEntryPlayPageImage
+    newsPageImage: _NewsEntryNewsPageImage
+    readMoreLink: str
+    newsType: List[str]
+    id: str
+
+
+class MinecraftNews(TypedDict):
+    version: Literal[1]
+    entries: List[_NewsEntry]
+
+
+class _JavaPatchNoteEntryImage(TypedDict):
+    url: str
+    title: str
+
+
+class _JavaPatchNoteEntry(TypedDict):
+    title: str
+    type: Literal["release", "snapshot"]
+    version: str
+    image: _JavaPatchNoteEntryImage
+    body: str
+    contentPath: str
+
+
+class JavaPatchNotes(TypedDict):
+    version: Literal[1]
+    entries: List[_JavaPatchNoteEntry]

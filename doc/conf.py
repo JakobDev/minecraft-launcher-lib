@@ -154,7 +154,7 @@ def write_module_file(in_path: pathlib.Path, out_dir: pathlib.Path) -> None:
 
 
 def write_modules() -> None:
-    MODULE_ORDER = ("command", "install", "natives", "microsoft_account", "utils", "java_utils", "forge", "fabric", "quilt", "runtime", "vanilla_launcher", "mrpack", "exceptions", "types", "microsoft_types")
+    MODULE_ORDER = ("command", "install", "natives", "microsoft_account", "utils", "news", "java_utils", "forge", "fabric", "quilt", "runtime", "vanilla_launcher", "mrpack", "exceptions", "types", "microsoft_types")
     modules_path = pathlib.Path(__file__).parent.parent / "minecraft_launcher_lib"
     modules_doc_dir = pathlib.Path(__file__).parent / "modules"
 
