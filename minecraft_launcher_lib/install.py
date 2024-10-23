@@ -11,21 +11,29 @@ import requests
 import shutil
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 __all__ = ["install_minecraft_version"]
 
 
-def install_libraries(id: str, libraries: List[ClientJsonLibrary], path: str, callback: CallbackDict) -> None:
+def install_libraries(
+        id: str,
+        libraries: List[ClientJsonLibrary],
+        path: str, callback: CallbackDict,
+        max_workers: Optional[int] = None,) -> None:
     """
     Install all libraries
     """
     session = requests.session()
     callback.get("setStatus", empty)("Download Libraries")
     callback.get("setMax", empty)(len(libraries) - 1)
-    for count, i in enumerate(libraries):
+
+    def download_library(
+            i: ClientJsonLibrary,) -> None:
+        """Download the single library."""
         # Check, if the rules allow this lib for the current system
         if "rules" in i and not parse_rule_list(i["rules"], {}):
-            continue
+            return
 
         # Turn the name into a path
         current_path = os.path.join(path, "libraries")
@@ -40,7 +48,7 @@ def install_libraries(id: str, libraries: List[ClientJsonLibrary], path: str, ca
         try:
             lib_path, name, version = i["name"].split(":")[0:3]
         except ValueError:
-            continue
+            return
 
         for lib_part in lib_path.split("."):
             current_path = os.path.join(current_path, lib_part)
@@ -71,7 +79,7 @@ def install_libraries(id: str, libraries: List[ClientJsonLibrary], path: str, ca
         if "downloads" not in i:
             if "extract" in i:
                 extract_natives_file(os.path.join(current_path, jar_filename_native), os.path.join(path, "versions", id, "natives"), i["extract"])
-            continue
+            return
 
         if "artifact" in i["downloads"] and i["downloads"]["artifact"]["url"] != "" and "path" in i["downloads"]["artifact"]:
             download_file(i["downloads"]["artifact"]["url"], os.path.join(path, "libraries", i["downloads"]["artifact"]["path"]), callback, sha1=i["downloads"]["artifact"]["sha1"], session=session, minecraft_directory=path)
@@ -79,7 +87,15 @@ def install_libraries(id: str, libraries: List[ClientJsonLibrary], path: str, ca
             download_file(i["downloads"]["classifiers"][native]["url"], os.path.join(current_path, jar_filename_native), callback, sha1=i["downloads"]["classifiers"][native]["sha1"], session=session, minecraft_directory=path)  # type: ignore
             extract_natives_file(os.path.join(current_path, jar_filename_native), os.path.join(path, "versions", id, "natives"), i.get("extract", {"exclude": []}))
 
-        callback.get("setProgress", empty)(count)
+    count = 0
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit task for every library
+        futures = [executor.submit(download_library, i) for i in libraries]
+        for future in futures:
+            # Wait until the task is completed
+            future.result()
+            count += 1
+            callback.get("setProgress", empty)(count)
 
 
 def install_assets(data: ClientJson, path: str, callback: CallbackDict) -> None:
