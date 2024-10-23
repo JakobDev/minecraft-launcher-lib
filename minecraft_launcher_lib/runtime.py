@@ -1,7 +1,7 @@
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
 from ._helper import get_user_agent, download_file, empty, get_sha1_hash, check_path_inside_minecraft_directory, get_client_json
 from .types import CallbackDict, JvmRuntimeInformation, VersionRuntimeInformation
-from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson
+from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson, _PlatformManifestJsonFile
 from .exceptions import VersionNotFound, PlatformNotSupported
 from typing import List, Union, Optional
 import subprocess
@@ -9,6 +9,7 @@ import datetime
 import requests
 import platform
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 _JVM_MANIFEST_URL = "https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json"
 
@@ -73,7 +74,11 @@ def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> 
         return []
 
 
-def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.PathLike], callback: Optional[CallbackDict] = None) -> None:
+def install_jvm_runtime(
+        jvm_version: str,
+        minecraft_directory: Union[str, os.PathLike],
+        callback: Optional[CallbackDict] = None,
+        max_workers: Optional[int] = None) -> None:
     """
     Installs the given jvm runtime. callback is the same dict as in the install module.
 
@@ -88,6 +93,7 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
     :param jvm_version: The Name of the JVM version
     :param minecraft_directory: The path to your Minecraft directory
     :param callback: the same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
+    :param max_workers: number of workers for asynchronous downloads. If None, max_workers will be set automatically.
     :raises VersionNotFound: The given JVM Version was not found
     :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
     """
@@ -104,12 +110,11 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
         return
     platform_manifest: PlatformManifestJson = requests.get(manifest_data[platform_string][jvm_version][0]["manifest"]["url"], headers={"user-agent": get_user_agent()}).json()
     base_path = os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, jvm_version)
-    # Download all files of the runtime
-    callback.get("setMax", empty)(len(platform_manifest["files"]) - 1)
-    count = 0
     session = requests.session()
     file_list: List[str] = []
-    for key, value in platform_manifest["files"].items():
+
+    def install_runtime_file(key: str, value: _PlatformManifestJsonFile) -> None:
+        """Install the single runtime file."""
         current_path = os.path.join(base_path, key)
         check_path_inside_minecraft_directory(minecraft_directory, current_path)
 
@@ -136,17 +141,25 @@ def install_jvm_runtime(jvm_version: str, minecraft_directory: Union[str, os.Pat
 
         elif value["type"] == "link":
             check_path_inside_minecraft_directory(minecraft_directory, os.path.join(base_path, value["target"]))
-
-            if not os.path.isdir(os.path.dirname(current_path)):
-                os.makedirs(os.path.dirname(current_path))
+            os.makedirs(os.path.dirname(current_path), exist_ok=True)
 
             try:
                 os.symlink(value["target"], current_path)
             except Exception:
                 pass
 
-        callback.get("setProgress", empty)(count)
-        count += 1
+    # Download all files of the runtime
+    callback.get("setMax", empty)(len(platform_manifest["files"]) - 1)
+    count = 0
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = [
+            executor.submit(install_runtime_file, key, value)
+            for key, value in platform_manifest["files"].items()
+        ]
+        for future in futures:
+            future.result()
+            count += 1
+            callback.get("setProgress", empty)(count)
 
     # Create the .version file
     version_path = os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, ".version")
