@@ -98,7 +98,11 @@ def install_libraries(
             callback.get("setProgress", empty)(count)
 
 
-def install_assets(data: ClientJson, path: str, callback: CallbackDict) -> None:
+def install_assets(
+        data: ClientJson,
+        path: str,
+        callback: CallbackDict,
+        max_workers: Optional[int] = None,) -> None:
     """
     Install all assets
     """
@@ -120,10 +124,20 @@ def install_assets(data: ClientJson, path: str, callback: CallbackDict) -> None:
     assets = set(val["hash"] for val in assets_data["objects"].values())
     callback.get("setMax", empty)(len(assets) - 1)
     count = 0
-    for filehash in assets:
+
+    def download_asset(filehash: str) -> None:
+        """Download the single asset file."""
         download_file("https://resources.download.minecraft.net/" + filehash[:2] + "/" + filehash, os.path.join(path, "assets", "objects", filehash[:2], filehash), callback, sha1=filehash, session=session, minecraft_directory=path)
-        count += 1
-        callback.get("setProgress", empty)(count)
+
+    # Use a ThreadPoolExecutor to download assets concurrently
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit task for every library
+        futures = [executor.submit(download_asset, filehash) for filehash in assets]
+        for future in futures:
+            # Wait until the task is completed
+            future.result()
+            count += 1
+            callback.get("setProgress", empty)(count)
 
 
 def do_version_install(versionid: str, path: str, callback: CallbackDict, url: Optional[str] = None, sha1: Optional[str] = None) -> None:
