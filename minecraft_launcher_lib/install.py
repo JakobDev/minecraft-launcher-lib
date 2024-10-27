@@ -101,10 +101,11 @@ def install_assets(data: ClientJson, path: str, callback: CallbackDict) -> None:
     # The assets has a hash. e.g. c4dbabc820f04ba685694c63359429b22e3a62b5
     # With this hash, it can be download from https://resources.download.minecraft.net/c4/c4dbabc820f04ba685694c63359429b22e3a62b5
     # And saved at assets/objects/c4/c4dbabc820f04ba685694c63359429b22e3a62b5
-    callback.get("setMax", empty)(len(assets_data["objects"]) - 1)
+    assets = set(val["hash"] for val in assets_data["objects"].values())
+    callback.get("setMax", empty)(len(assets) - 1)
     count = 0
-    for value in assets_data["objects"].values():
-        download_file("https://resources.download.minecraft.net/" + value["hash"][:2] + "/" + value["hash"], os.path.join(path, "assets", "objects", value["hash"][:2], value["hash"]), callback, sha1=value["hash"], session=session, minecraft_directory=path)
+    for filehash in assets:
+        download_file("https://resources.download.minecraft.net/" + filehash[:2] + "/" + filehash, os.path.join(path, "assets", "objects", filehash[:2], filehash), callback, sha1=filehash, session=session, minecraft_directory=path)
         count += 1
         callback.get("setProgress", empty)(count)
 
