@@ -1,7 +1,7 @@
 "This module contains some helper functions. It should nt be used outside minecraft_launcher_lib"
 from .exceptions import FileOutsideMinecraftDirectory, InvalidChecksum, VersionNotFound
+from ._internal_types.shared_types import ClientJson, ClientJsonRule, ClientJsonLibrary
 from ._internal_types.helper_types import RequestsResponseCache, MavenMetadata
-from ._internal_types.shared_types import ClientJson, ClientJsonRule
 from typing import List, Dict, Union, Literal, Optional, Any
 from .types import MinecraftOptions, CallbackDict
 import datetime
@@ -128,6 +128,14 @@ def parse_rule_list(rules: List[ClientJsonRule], options: MinecraftOptions) -> b
     return True
 
 
+def _get_lib_name_without_version(lib: ClientJsonLibrary) -> str:
+    """
+    Returns the library name but without the version part
+    e.g. org.ow2.asm:asm:9.7.1 -> org.ow2.asm:asm
+    """
+    return ":".join(lib["name"].split(":")[:-1])
+
+
 def inherit_json(original_data: ClientJson, path: Union[str, os.PathLike]) -> ClientJson:
     """
     Implement the inheritsFrom function
@@ -138,7 +146,28 @@ def inherit_json(original_data: ClientJson, path: Union[str, os.PathLike]) -> Cl
     with open(os.path.join(path, "versions", inherit_version, inherit_version + ".json")) as f:
         new_data: ClientJson = json.load(f)
 
+    # Inheriting the libs is a bit special
+    # If the lib is already present in the client.json in a different, it can't be inherited
+    # So first we need a dict which contains all libs that are already present
+    original_libs: Dict[str, bool] = {}
+    for current_lib in original_data.get("libraries", []):
+        lib_name = _get_lib_name_without_version(current_lib)
+        original_libs[lib_name] = True
+
+    # Now we can attach all libs from the inherited version that are not already existing
+    lib_list = original_data.get("libraries", [])
+    for current_lib in new_data["libraries"]:
+        lib_name = _get_lib_name_without_version(current_lib)
+        if lib_name not in original_libs:
+            lib_list.append(current_lib)
+
+    new_data["libraries"] = lib_list
+
     for key, value in original_data.items():
+        if key == "libraries":
+            # We already had inherited the libs
+            continue
+
         if isinstance(value, list) and isinstance(new_data.get(key, None), list):
             new_data[key] = value + new_data[key]  # type: ignore
         elif isinstance(value, dict) and isinstance(new_data.get(key, None), dict):
