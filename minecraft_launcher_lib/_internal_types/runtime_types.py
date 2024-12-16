@@ -1,4 +1,4 @@
-from typing import List, Dict, Literal, TypedDict
+from typing import Literal, TypedDict
 
 
 class _RuntimeListJsonEntryManifest(TypedDict):
@@ -8,12 +8,12 @@ class _RuntimeListJsonEntryManifest(TypedDict):
 
 
 class _RuntimeListJsonEntry(TypedDict):
-    availability: Dict[Literal["group", "progress"], int]
+    availability: dict[Literal["group", "progress"], int]
     manifest: _RuntimeListJsonEntryManifest
-    version: Dict[Literal["name", "released"], str]
+    version: dict[Literal["name", "released"], str]
 
 
-RuntimeListJson = Dict[str, Dict[str, List[_RuntimeListJsonEntry]]]
+RuntimeListJson = dict[str, dict[str, list[_RuntimeListJsonEntry]]]
 
 
 class _PlatformManifestJsonFileDownloads(TypedDict):
@@ -23,11 +23,11 @@ class _PlatformManifestJsonFileDownloads(TypedDict):
 
 
 class _PlatformManifestJsonFile(TypedDict, total=False):
-    downloads: Dict[Literal["lzma", "raw"], _PlatformManifestJsonFileDownloads]
+    downloads: dict[Literal["lzma", "raw"], _PlatformManifestJsonFileDownloads]
     type: Literal["file", "directory", "link"]
     executable: bool
     target: str
 
 
 class PlatformManifestJson(TypedDict):
-    files: Dict[str, _PlatformManifestJsonFile]
+    files: dict[str, _PlatformManifestJsonFile]

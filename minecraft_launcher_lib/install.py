@@ -3,24 +3,23 @@ from ._helper import download_file, parse_rule_list, inherit_json, empty, get_us
 from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
 from .natives import extract_natives_file, get_natives
 from ._internal_types.install_types import AssetsJson
+from concurrent.futures import ThreadPoolExecutor
 from .runtime import install_jvm_runtime
-from typing import List, Optional, Union
 from .exceptions import VersionNotFound
 from .types import CallbackDict
 import requests
 import shutil
 import json
 import os
-from concurrent.futures import ThreadPoolExecutor
 
 __all__ = ["install_minecraft_version"]
 
 
 def install_libraries(
         id: str,
-        libraries: List[ClientJsonLibrary],
+        libraries: list[ClientJsonLibrary],
         path: str, callback: CallbackDict,
-        max_workers: Optional[int] = None,) -> None:
+        max_workers: int | None = None,) -> None:
     """
     Install all libraries
     """
@@ -102,7 +101,7 @@ def install_assets(
         data: ClientJson,
         path: str,
         callback: CallbackDict,
-        max_workers: Optional[int] = None,) -> None:
+        max_workers: int | None = None,) -> None:
     """
     Install all assets
     """
@@ -140,7 +139,7 @@ def install_assets(
             callback.get("setProgress", empty)(count)
 
 
-def do_version_install(versionid: str, path: str, callback: CallbackDict, url: Optional[str] = None, sha1: Optional[str] = None) -> None:
+def do_version_install(versionid: str, path: str, callback: CallbackDict, url: str | None = None, sha1: str | None = None) -> None:
     """
     Installs the given version
     """
@@ -187,7 +186,7 @@ def do_version_install(versionid: str, path: str, callback: CallbackDict, url: O
     callback.get("setStatus", empty)("Installation complete")
 
 
-def install_minecraft_version(versionid: str, minecraft_directory: Union[str, os.PathLike], callback: Optional[CallbackDict] = None) -> None:
+def install_minecraft_version(versionid: str, minecraft_directory: str | os.PathLike, callback: CallbackDict | None = None) -> None:
     """
     Installs a minecraft version into the given path. e.g. ``install_version("1.14", "/tmp/minecraft")``. Use :func:`~minecraft_launcher_lib.utils.get_minecraft_directory` to get the default Minecraft directory.
 

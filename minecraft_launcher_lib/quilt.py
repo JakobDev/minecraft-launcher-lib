@@ -8,14 +8,13 @@ from ._helper import download_file, get_requests_response_cache, parse_maven_met
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
 from .types import QuiltMinecraftVersion, QuiltLoader, CallbackDict
 from .install import install_minecraft_version
-from typing import List, Optional, Union
 from .utils import is_version_valid
 import subprocess
 import tempfile
 import os
 
 
-def get_all_minecraft_versions() -> List[QuiltMinecraftVersion]:
+def get_all_minecraft_versions() -> list[QuiltMinecraftVersion]:
     """
     Returns all available Minecraft Versions for Quilt
 
@@ -30,7 +29,7 @@ def get_all_minecraft_versions() -> List[QuiltMinecraftVersion]:
     return get_requests_response_cache(QUILT_MINECARFT_VERSIONS_URL).json()
 
 
-def get_stable_minecraft_versions() -> List[str]:
+def get_stable_minecraft_versions() -> list[str]:
     """
     Returns a list which only contains the stable Minecraft versions that supports Quilt
 
@@ -100,7 +99,7 @@ def is_minecraft_version_supported(version: str) -> bool:
     return False
 
 
-def get_all_loader_versions() -> List[QuiltLoader]:
+def get_all_loader_versions() -> list[QuiltLoader]:
     """
     Returns all loader versions
 
@@ -144,7 +143,7 @@ def get_latest_installer_version() -> str:
     return parse_maven_metadata(QUILT_INSTALLER_MAVEN_URL)["latest"]
 
 
-def install_quilt(minecraft_version: str, minecraft_directory: Union[str, os.PathLike], loader_version: Optional[str] = None, callback: Optional[CallbackDict] = None, java: Optional[Union[str, os.PathLike]] = None) -> None:
+def install_quilt(minecraft_version: str, minecraft_directory: str | os.PathLike, loader_version: str | None = None, callback: CallbackDict | None = None, java: str | os.PathLike | None = None) -> None:
     """
     Installs the Quilt modloader.
 

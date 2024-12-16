@@ -6,7 +6,6 @@ from ._helper import download_file, empty, check_path_inside_minecraft_directory
 from .types import MrpackInformation, MrpackInstallOptions, CallbackDict
 from ._internal_types.mrpack_types import MrpackIndex, MrpackFile
 from .install import install_minecraft_version
-from typing import List, Union, Optional
 from .forge import install_forge_version
 from .exceptions import VersionNotFound
 from .fabric import install_fabric
@@ -17,11 +16,11 @@ import json
 import os
 
 
-def _filter_mrpack_files(file_list: List[MrpackFile], mrpack_install_options: MrpackInstallOptions) -> List[MrpackFile]:
+def _filter_mrpack_files(file_list: list[MrpackFile], mrpack_install_options: MrpackInstallOptions) -> list[MrpackFile]:
     """
     Gets all Mrpack Files that should be installed
     """
-    filtered_list: List[MrpackFile] = []
+    filtered_list: list[MrpackFile] = []
     for file in file_list:
         if "env" not in file:
             filtered_list.append(file)
@@ -35,7 +34,7 @@ def _filter_mrpack_files(file_list: List[MrpackFile], mrpack_install_options: Mr
     return filtered_list
 
 
-def get_mrpack_information(path: Union[str, os.PathLike]) -> MrpackInformation:
+def get_mrpack_information(path: str | os.PathLike) -> MrpackInformation:
     """
     Gets some Information from a .mrpack file
 
@@ -74,7 +73,7 @@ def get_mrpack_information(path: Union[str, os.PathLike]) -> MrpackInformation:
             return information
 
 
-def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str, os.PathLike], modpack_directory: Optional[Union[str, os.PathLike]] = None, callback: Optional[CallbackDict] = None, mrpack_install_options: Optional[MrpackInstallOptions] = None) -> None:
+def install_mrpack(path: str | os.PathLike, minecraft_directory: str | os.PathLike, modpack_directory: str | os.PathLike | None = None, callback: CallbackDict | None = None, mrpack_install_options: MrpackInstallOptions | None = None) -> None:
     """
     Installs a .mrpack file
 
@@ -159,7 +158,7 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
             except FileExistsError:
                 pass
 
-            with open(full_path, 'wb') as f:
+            with open(full_path, "wb") as f:
                 f.write(zf.read(zip_name))
 
         if mrpack_install_options.get("skipDependenciesInstall"):
@@ -191,7 +190,7 @@ def install_mrpack(path: Union[str, os.PathLike], minecraft_directory: Union[str
             install_quilt(index["dependencies"]["minecraft"], minecraft_directory, loader_version=index["dependencies"]["quilt-loader"], callback=callback)
 
 
-def get_mrpack_launch_version(path: Union[str, os.PathLike]) -> str:
+def get_mrpack_launch_version(path: str | os.PathLike) -> str:
     """
     Returns that Version that needs to be used with :func:`~minecraft_launcher_lib.command.get_minecraft_command`.
 

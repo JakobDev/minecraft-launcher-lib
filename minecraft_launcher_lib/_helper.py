@@ -2,8 +2,8 @@
 from .exceptions import FileOutsideMinecraftDirectory, InvalidChecksum, VersionNotFound
 from ._internal_types.shared_types import ClientJson, ClientJsonRule, ClientJsonLibrary
 from ._internal_types.helper_types import RequestsResponseCache, MavenMetadata
-from typing import List, Dict, Union, Literal, Optional, Any
 from .types import MinecraftOptions, CallbackDict
+from typing import Literal, Any
 import datetime
 import requests
 import platform
@@ -24,7 +24,7 @@ def empty(arg: Any) -> None:
     pass
 
 
-def check_path_inside_minecraft_directory(minecraft_directory: Union[str, os.PathLike], path: Union[str, os.PathLike]) -> None:
+def check_path_inside_minecraft_directory(minecraft_directory: str | os.PathLike, path: str | os.PathLike) -> None:
     """
     Raises a FileOutsideMinecraftDirectory if the Path is not in the given Directory
     """
@@ -32,7 +32,7 @@ def check_path_inside_minecraft_directory(minecraft_directory: Union[str, os.Pat
         raise FileOutsideMinecraftDirectory(os.path.abspath(path), os.path.abspath(minecraft_directory))
 
 
-def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: Optional[str] = None, lzma_compressed: Optional[bool] = False, session: Optional[requests.sessions.Session] = None, minecraft_directory: Optional[Union[str, os.PathLike]] = None, overwrite: Optional[bool] = False) -> bool:
+def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: str | None = None, lzma_compressed: bool | None = False, session: requests.sessions.Session | None = None, minecraft_directory: str | os.PathLike | None = None, overwrite: bool | None = False) -> bool:
     """
     Downloads a file into the given path. Check sha1 if given.
     """
@@ -117,7 +117,7 @@ def parse_single_rule(rule: ClientJsonRule, options: MinecraftOptions) -> bool:
     return not returnvalue
 
 
-def parse_rule_list(rules: List[ClientJsonRule], options: MinecraftOptions) -> bool:
+def parse_rule_list(rules: list[ClientJsonRule], options: MinecraftOptions) -> bool:
     """
     Parse a list of rules
     """
@@ -136,7 +136,7 @@ def _get_lib_name_without_version(lib: ClientJsonLibrary) -> str:
     return ":".join(lib["name"].split(":")[:-1])
 
 
-def inherit_json(original_data: ClientJson, path: Union[str, os.PathLike]) -> ClientJson:
+def inherit_json(original_data: ClientJson, path: str | os.PathLike) -> ClientJson:
     """
     Implement the inheritsFrom function
     See https://github.com/tomsik68/mclauncher-api/wiki/Version-Inheritance-&-Forge
@@ -149,7 +149,7 @@ def inherit_json(original_data: ClientJson, path: Union[str, os.PathLike]) -> Cl
     # Inheriting the libs is a bit special
     # If the lib is already present in the client.json in a different, it can't be inherited
     # So first we need a dict which contains all libs that are already present
-    original_libs: Dict[str, bool] = {}
+    original_libs: dict[str, bool] = {}
     for current_lib in original_data.get("libraries", []):
         lib_name = _get_lib_name_without_version(current_lib)
         original_libs[lib_name] = True
@@ -180,7 +180,7 @@ def inherit_json(original_data: ClientJson, path: Union[str, os.PathLike]) -> Cl
     return new_data
 
 
-def get_library_path(name: str, path: Union[str, os.PathLike]) -> str:
+def get_library_path(name: str, path: str | os.PathLike) -> str:
     """
     Returns the path from a libname
     """
@@ -275,7 +275,7 @@ def get_classpath_separator() -> Literal[":", ";"]:
         return ":"
 
 
-_requests_response_cache: Dict[str, RequestsResponseCache] = {}
+_requests_response_cache: dict[str, RequestsResponseCache] = {}
 
 
 def get_requests_response_cache(url: str) -> requests.models.Response:
@@ -308,7 +308,7 @@ def parse_maven_metadata(url: str) -> MavenMetadata:
     }
 
 
-def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path: str, minecraft_directory: Optional[Union[str, os.PathLike]] = None) -> None:
+def extract_file_from_zip(handler: zipfile.ZipFile, zip_path: str, extract_path: str, minecraft_directory: str | os.PathLike | None = None) -> None:
     """
     Extract a file from a zip handler into the given path
     """
@@ -335,7 +335,7 @@ def assert_func(expression: bool) -> None:
         raise AssertionError()
 
 
-def get_client_json(version: str, minecraft_directory: Union[str, os.PathLike]) -> ClientJson:
+def get_client_json(version: str, minecraft_directory: str | os.PathLike) -> ClientJson:
     "Load the client.json for the given version"
     local_path = os.path.join(minecraft_directory, "versions", version, f"{version}.json")
     if os.path.isfile(local_path):

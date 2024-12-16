@@ -15,7 +15,6 @@ forge contains functions for dealing with the Forge modloader
 from ._helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty, extract_file_from_zip, get_classpath_separator
 from .install import install_minecraft_version, install_libraries
 from ._internal_types.forge_types import ForgeInstallProfile
-from typing import List, Union, Optional
 from .exceptions import VersionNotFound
 from .types import CallbackDict
 import subprocess
@@ -27,7 +26,7 @@ import os
 __all__ = ["install_forge_version", "run_forge_installer", "list_forge_versions", "find_forge_version", "is_forge_version_valid", "supports_automatic_install", "forge_to_installed_version"]
 
 
-def forge_processors(data: ForgeInstallProfile, minecraft_directory: Union[str, os.PathLike], lzma_path: str, installer_path: str, callback: CallbackDict, java: str) -> None:
+def forge_processors(data: ForgeInstallProfile, minecraft_directory: str | os.PathLike, lzma_path: str, installer_path: str, callback: CallbackDict, java: str) -> None:
     """
     Run the processors of the install_profile.json
     """
@@ -75,7 +74,7 @@ def forge_processors(data: ForgeInstallProfile, minecraft_directory: Union[str, 
             callback.get("setProgress", empty)(count)
 
 
-def install_forge_version(versionid: str, path: Union[str, os.PathLike], callback: Optional[CallbackDict] = None, java: Optional[Union[str, os.PathLike]] = None) -> None:
+def install_forge_version(versionid: str, path: str | os.PathLike, callback: CallbackDict | None = None, java: str | os.PathLike | None = None) -> None:
     """
     Installs the given Forge version
 
@@ -157,7 +156,7 @@ def install_forge_version(versionid: str, path: Union[str, os.PathLike], callbac
             forge_processors(version_data, str(path), lzma_path, installer_path, callback, "java" if java is None else str(java))
 
 
-def run_forge_installer(version: str, java: Optional[Union[str, os.PathLike]] = None) -> None:
+def run_forge_installer(version: str, java: str | os.PathLike | None = None) -> None:
     """
     Run the forge installer of the given forge version
 
@@ -175,7 +174,7 @@ def run_forge_installer(version: str, java: Optional[Union[str, os.PathLike]] = 
         subprocess.run(["java" if java is None else str(java), "-jar", installer_path], check=True, cwd=tempdir)
 
 
-def list_forge_versions() -> List[str]:
+def list_forge_versions() -> list[str]:
     """
     Returns a list of all forge versions
     """
@@ -183,7 +182,7 @@ def list_forge_versions() -> List[str]:
     return parse_maven_metadata(MAVEN_METADATA_URL)["versions"]
 
 
-def find_forge_version(vanilla_version: str) -> Optional[str]:
+def find_forge_version(vanilla_version: str) -> str | None:
     """
     Find the latest forge version that is compatible to the given vanilla version
 

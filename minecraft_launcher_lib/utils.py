@@ -2,7 +2,6 @@
 from .types import MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
 from ._internal_types.shared_types import ClientJson, VersionListManifestJson
 from ._helper import get_requests_response_cache, assert_func
-from typing import List, Union
 from datetime import datetime
 import platform
 import pathlib
@@ -47,7 +46,7 @@ def get_latest_version() -> LatestMinecraftVersions:
     return get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()["latest"]
 
 
-def get_version_list() -> List[MinecraftVersionInfo]:
+def get_version_list() -> list[MinecraftVersionInfo]:
     """
     Returns all versions that Mojang offers to download
 
@@ -59,13 +58,13 @@ def get_version_list() -> List[MinecraftVersionInfo]:
             print(version["id"])
     """
     vlist: VersionListManifestJson = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
-    returnlist: List[MinecraftVersionInfo] = []
+    returnlist: list[MinecraftVersionInfo] = []
     for i in vlist["versions"]:
         returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": datetime.fromisoformat(i["releaseTime"]), "complianceLevel": i["complianceLevel"]})
     return returnlist
 
 
-def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List[MinecraftVersionInfo]:
+def get_installed_versions(minecraft_directory: str | os.PathLike) -> list[MinecraftVersionInfo]:
     """
     Returns all installed versions
 
@@ -84,7 +83,7 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     except FileNotFoundError:
         return []
 
-    version_list: List[MinecraftVersionInfo] = []
+    version_list: list[MinecraftVersionInfo] = []
     for i in dir_list:
         if not os.path.isfile(os.path.join(minecraft_directory, "versions", i, i + ".json")):
             continue
@@ -102,7 +101,7 @@ def get_installed_versions(minecraft_directory: Union[str, os.PathLike]) -> List
     return version_list
 
 
-def get_available_versions(minecraft_directory: Union[str, os.PathLike]) -> List[MinecraftVersionInfo]:
+def get_available_versions(minecraft_directory: str | os.PathLike) -> list[MinecraftVersionInfo]:
     """
     Returns all installed versions and all versions that Mojang offers to download
 
@@ -210,7 +209,7 @@ def generate_test_options() -> MinecraftOptions:
     }
 
 
-def is_version_valid(version: str, minecraft_directory: Union[str, os.PathLike]) -> bool:
+def is_version_valid(version: str, minecraft_directory: str | os.PathLike) -> bool:
     """
     Checks if the given version exists.
     This checks if the given version is installed or offered to download by Mojang.
@@ -277,7 +276,7 @@ def is_platform_supported() -> bool:
     return True
 
 
-def is_minecraft_installed(minecraft_directory: Union[str, os.PathLike]) -> bool:
+def is_minecraft_installed(minecraft_directory: str | os.PathLike) -> bool:
     """
     Checks, if there is already a existing Minecraft Installation in the given Directory
 

@@ -1,4 +1,4 @@
-from typing import List, TypedDict, Literal
+from typing import TypedDict, Literal
 
 
 class MrpackFileHashes(TypedDict):
@@ -15,7 +15,7 @@ class MrpackFile(TypedDict, total=False):
     path: str
     hashes: MrpackFileHashes
     env: MrpackFileEnv
-    downloads: List[str]
+    downloads: list[str]
     fileSize: int
 
 
@@ -33,5 +33,5 @@ class MrpackIndex(TypedDict, total=False):
     versionId: str
     name: str
     summary: str
-    files: List[MrpackFile]
+    files: list[MrpackFile]
     dependencies: MrpackDependencies

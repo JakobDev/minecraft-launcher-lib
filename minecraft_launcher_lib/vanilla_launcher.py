@@ -4,7 +4,6 @@ from .types import VanillaLauncherProfile, MinecraftOptions
 from .exceptions import InvalidVanillaLauncherProfile
 from .utils import get_latest_version
 from ._helper import assert_func
-from typing import List, Union
 import datetime
 import json
 import uuid
@@ -54,7 +53,7 @@ def _is_vanilla_launcher_profile_valid(vanilla_profile: VanillaLauncherProfile) 
     return True
 
 
-def load_vanilla_launcher_profiles(minecraft_directory: Union[str, os.PathLike]) -> List[VanillaLauncherProfile]:
+def load_vanilla_launcher_profiles(minecraft_directory: str | os.PathLike) -> list[VanillaLauncherProfile]:
     """
     Loads the profiles of the Vanilla Launcher from the given Minecraft directory
 
@@ -64,26 +63,28 @@ def load_vanilla_launcher_profiles(minecraft_directory: Union[str, os.PathLike])
     with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "r", encoding="utf-8") as f:
         data: VanillaLauncherProfilesJson = json.load(f)
 
-    profile_list: List[VanillaLauncherProfile] = []
+    profile_list: list[VanillaLauncherProfile] = []
     for value in data["profiles"].values():
         vanilla_profile: VanillaLauncherProfile = {}
 
-        if value["type"] == "latest-release":
-            vanilla_profile["name"] = "Latest release"
-        elif value["type"] == "latest-snapshot":
-            vanilla_profile["name"] = "Latest snapshot"
-        else:
-            vanilla_profile["name"] = value["name"]
+        match value["type"]:
+            case "latest-release":
+                vanilla_profile["name"] = "Latest release"
+            case "latest-snapshot":
+                vanilla_profile["name"] = "Latest snapshot"
+            case _:
+                 vanilla_profile["name"] = value["name"]
 
-        if value["lastVersionId"] == "latest-release":
-            vanilla_profile["versionType"] = "latest-release"
-            vanilla_profile["version"] = None
-        elif value["lastVersionId"] == "latest-snapshot":
-            vanilla_profile["versionType"] = "latest-snapshot"
-            vanilla_profile["version"] = None
-        else:
-            vanilla_profile["versionType"] = "custom"
-            vanilla_profile["version"] = value["lastVersionId"]
+        match value["lastVersionId"]:
+            case "latest-release":
+                vanilla_profile["versionType"] = "latest-release"
+                vanilla_profile["version"] = None
+            case "latest-snapshot":
+                vanilla_profile["versionType"] = "latest-snapshot"
+                vanilla_profile["version"] = None
+            case _:
+                vanilla_profile["versionType"] = "custom"
+                vanilla_profile["version"] = value["lastVersionId"]
 
         vanilla_profile["gameDirectory"] = value.get("gameDir")
         vanilla_profile["javaExecutable"] = value.get("javaDir")
@@ -157,7 +158,7 @@ def get_vanilla_launcher_profile_version(vanilla_profile: VanillaLauncherProfile
         return vanilla_profile["version"]  # type: ignore
 
 
-def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], vanilla_profile: VanillaLauncherProfile) -> None:
+def add_vanilla_launcher_profile(minecraft_directory: str | os.PathLike, vanilla_profile: VanillaLauncherProfile) -> None:
     """
     Adds a new Profile to the Vanilla Launcher
 
@@ -213,7 +214,7 @@ def add_vanilla_launcher_profile(minecraft_directory: Union[str, os.PathLike], v
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 
-def do_vanilla_launcher_profiles_exists(minecraft_directory: Union[str, os.PathLike]) -> bool:
+def do_vanilla_launcher_profiles_exists(minecraft_directory: str | os.PathLike) -> bool:
     """
     Checks if profiles from the vanilla launcher can be found
 

@@ -7,8 +7,8 @@ For a list of all types see :doc:`microsoft_types`.
 from .microsoft_types import AuthorizationTokenResponse, XBLResponse, XSTSResponse, MinecraftAuthenticateResponse, MinecraftStoreResponse, MinecraftProfileResponse, CompleteLoginResponse
 from .exceptions import InvalidRefreshToken, AzureAppNotPermitted, AccountNotOwnMinecraft
 from ._helper import get_user_agent, assert_func
-from typing import Literal, Optional, Tuple, cast
 from base64 import urlsafe_b64encode
+from typing import Literal, cast
 from hashlib import sha256
 import urllib.parse
 import requests
@@ -40,7 +40,7 @@ def get_login_url(client_id: str, redirect_uri: str) -> str:
     return url
 
 
-def _generate_pkce_data() -> Tuple[str, str, Literal["plain", "S256"]]:
+def _generate_pkce_data() -> tuple[str, str, Literal["plain", "S256"]]:
     """
     Generates the PKCE code challenge and code verifier
 
@@ -59,7 +59,7 @@ def generate_state() -> str:
     return secrets.token_urlsafe(16)
 
 
-def get_secure_login_data(client_id: str, redirect_uri: str, state: Optional[str] = None) -> Tuple[str, str, str]:
+def get_secure_login_data(client_id: str, redirect_uri: str, state: str | None = None) -> tuple[str, str, str]:
     """
     Generates the login data for a secure login with pkce and state.\\
     Prevents Cross-Site Request Forgery attacks and authorization code injection attacks.
@@ -100,7 +100,7 @@ def url_contains_auth_code(url: str) -> bool:
     return "code" in qs
 
 
-def get_auth_code_from_url(url: str) -> Optional[str]:
+def get_auth_code_from_url(url: str) -> str | None:
     """
     Get the authorization code from the url.\\
     If you want to check the state, use :func:`parse_auth_code_url`, which throws errors instead of returning an optional value.
@@ -116,7 +116,7 @@ def get_auth_code_from_url(url: str) -> Optional[str]:
         return None
 
 
-def parse_auth_code_url(url: str, state: Optional[str]) -> str:
+def parse_auth_code_url(url: str, state: str | None) -> str:
     """
     Parse the authorization code url and checks the state.
 
@@ -133,7 +133,7 @@ def parse_auth_code_url(url: str, state: Optional[str]) -> str:
     return qs["code"][0]
 
 
-def get_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str] = None) -> AuthorizationTokenResponse:
+def get_authorization_token(client_id: str, client_secret: str | None, redirect_uri: str, auth_code: str, code_verifier: str | None = None) -> AuthorizationTokenResponse:
     """
     Get the authorization token. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
 
@@ -165,7 +165,7 @@ def get_authorization_token(client_id: str, client_secret: Optional[str], redire
     return r.json()
 
 
-def refresh_authorization_token(client_id: str, client_secret: Optional[str], redirect_uri: Optional[str], refresh_token: str) -> AuthorizationTokenResponse:
+def refresh_authorization_token(client_id: str, client_secret: str | None, redirect_uri: str | None, refresh_token: str) -> AuthorizationTokenResponse:
     """
     Refresh the authorization token. This function is called during :func:`complete_refresh`, so you need to use this function ony if :func:`complete_refresh` doesnt't work for you.
 
@@ -291,7 +291,7 @@ def get_profile(access_token: str) -> MinecraftProfileResponse:
     return r.json()
 
 
-def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: str, auth_code: str, code_verifier: Optional[str] = None) -> CompleteLoginResponse:
+def complete_login(client_id: str, client_secret: str | None, redirect_uri: str, auth_code: str, code_verifier: str | None = None) -> CompleteLoginResponse:
     """
     Do the complete login process.
 
@@ -352,7 +352,7 @@ def complete_login(client_id: str, client_secret: Optional[str], redirect_uri: s
     return profile
 
 
-def complete_refresh(client_id: str, client_secret: Optional[str], redirect_uri: Optional[str], refresh_token: str) -> CompleteLoginResponse:
+def complete_refresh(client_id: str, client_secret: str | None, redirect_uri: str | None, refresh_token: str) -> CompleteLoginResponse:
     """
     Do the complete login process with a refresh token. It returns the same as :func:`complete_login`.
 

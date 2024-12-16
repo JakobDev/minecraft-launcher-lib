@@ -1,6 +1,5 @@
 "exceptions contains all custom exceptions that can be raised by minecraft_launcher_lib"
 from .types import VanillaLauncherProfile
-from typing import List
 
 
 class VersionNotFound(ValueError):
@@ -35,8 +34,8 @@ class ExternalProgramError(Exception):
     """
     This Exception is raised when a external program failed
     """
-    def __init__(self, command: List[str], stdout: bytes, stderr: bytes) -> None:
-        self.command: List[str] = command
+    def __init__(self, command: list[str], stdout: bytes, stderr: bytes) -> None:
+        self.command: list[str] = command
         "The command that caused the error"
 
         self.stdout: bytes = stdout

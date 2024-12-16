@@ -2,7 +2,7 @@
 This module contains all Types for the :doc:`microsoft_account` module.
 It has it's own module because of the many types needed that are not used somewhere else.
 """
-from typing import Any, Literal, TypedDict, List
+from typing import Any, Literal, TypedDict
 
 
 class AuthorizationTokenResponse(TypedDict):
@@ -18,7 +18,7 @@ class _Xui(TypedDict):
 
 
 class _DisplayClaims(TypedDict):
-    xui: List[_Xui]
+    xui: list[_Xui]
 
 
 class XBLResponse(TypedDict):
@@ -41,14 +41,14 @@ class _MinecraftStoreItem(TypedDict):
 
 
 class MinecraftStoreResponse(TypedDict):
-    items: List[_MinecraftStoreItem]
+    items: list[_MinecraftStoreItem]
     signature: str
     keyId: str
 
 
 class MinecraftAuthenticateResponse(TypedDict):
     username: str
-    roles: List[Any]
+    roles: list[Any]
     access_token: str
     token_type: str
     expires_in: int
@@ -71,8 +71,8 @@ class _MinecraftProfileCape(_MinecraftProfileInfo):
 class MinecraftProfileResponse(TypedDict):
     id: str
     name: str
-    skins: List[_MinecraftProfileSkin]
-    capes: List[_MinecraftProfileCape]
+    skins: list[_MinecraftProfileSkin]
+    capes: list[_MinecraftProfileCape]
     error: str
     errorMessage: str
 

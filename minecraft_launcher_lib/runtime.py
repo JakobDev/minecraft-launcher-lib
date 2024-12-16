@@ -1,15 +1,14 @@
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
 from ._helper import get_user_agent, download_file, empty, get_sha1_hash, check_path_inside_minecraft_directory, get_client_json
-from .types import CallbackDict, JvmRuntimeInformation, VersionRuntimeInformation
 from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson, _PlatformManifestJsonFile
+from .types import CallbackDict, JvmRuntimeInformation, VersionRuntimeInformation
 from .exceptions import VersionNotFound, PlatformNotSupported
-from typing import List, Union, Optional
+from concurrent.futures import ThreadPoolExecutor
 import subprocess
 import datetime
 import requests
 import platform
 import os
-from concurrent.futures import ThreadPoolExecutor
 
 _JVM_MANIFEST_URL = "https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json"
 
@@ -18,26 +17,27 @@ def _get_jvm_platform_string() -> str:
     """
     Get the name that is used the identify the platform
     """
-    if platform.system() == "Windows":
-        if platform.architecture()[0] == "32bit":
-            return "windows-x86"
-        else:
-            return "windows-x64"
-    elif platform.system() == "Linux":
-        if platform.architecture()[0] == "32bit":
-            return "linux-i386"
-        else:
-            return "linux"
-    elif platform.system() == "Darwin":
-        if platform.machine() == "arm64":
-            return "mac-os-arm64"
-        else:
-            return "mac-os"
-    else:
-        return "gamecore"
+    match platform.system():
+        case "Windows":
+            if platform.architecture()[0] == "32bit":
+                return "windows-x86"
+            else:
+                return "windows-x64"
+        case "Linux":
+            if platform.architecture()[0] == "32bit":
+                return "linux-i386"
+            else:
+                return "linux"
+        case "Darwin":
+            if platform.machine() == "arm64":
+                return "mac-os-arm64"
+            else:
+                return "mac-os"
+        case _:
+            return "gamecore"
 
 
-def get_jvm_runtimes() -> List[str]:
+def get_jvm_runtimes() -> list[str]:
     """
     Returns a list of all jvm runtimes
 
@@ -55,7 +55,7 @@ def get_jvm_runtimes() -> List[str]:
     return jvm_list
 
 
-def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> List[str]:
+def get_installed_jvm_runtimes(minecraft_directory: str | os.PathLike) -> list[str]:
     """
     Returns a list of all installed jvm runtimes
 
@@ -76,9 +76,9 @@ def get_installed_jvm_runtimes(minecraft_directory: Union[str, os.PathLike]) -> 
 
 def install_jvm_runtime(
         jvm_version: str,
-        minecraft_directory: Union[str, os.PathLike],
-        callback: Optional[CallbackDict] = None,
-        max_workers: Optional[int] = None) -> None:
+        minecraft_directory: str | os.PathLike,
+        callback: CallbackDict | None = None,
+        max_workers: int | None = None) -> None:
     """
     Installs the given jvm runtime. callback is the same dict as in the install module.
 
@@ -111,7 +111,7 @@ def install_jvm_runtime(
     platform_manifest: PlatformManifestJson = requests.get(manifest_data[platform_string][jvm_version][0]["manifest"]["url"], headers={"user-agent": get_user_agent()}).json()
     base_path = os.path.join(minecraft_directory, "runtime", jvm_version, platform_string, jvm_version)
     session = requests.session()
-    file_list: List[str] = []
+    file_list: list[str] = []
 
     def install_runtime_file(key: str, value: _PlatformManifestJsonFile) -> None:
         """Install the single runtime file."""
@@ -179,7 +179,7 @@ def install_jvm_runtime(
             f.write(f"{current_file} /#// {sha1} {ctime}\n")
 
 
-def get_executable_path(jvm_version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[str]:
+def get_executable_path(jvm_version: str, minecraft_directory: str | os.PathLike) -> str | None:
     """
     Returns the path to the executable. Returns None if none is found.
 
@@ -244,7 +244,7 @@ def get_jvm_runtime_information(jvm_version: str) -> JvmRuntimeInformation:
     }
 
 
-def get_version_runtime_information(version: str, minecraft_directory: Union[str, os.PathLike]) -> Optional[VersionRuntimeInformation]:
+def get_version_runtime_information(version: str, minecraft_directory: str | os.PathLike) -> VersionRuntimeInformation | None:
     """
     Returns information about the runtime used by a version
 

@@ -1,16 +1,16 @@
-from typing import List, Dict, Union, Literal, TypedDict
+from typing import Union, Literal, TypedDict
 
 
 class ClientJsonRule(TypedDict):
     action: Literal["allow", "disallow"]
-    os: Dict[Literal["name", "arch", "vesion"], str]
-    features: Dict[Literal["has_custom_resolution", "is_demo_user", "has_quick_plays_support", "is_quick_play_singleplayer", "is_quick_play_multiplayer", "is_quick_play_realms"], bool]
+    os: dict[Literal["name", "arch", "vesion"], str]
+    features: dict[Literal["has_custom_resolution", "is_demo_user", "has_quick_plays_support", "is_quick_play_singleplayer", "is_quick_play_multiplayer", "is_quick_play_realms"], bool]
 
 
 class ClientJsonArgumentRule(TypedDict, total=False):
-    compatibilityRules: List[ClientJsonRule]
-    rules: List[ClientJsonRule]
-    value: Union[str, List[str]]
+    compatibilityRules: list[ClientJsonRule]
+    rules: list[ClientJsonRule]
+    value: Union[str, list[str]]
 
 
 class _ClientJsonAssetIndex(TypedDict):
@@ -41,15 +41,15 @@ class _ClientJsonLibraryDownloadsArtifact(TypedDict):
 
 class _ClientJsonLibraryDownloads(TypedDict, total=False):
     artifact: _ClientJsonLibraryDownloadsArtifact
-    classifiers: Dict[Literal["javadoc", "natives-linux", "natives-macos", "natives-windows", "sources"], _ClientJsonLibraryDownloadsArtifact]
+    classifiers: dict[Literal["javadoc", "natives-linux", "natives-macos", "natives-windows", "sources"], _ClientJsonLibraryDownloadsArtifact]
 
 
 class ClientJsonLibrary(TypedDict, total=False):
     name: str
     downloads: _ClientJsonLibraryDownloads
-    extract: Dict[Literal["exclude"], List[str]]
-    rules: List[ClientJsonRule]
-    natives: Dict[Literal["linux", "osx", "windows"], str]
+    extract: dict[Literal["exclude"], list[str]]
+    rules: list[ClientJsonRule]
+    natives: dict[Literal["linux", "osx", "windows"], str]
     url: str
 
 
@@ -69,14 +69,14 @@ class _ClientJsonLogging(TypedDict):
 class ClientJson(TypedDict, total=False):
     id: str
     jar: str
-    arguments: Dict[Literal["game", "jvm"], List[Union[str, ClientJsonArgumentRule]]]
+    arguments: dict[Literal["game", "jvm"], list[Union[str, ClientJsonArgumentRule]]]
     minecraftArguments: str
     assetIndex: _ClientJsonAssetIndex
     assets: str
-    downloads: Dict[Literal["client", "client_mappings", "server", "server_mappings"], _ClientJsonDownloads]
+    downloads: dict[Literal["client", "client_mappings", "server", "server_mappings"], _ClientJsonDownloads]
     javaVersion: _ClientJsonJavaVersion
-    libraries: List[ClientJsonLibrary]
-    logging: Dict[Literal["client"], _ClientJsonLogging]
+    libraries: list[ClientJsonLibrary]
+    logging: dict[Literal["client"], _ClientJsonLogging]
     mainClass: str
     minimumLauncherVersion: int
     releaseTime: str
@@ -97,5 +97,5 @@ class _VersionListManifestJsonVersion(TypedDict):
 
 
 class VersionListManifestJson(TypedDict):
-    latest: Dict[Literal["release", "snapshot"], str]
-    versions: List[_VersionListManifestJsonVersion]
+    latest: dict[Literal["release", "snapshot"], str]
+    versions: list[_VersionListManifestJsonVersion]

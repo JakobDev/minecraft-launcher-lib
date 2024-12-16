@@ -1,8 +1,8 @@
 "natives contains a function for extracting natives libraries to a specific folder"
 from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
 from ._helper import parse_rule_list, inherit_json, get_library_path
-from typing import List, Dict, Literal, Union
 from .exceptions import VersionNotFound
+from typing import Literal
 import platform
 import zipfile
 import json
@@ -40,7 +40,7 @@ def get_natives(data: ClientJsonLibrary) -> str:
         return ""
 
 
-def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[Literal["exclude"], List[str]]) -> None:
+def extract_natives_file(filename: str, extract_path: str, extract_data: dict[Literal["exclude"], list[str]]) -> None:
     """
     Unpack natives
     """
@@ -58,7 +58,7 @@ def extract_natives_file(filename: str, extract_path: str, extract_data: Dict[Li
                 zf.extract(i, extract_path)
 
 
-def extract_natives(versionid: str, path: Union[str, os.PathLike], extract_path: str) -> None:
+def extract_natives(versionid: str, path: str | os.PathLike, extract_path: str) -> None:
     """
     Extract all native libraries from a version into the given directory. The directory will be created, if it does not exist.
 

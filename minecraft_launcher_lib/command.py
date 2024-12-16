@@ -6,7 +6,6 @@ from .exceptions import VersionNotFound
 from .utils import get_library_version
 from .types import MinecraftOptions
 from .natives import get_natives
-from typing import List, Union
 import json
 import copy
 import os
@@ -71,11 +70,11 @@ def replace_arguments(argstr: str, versionData: ClientJson, path: str, options: 
     return argstr
 
 
-def get_arguments_string(versionData: ClientJson, path: str, options: MinecraftOptions, classpath: str) -> List[str]:
+def get_arguments_string(versionData: ClientJson, path: str, options: MinecraftOptions, classpath: str) -> list[str]:
     """
     Turns the argument string from the version.json into a list
     """
-    arglist: List[str] = []
+    arglist: list[str] = []
 
     for v in versionData["minecraftArguments"].split(" "):
         v = replace_arguments(v, versionData, path, options, classpath)
@@ -94,11 +93,11 @@ def get_arguments_string(versionData: ClientJson, path: str, options: MinecraftO
     return arglist
 
 
-def get_arguments(data: List[Union[str, ClientJsonArgumentRule]], versionData: ClientJson, path: str, options: MinecraftOptions, classpath: str) -> List[str]:
+def get_arguments(data: list[str | ClientJsonArgumentRule], versionData: ClientJson, path: str, options: MinecraftOptions, classpath: str) -> list[str]:
     """
     Returns all arguments from the version.json
     """
-    arglist: List[str] = []
+    arglist: list[str] = []
     for i in data:
         # i could be the argument
         if isinstance(i, str):
@@ -122,7 +121,7 @@ def get_arguments(data: List[Union[str, ClientJsonArgumentRule]], versionData: C
     return arglist
 
 
-def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathLike], options: MinecraftOptions) -> List[str]:
+def get_minecraft_command(version: str, minecraft_directory: str | os.PathLike, options: MinecraftOptions) -> list[str]:
     """
     Returns the command for running minecraft as list. The given command can be executed with subprocess. Use :func:`~minecraft_launcher_lib.utils.get_minecraft_directory` to get the default Minecraft directory.
 
@@ -181,7 +180,7 @@ def get_minecraft_command(version: str, minecraft_directory: Union[str, os.PathL
     options["nativesDirectory"] = options.get("nativesDirectory", os.path.join(path, "versions", data["id"], "natives"))
     classpath = get_libraries(data, path)
 
-    command: List[str] = []
+    command: list[str] = []
     # Add Java executable
     if "executablePath" in options:
         command.append(options["executablePath"])

@@ -1,12 +1,12 @@
 from .shared_types import ClientJson, ClientJsonLibrary
-from typing import List, Dict, Literal, TypedDict
+from typing import Literal, TypedDict
 
 
 class _ForgeInstallProcessor(TypedDict, total=False):
-    sides: List[Literal["client", "server"]]
+    sides: list[Literal["client", "server"]]
     jar: str
-    classpath: List[str]
-    args: List[str]
+    classpath: list[str]
+    args: list[str]
 
 
 class _ForgeInstallProfileInstall(TypedDict, total=False):
@@ -27,9 +27,9 @@ class ForgeInstallProfile(TypedDict, total=False):
     version: str
     minecraft: str
     serverJarPath: str
-    data: Dict[str, Dict[Literal["client", "server"], str]]
-    processors: List[_ForgeInstallProcessor]
-    libraries: List[ClientJsonLibrary]
+    data: dict[str, dict[Literal["client", "server"], str]]
+    processors: list[_ForgeInstallProcessor]
+    libraries: list[ClientJsonLibrary]
     icon: str
     logo: str
     mirrorList: str

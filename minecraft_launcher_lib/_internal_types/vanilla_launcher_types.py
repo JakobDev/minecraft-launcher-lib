@@ -1,4 +1,4 @@
-from typing import Dict, Literal, TypedDict
+from typing import Literal, TypedDict
 
 
 class VanillaLauncherProfilesJsonProfile(TypedDict, total=False):
@@ -10,10 +10,10 @@ class VanillaLauncherProfilesJsonProfile(TypedDict, total=False):
     lastUsed: str
     lastVersionId: str
     name: str
-    resolution: Dict[Literal["height", "width"], int]
+    resolution: dict[Literal["height", "width"], int]
     type: str
 
 
 class VanillaLauncherProfilesJson(TypedDict):
-    profiles: Dict[str, VanillaLauncherProfilesJsonProfile]
+    profiles: dict[str, VanillaLauncherProfilesJsonProfile]
     version: int

@@ -3,7 +3,7 @@ This module contains all Types for minecraft-launcher-lib. It may help your IDE.
 If you are not interested in static typing just ignore it.
 For more information about TypedDict see `PEP 589 <https://peps.python.org/pep-0589/>`_.
 """
-from typing import Literal, TypedDict, List, Callable, Optional
+from typing import Literal, TypedDict, Callable
 import datetime
 
 
@@ -13,7 +13,7 @@ class MinecraftOptions(TypedDict, total=False):
     token: str
     executablePath: str
     defaultExecutablePath: str
-    jvmArguments: List[str]
+    jvmArguments: list[str]
     launcherName: str
     launcherVersion: str
     gameDirectory: str
@@ -27,10 +27,10 @@ class MinecraftOptions(TypedDict, total=False):
     enableLoggingConfig: bool
     disableMultiplayer: bool
     disableChat: bool
-    quickPlayPath: Optional[str]
-    quickPlaySingleplayer: Optional[str]
-    quickPlayMultiplayer: Optional[str]
-    quickPlayRealms: Optional[str]
+    quickPlayPath: str | None
+    quickPlaySingleplayer: str | None
+    quickPlayMultiplayer: str | None
+    quickPlayRealms: str | None
 
 
 class CallbackDict(TypedDict, total=False):
@@ -87,7 +87,7 @@ class JavaInformation(TypedDict):
     name: str
     version: str
     java_path: str
-    javaw_path: Optional[str]
+    javaw_path: str | None
     is_64bit: bool
     openjdk: bool
 
@@ -101,12 +101,12 @@ class VanillaLauncherProfileResolution(TypedDict):
 
 class VanillaLauncherProfile(TypedDict, total=False):
     name: str
-    version: Optional[str]
+    version: str | None
     versionType: Literal["latest-release", "latest-snapshot", "custom"]
-    gameDirectory: Optional[str]
-    javaExecutable: Optional[str]
-    javaArguments: Optional[List[str]]
-    customResolution: Optional[VanillaLauncherProfileResolution]
+    gameDirectory: str | None
+    javaExecutable: str | None
+    javaArguments: list[str] | None
+    customResolution: VanillaLauncherProfileResolution | None
 
 
 # mrpack
@@ -117,11 +117,11 @@ class MrpackInformation(TypedDict):
     versionId: str
     formatVersion: int
     minecraftVersion: str
-    optionalFiles: List[str]
+    optionalFiles: list[str]
 
 
 class MrpackInstallOptions(TypedDict, total=False):
-    optionalFiles: List[str]
+    optionalFiles: list[str]
     skipDependenciesInstall: bool
 
 
@@ -161,13 +161,13 @@ class _NewsEntry(TypedDict):
     playPageImage: _NewsEntryPlayPageImage
     newsPageImage: _NewsEntryNewsPageImage
     readMoreLink: str
-    newsType: List[str]
+    newsType: list[str]
     id: str
 
 
 class MinecraftNews(TypedDict):
     version: Literal[1]
-    entries: List[_NewsEntry]
+    entries: list[_NewsEntry]
 
 
 class _JavaPatchNoteEntryImage(TypedDict):
@@ -186,4 +186,4 @@ class _JavaPatchNoteEntry(TypedDict):
 
 class JavaPatchNotes(TypedDict):
     version: Literal[1]
-    entries: List[_JavaPatchNoteEntry]
+    entries: list[_JavaPatchNoteEntry]

@@ -1,4 +1,4 @@
-from typing import List, TypedDict
+from typing import TypedDict
 import requests
 import datetime
 
@@ -11,4 +11,4 @@ class RequestsResponseCache(TypedDict):
 class MavenMetadata(TypedDict):
     release: str
     latest: str
-    versions: List[str]
+    versions: list[str]

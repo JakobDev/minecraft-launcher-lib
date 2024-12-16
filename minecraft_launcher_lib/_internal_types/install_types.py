@@ -7,4 +7,4 @@ class _AssetsJsonObject(TypedDict):
 
 
 class AssetsJson(TypedDict):
-    objects: Dict[str, _AssetsJsonObject]
+    objects: dict[str, _AssetsJsonObject]

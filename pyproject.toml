@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "minecraft-launcher-lib"
 description = "A library for creating a custom Minecraft launcher"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 keywords = ["JakobDev", "Minecraft", "Mojang", "launcher", "minecraft-launcher", "java"]
 license = { text = "BSD-2-Clause" }
 authors = [
@@ -25,11 +25,10 @@ classifiers = [
   "Operating System :: MacOS :: MacOS X",
   "Operating System :: Microsoft :: Windows",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
