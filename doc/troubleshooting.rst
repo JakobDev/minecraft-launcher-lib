@@ -18,7 +18,7 @@ Here is a quick checklist for you, if Minecraft doesn't starts.
 
 - Check the Java version
 
-    While newer versions of Minecraft has a Java runtime version in it's version.json, older versions don't have it. Some older versions requires a older Java version.
+    While newer versions of Minecraft has a Java runtime version in it's client.json, older versions don't have it. Some older versions requires a older Java version.
     Make sure to launch this old versions with the right Java version. Check out the :doc:`/modules/command` module documentation to learn how to set the Java version.
 
 - Check your JVM Arguments

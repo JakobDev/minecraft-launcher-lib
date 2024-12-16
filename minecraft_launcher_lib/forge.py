@@ -113,7 +113,7 @@ def install_forge_version(versionid: str, path: str | os.PathLike, callback: Cal
         if "libraries" in version_data:
             install_libraries(minecraft_version, version_data["libraries"], str(path), callback)
 
-        # Extract the version.json
+        # Extract the client.json
         version_json_path = os.path.join(path, "versions", forge_version_id, forge_version_id + ".json")
         try:
             extract_file_from_zip(zf, "version.json", version_json_path, minecraft_directory=path)

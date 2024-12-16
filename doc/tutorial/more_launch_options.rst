@@ -23,11 +23,11 @@ Make sure every argument starts with a :code:`-`, otherwise Minecraft will not s
 -------------------------
 Java Executable
 -------------------------
-The Java Executable is the path the Java which is used to run Minecraft. If the version.json contains a Java Runtime, it minecraft-launcher-lib will download and use these version. Otherwise it will just use the java command.
-minecraft-launcher-lib allows to overwrite this. This can be useful, if you want to start a older version which needs a older Java and does not contain a runtime in the :code:`version.json`.
+The Java Executable is the path the Java which is used to run Minecraft. If the client.json contains a Java Runtime, it minecraft-launcher-lib will download and use these version. Otherwise it will just use the java command.
+minecraft-launcher-lib allows to overwrite this. This can be useful, if you want to start a older version which needs a older Java and does not contain a runtime in the :code:`client.json`.
 
-There are 2 options to overwrite the Java Executable: :code:`executablePath` and :code:`defaultExecutablePath`. The difference is, that :code:`executablePath` is always used. :code:`defaultExecutablePath` is only used, when the :code:`version.json`
-has set no Java Runtime. If the version.json contains a Runtime, the Runtime will be prefered over the defaultExecutablePath.
+There are 2 options to overwrite the Java Executable: :code:`executablePath` and :code:`defaultExecutablePath`. The difference is, that :code:`executablePath` is always used. :code:`defaultExecutablePath` is only used, when the :code:`client.json`
+has set no Java Runtime. If the client.json contains a Runtime, the Runtime will be prefered over the defaultExecutablePath.
 
 .. code:: python
 

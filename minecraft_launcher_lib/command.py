@@ -72,7 +72,7 @@ def replace_arguments(argstr: str, versionData: ClientJson, path: str, options: 
 
 def get_arguments_string(versionData: ClientJson, path: str, options: MinecraftOptions, classpath: str) -> list[str]:
     """
-    Turns the argument string from the version.json into a list
+    Turns the argument string from the client.json into a list
     """
     arglist: list[str] = []
 
@@ -95,7 +95,7 @@ def get_arguments_string(versionData: ClientJson, path: str, options: MinecraftO
 
 def get_arguments(data: list[str | ClientJsonArgumentRule], versionData: ClientJson, path: str, options: MinecraftOptions, classpath: str) -> list[str]:
     """
-    Returns all arguments from the version.json
+    Returns all arguments from the client.json
     """
     arglist: list[str] = []
     for i in data:
@@ -140,7 +140,7 @@ def get_minecraft_command(version: str, minecraft_directory: str | os.PathLike, 
             "token": the accessToken,
             # This is optional
             "executablePath": "java", # The path to the java executable
-            "defaultExecutablePath": "java", # The path to the java executable if the version.json has none
+            "defaultExecutablePath": "java", # The path to the java executable if the client.json has none
             "jvmArguments": [], #The jvmArguments
             "launcherName": "minecraft-launcher-lib", # The name of your launcher
             "launcherVersion": "1.0", # The version of your launcher
@@ -196,7 +196,7 @@ def get_minecraft_command(version: str, minecraft_directory: str | os.PathLike, 
     if "jvmArguments" in options:
         command = command + options["jvmArguments"]
 
-    # Newer Versions have jvmArguments in version.json
+    # Newer Versions have jvmArguments in client.json
     if isinstance(data.get("arguments", None), dict):
         if "jvm" in data["arguments"]:
             command = command + get_arguments(data["arguments"]["jvm"], data, path, options, classpath)
