@@ -1,3 +1,6 @@
+# This file is part of minecraft-launcher-lib (https://codeberg.org/JakobDev/minecraft-launcher-lib)
+# SPDX-FileCopyrightText: Copyright (c) 2019-2024 JakobDev <jakobdev@gmx.de> and contributors
+# SPDX-License-Identifier: BSD-2-Clause
 "natives contains a function for extracting natives libraries to a specific folder"
 from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
 from ._helper import parse_rule_list, inherit_json, get_library_path

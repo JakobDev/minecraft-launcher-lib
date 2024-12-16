@@ -1,3 +1,6 @@
+# This file is part of minecraft-launcher-lib (https://codeberg.org/JakobDev/minecraft-launcher-lib)
+# SPDX-FileCopyrightText: Copyright (c) 2019-2024 JakobDev <jakobdev@gmx.de> and contributors
+# SPDX-License-Identifier: BSD-2-Clause
 "utils contains a few functions for helping you that doesn't fit in any other category"
 from .types import MinecraftOptions, LatestMinecraftVersions, MinecraftVersionInfo
 from ._internal_types.shared_types import ClientJson, VersionListManifestJson

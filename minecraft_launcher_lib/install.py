@@ -1,3 +1,6 @@
+# This file is part of minecraft-launcher-lib (https://codeberg.org/JakobDev/minecraft-launcher-lib)
+# SPDX-FileCopyrightText: Copyright (c) 2019-2024 JakobDev <jakobdev@gmx.de> and contributors
+# SPDX-License-Identifier: BSD-2-Clause
 "install allows you to install minecraft."
 from ._helper import download_file, parse_rule_list, inherit_json, empty, get_user_agent, check_path_inside_minecraft_directory
 from ._internal_types.shared_types import ClientJson, ClientJsonLibrary
