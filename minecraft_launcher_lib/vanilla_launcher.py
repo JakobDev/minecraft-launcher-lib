@@ -73,7 +73,7 @@ def load_vanilla_launcher_profiles(minecraft_directory: str | os.PathLike) -> li
             case "latest-snapshot":
                 vanilla_profile["name"] = "Latest snapshot"
             case _:
-                 vanilla_profile["name"] = value["name"]
+                vanilla_profile["name"] = value["name"]
 
         match value["lastVersionId"]:
             case "latest-release":
