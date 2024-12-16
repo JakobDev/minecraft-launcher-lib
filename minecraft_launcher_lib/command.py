@@ -148,7 +148,7 @@ def get_minecraft_command(version: str, minecraft_directory: str | os.PathLike, 
             "demo": False, # Run Minecraft in demo mode
             "customResolution": False, # Enable custom resolution
             "resolutionWidth": "854", # The resolution width
-            "resolutionHeight": "480", # The resolution heigth
+            "resolutionHeight": "480", # The resolution height
             "server": "example.com", # The IP of a server where Minecraft connect to after start
             "port": "123", # The port of a server where Minecraft connect to after start
             "nativesDirectory": "minecraft_directory/versions/version/natives", # The natives directory

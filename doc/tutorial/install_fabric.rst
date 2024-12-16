@@ -9,7 +9,7 @@ Installing Fabric is very easy. Let's say you want to install Fabric for 1.17:
 
 .. code:: python
 
-    minecraft_launcher_lib.fabric.install_fabric("1.17", minecraft_directoy)
+    minecraft_launcher_lib.fabric.install_fabric("1.17", minecraft_directory)
 
 :func:`~minecraft_launcher_lib.fabric.install_fabric` supports the same callbacks as :func:`~minecraft_launcher_lib.install.install_minecraft_version`.
 

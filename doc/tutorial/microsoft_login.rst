@@ -6,7 +6,7 @@ Login with a Microsoft Account requires a Web browser and a Azure Application.
 Create Azure Application
 -------------------------
 To login with Microsoft you need to create a Azure Application first. Follow `this tutorial <https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app>`_ to create one.
-You need the Clinet ID, the Secret and the redirect URL of your new Application.
+You need the Client ID, the Secret and the redirect URL of your new Application.
 
 -------------------------
 Apply for Permission
@@ -44,7 +44,7 @@ You get this result:
     {
         "id" : "The uuid",
         "name" : "The username",
-        "access_token": "The acces token",
+        "access_token": "The access token",
         "refresh_token": "The refresh token",
         "skins" : [{
             "id" : "6a6e65e5-76dd-4c3c-a625-162924514568",

@@ -83,7 +83,7 @@ def install_mrpack(path: str | os.PathLike, minecraft_directory: str | os.PathLi
 
         mrpack_install_options = {
             "optionalFiles": [], # List with all Optional files
-            "skipDependenciesInstall": False # If you want to skip the Dependencie install. Only used for testing purposes.
+            "skipDependenciesInstall": False # If you want to skip the Dependencies install. Only used for testing purposes.
         }
 
     Example:

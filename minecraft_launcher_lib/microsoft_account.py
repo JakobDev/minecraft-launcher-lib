@@ -135,7 +135,7 @@ def parse_auth_code_url(url: str, state: str | None) -> str:
 
 def get_authorization_token(client_id: str, client_secret: str | None, redirect_uri: str, auth_code: str, code_verifier: str | None = None) -> AuthorizationTokenResponse:
     """
-    Get the authorization token. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
+    Get the authorization token. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesn't work for you.
 
     :param client_id: The Client ID of your Azure App
     :param client_secret: The Client Secret of your Azure App. This is deprecated and should not been used anymore.
@@ -167,7 +167,7 @@ def get_authorization_token(client_id: str, client_secret: str | None, redirect_
 
 def refresh_authorization_token(client_id: str, client_secret: str | None, redirect_uri: str | None, refresh_token: str) -> AuthorizationTokenResponse:
     """
-    Refresh the authorization token. This function is called during :func:`complete_refresh`, so you need to use this function ony if :func:`complete_refresh` doesnt't work for you.
+    Refresh the authorization token. This function is called during :func:`complete_refresh`, so you need to use this function ony if :func:`complete_refresh` doesn't work for you.
 
     :param client_id: The Client ID of your Azure App
     :param client_secret: The Client Secret of your Azure App. This is deprecated and should not been used anymore.
@@ -197,7 +197,7 @@ def refresh_authorization_token(client_id: str, client_secret: str | None, redir
 
 def authenticate_with_xbl(access_token: str) -> XBLResponse:
     """
-    Authenticate with Xbox Live. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
+    Authenticate with Xbox Live. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesn't work for you.
 
     :param access_token: The Token you get from :func:`get_authorization_token`
     """
@@ -221,7 +221,7 @@ def authenticate_with_xbl(access_token: str) -> XBLResponse:
 
 def authenticate_with_xsts(xbl_token: str) -> XSTSResponse:
     """
-    Authenticate with XSTS. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
+    Authenticate with XSTS. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesn't work for you.
 
     :param xbl_token: The Token you get from :func:`authenticate_with_xbl`
     """
@@ -246,7 +246,7 @@ def authenticate_with_xsts(xbl_token: str) -> XSTSResponse:
 
 def authenticate_with_minecraft(userhash: str, xsts_token: str) -> MinecraftAuthenticateResponse:
     """
-    Authenticate with Minecraft. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
+    Authenticate with Minecraft. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesn't work for you.
 
     :param userhash: The Hash you get from :func:`authenticate_with_xbl`
     :param xsts_token: The Token you get from :func:`authenticate_with_xsts`
@@ -279,7 +279,7 @@ def get_store_information(access_token: str) -> MinecraftStoreResponse:
 
 def get_profile(access_token: str) -> MinecraftProfileResponse:
     """
-    Get the profile. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesnt't work for you.
+    Get the profile. This function is called during :func:`complete_login`, so you need to use this function ony if :func:`complete_login` doesn't work for you.
 
     :param access_token: The Token you get from :func:`authenticate_with_minecraft`
     """

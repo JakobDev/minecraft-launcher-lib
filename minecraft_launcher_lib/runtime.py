@@ -260,7 +260,7 @@ def get_version_runtime_information(version: str, minecraft_directory: str | os.
 
     :param minecraft_directory: The path to your Minecraft directory
     :raises VersionNotFound: The Minecraft version was not found
-    :return: A Dict with Information. None if the vserion has no runtime information.
+    :return: A Dict with Information. None if the version has no runtime information.
     """
     data = get_client_json(version, minecraft_directory)
 

@@ -36,7 +36,7 @@ def download_file(url: str, path: str, callback: CallbackDict = {}, sha1: str | 
     """
     Downloads a file into the given path. Check sha1 if given.
     """
-    # Chek if the Path is outside the given Minecraft Directory
+    # Check if the Path is outside the given Minecraft Directory
     if minecraft_directory is not None:
         check_path_inside_minecraft_directory(minecraft_directory, path)
 
@@ -182,7 +182,7 @@ def inherit_json(original_data: ClientJson, path: str | os.PathLike) -> ClientJs
 
 def get_library_path(name: str, path: str | os.PathLike) -> str:
     """
-    Returns the path from a libname
+    Returns the path from a library name
     """
     libpath = os.path.join(path, "libraries")
     parts = name.split(":")
@@ -267,7 +267,7 @@ def get_user_agent() -> str:
 
 def get_classpath_separator() -> Literal[":", ";"]:
     """
-    Returns the classpath seperator for the current os
+    Returns the classpath separator for the current os
     """
     if platform.system() == "Windows":
         return ";"
