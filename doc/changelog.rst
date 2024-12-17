@@ -2,6 +2,17 @@ Changelog
 ==================================================
 
 -------------------------
+7.0
+-------------------------
+- The minimum Python version was increased from 3.8 to 3.10
+- The installation is now multithreaded (`izharus <https://codeberg.org/izharus>`_ in `#139 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/139>`_)
+- Duplicated Assets are no longer downloaded (`izharus <https://codeberg.org/izharus>`_ in `#137 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/137>`_)
+- :code:`utils.get_minecraft_news()` was removed without deprecation period, as Mojang shut down the API endpoint (`#131 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/131>`_)
+- Added :code:`news` module as replacement for :code:`utils.get_minecraft_news()`
+- Fixed launching of Fabric 1.21 (`#143 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/143>`_)
+- Fixed Bug with install mrpack (`#124 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/124>`_)
+
+-------------------------
 6.5
 -------------------------
 - Add :func:`~minecraft_launcher_lib.runtime.get_version_runtime_information`
