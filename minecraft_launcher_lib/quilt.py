@@ -189,13 +189,15 @@ def install_quilt(minecraft_version: str, minecraft_directory: str | os.PathLike
     installer_version = get_latest_installer_version()
     installer_download_url = f"https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/{installer_version}/quilt-installer-{installer_version}.jar"
 
-    with tempfile.NamedTemporaryFile(prefix="minecraft-launcher-lib-quilt-install-") as installer_file:
+    with tempfile.TemporaryDirectory(prefix="minecraft-launcher-lib-quilt-install-") as tempdir:
+        installer_path = os.path.join(tempdir, "quit-installer.jar")
+
         # Download the installer
-        download_file(installer_download_url, installer_file.name, callback=callback, overwrite=True)
+        download_file(installer_download_url, installer_path, callback=callback, overwrite=True)
 
         # Run the installer
         callback.get("setStatus", empty)("Running quilt installer")
-        command = ["java" if java is None else str(java), "-jar", installer_file.name, "install", "client", minecraft_version, loader_version, f"--install-dir={path}", "--no-profile"]
+        command = ["java" if java is None else str(java), "-jar", installer_path, "install", "client", minecraft_version, loader_version, f"--install-dir={path}", "--no-profile"]
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode != 0:
             raise ExternalProgramError(command, result.stdout, result.stderr)
