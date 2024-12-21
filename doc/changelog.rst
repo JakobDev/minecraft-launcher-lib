@@ -4,7 +4,7 @@ Changelog
 -------------------------
 7.1
 -------------------------
-- Fixed tempfile handeling on Windows (`#144 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/144>`_)
+- Fixed tempfile handling on Windows (`#144 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/144>`_)
 
 -------------------------
 7.0
