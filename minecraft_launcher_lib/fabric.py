@@ -1,5 +1,5 @@
 # This file is part of minecraft-launcher-lib (https://codeberg.org/JakobDev/minecraft-launcher-lib)
-# SPDX-FileCopyrightText: Copyright (c) 2019-2024 JakobDev <jakobdev@gmx.de> and contributors
+# SPDX-FileCopyrightText: Copyright (c) 2019-2025 JakobDev <jakobdev@gmx.de> and contributors
 # SPDX-License-Identifier: BSD-2-Clause
 "fabric contains functions for dealing with the `Fabric modloader <https://fabricmc.net/>`_."
 from ._helper import download_file, get_requests_response_cache, parse_maven_metadata, empty
