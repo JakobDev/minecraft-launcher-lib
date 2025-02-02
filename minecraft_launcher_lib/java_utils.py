@@ -7,7 +7,7 @@ import subprocess
 import platform
 import re
 import os
-
+from ._helper import SUBPROCESS_STARTUP_INFO
 
 def get_java_information(path: str | os.PathLike) -> JavaInformation:
     """
@@ -37,7 +37,7 @@ def get_java_information(path: str | os.PathLike) -> JavaInformation:
         if not os.path.isfile(os.path.join(path, "bin", "java")):
             raise ValueError(os.path.abspath(os.path.join(path, "bin", "java")) + " was not found")
 
-    lines = subprocess.run([os.path.join(path, "bin", "java"), "-showversion"], capture_output=True, text=True).stderr.splitlines()
+    lines = subprocess.run([os.path.join(path, "bin", "java"), "-showversion"], capture_output=True, text=True, startupinfo=SUBPROCESS_STARTUP_INFO).stderr.splitlines()
     information: JavaInformation = {}  # type: ignore
     information["path"] = str(path)
     information["name"] = os.path.basename(path)

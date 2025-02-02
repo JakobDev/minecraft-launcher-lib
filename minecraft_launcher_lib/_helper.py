@@ -18,7 +18,14 @@ import json
 import sys
 import re
 import os
+import subprocess
 
+if os.name == "nt":
+    SUBPROCESS_STARTUP_INFO = subprocess.STARTUPINFO() 
+    SUBPROCESS_STARTUP_INFO.dwFlags |= subprocess.STARTF_USESHOWWINDOW 
+    SUBPROCESS_STARTUP_INFO.wShowWindow = subprocess.SW_HIDE # Hide the console window
+else:
+    SUBPROCESS_STARTUP_INFO = None
 
 def empty(arg: Any) -> None:
     """
