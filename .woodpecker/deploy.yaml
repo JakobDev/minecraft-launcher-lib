@@ -10,8 +10,12 @@ steps:
             - pip install twine build
             - python -m build
             - twine upload -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD" dist/*
-        secrets: [PYPI_USERNAME, PYPI_PASSWORD]
+        environment:
+            PYPI_USERNAME:
+                from_secret: PYPI_USERNAME
+            PYPI_PASSWORD:
+                from_secret: PYPI_PASSWORD
 
 when:
-    event: tag
+    event: release
     branch: master
