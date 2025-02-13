@@ -2,12 +2,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2019-2025 JakobDev <jakobdev@gmx.de> and contributors
 # SPDX-License-Identifier: BSD-2-Clause
 "java_utils contains some functions to help with Java"
+from ._helper import SUBPROCESS_STARTUP_INFO
 from .types import JavaInformation
 import subprocess
 import platform
 import re
 import os
-from ._helper import SUBPROCESS_STARTUP_INFO
 
 def get_java_information(path: str | os.PathLike) -> JavaInformation:
     """

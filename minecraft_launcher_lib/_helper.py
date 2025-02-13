@@ -7,6 +7,7 @@ from ._internal_types.shared_types import ClientJson, ClientJsonRule, ClientJson
 from ._internal_types.helper_types import RequestsResponseCache, MavenMetadata
 from .types import MinecraftOptions, CallbackDict
 from typing import Literal, Any
+import subprocess
 import datetime
 import requests
 import platform
@@ -18,7 +19,6 @@ import json
 import sys
 import re
 import os
-import subprocess
 
 if os.name == "nt":
     SUBPROCESS_STARTUP_INFO = subprocess.STARTUPINFO() 
