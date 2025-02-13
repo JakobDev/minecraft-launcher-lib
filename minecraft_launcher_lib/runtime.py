@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2019-2025 JakobDev <jakobdev@gmx.de> and contributors
 # SPDX-License-Identifier: BSD-2-Clause
 "runtime allows to install the java runtime. This module is used by :func:`~minecraft_launcher_lib.install.install_minecraft_version`, so you don't need to use it in your code most of the time."
-from ._helper import get_user_agent, download_file, empty, get_sha1_hash, check_path_inside_minecraft_directory, get_client_json, SUBPROCESS_STARTUP_INFO
+from ._helper import get_user_agent, download_file, empty, get_sha1_hash, check_path_inside_minecraft_directory, get_client_json
 from ._internal_types.runtime_types import RuntimeListJson, PlatformManifestJson, _PlatformManifestJsonFile
 from .types import CallbackDict, JvmRuntimeInformation, VersionRuntimeInformation
 from .exceptions import VersionNotFound, PlatformNotSupported
@@ -131,7 +131,7 @@ def install_jvm_runtime(
             # Make files executable on unix systems
             if value["executable"]:
                 try:
-                    subprocess.run(["chmod", "+x", current_path], startupinfo=SUBPROCESS_STARTUP_INFO)
+                    subprocess.run(["chmod", "+x", current_path])
                 except FileNotFoundError:
                     pass
             file_list.append(key)
