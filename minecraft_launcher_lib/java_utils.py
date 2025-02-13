@@ -9,6 +9,7 @@ import platform
 import re
 import os
 
+
 def get_java_information(path: str | os.PathLike) -> JavaInformation:
     """
     Returns Some Information about the given Java Installation
