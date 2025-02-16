@@ -21,9 +21,10 @@ import re
 import os
 
 if os.name == "nt":
-    SUBPROCESS_STARTUP_INFO = subprocess.STARTUPINFO()
-    SUBPROCESS_STARTUP_INFO.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    SUBPROCESS_STARTUP_INFO.wShowWindow = subprocess.SW_HIDE  # Hide the console window
+    info = subprocess.STARTUPINFO()  # type: ignore
+    info.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
+    info.wShowWindow = subprocess.SW_HIDE  # type: ignore
+    SUBPROCESS_STARTUP_INFO: subprocess.STARTUPINFO | None = info  # type: ignore
 else:
     SUBPROCESS_STARTUP_INFO = None
 
