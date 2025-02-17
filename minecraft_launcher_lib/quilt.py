@@ -7,7 +7,7 @@ quilt contains functions for dealing with the `Quilt modloader <https://quiltmc.
 You may have noticed, that the Functions are the same as in the :doc:`fabric` module.
 That's because Quilt is a Fork of Fabric. This module behaves exactly the same as the fabric module.
 """
-from ._helper import download_file, get_requests_response_cache, parse_maven_metadata, empty
+from ._helper import download_file, get_requests_response_cache, parse_maven_metadata, empty, SUBPROCESS_STARTUP_INFO
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
 from .types import QuiltMinecraftVersion, QuiltLoader, CallbackDict
 from .install import install_minecraft_version
@@ -198,7 +198,7 @@ def install_quilt(minecraft_version: str, minecraft_directory: str | os.PathLike
         # Run the installer
         callback.get("setStatus", empty)("Running quilt installer")
         command = ["java" if java is None else str(java), "-jar", installer_path, "install", "client", minecraft_version, loader_version, f"--install-dir={path}", "--no-profile"]
-        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=SUBPROCESS_STARTUP_INFO)
         if result.returncode != 0:
             raise ExternalProgramError(command, result.stdout, result.stderr)
 

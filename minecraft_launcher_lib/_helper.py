@@ -7,6 +7,7 @@ from ._internal_types.shared_types import ClientJson, ClientJsonRule, ClientJson
 from ._internal_types.helper_types import RequestsResponseCache, MavenMetadata
 from .types import MinecraftOptions, CallbackDict
 from typing import Literal, Any
+import subprocess
 import datetime
 import requests
 import platform
@@ -18,6 +19,14 @@ import json
 import sys
 import re
 import os
+
+if os.name == "nt":
+    info = subprocess.STARTUPINFO()  # type: ignore
+    info.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
+    info.wShowWindow = subprocess.SW_HIDE  # type: ignore
+    SUBPROCESS_STARTUP_INFO: subprocess.STARTUPINFO | None = info  # type: ignore
+else:
+    SUBPROCESS_STARTUP_INFO = None
 
 
 def empty(arg: Any) -> None:

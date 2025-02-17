@@ -15,7 +15,7 @@
 
 forge contains functions for dealing with the Forge modloader
 """
-from ._helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty, extract_file_from_zip, get_classpath_separator
+from ._helper import download_file, get_library_path, get_jar_mainclass, parse_maven_metadata, empty, extract_file_from_zip, get_classpath_separator, SUBPROCESS_STARTUP_INFO
 from .install import install_minecraft_version, install_libraries
 from ._internal_types.forge_types import ForgeInstallProfile
 from .exceptions import VersionNotFound
@@ -73,7 +73,7 @@ def forge_processors(data: ForgeInstallProfile, minecraft_directory: str | os.Pa
             for argument_key, argument_value in argument_vars.items():
                 for pos in range(len(command)):
                     command[pos] = command[pos].replace(argument_key, argument_value)
-            subprocess.run(command)
+            subprocess.run(command, startupinfo=SUBPROCESS_STARTUP_INFO)
             callback.get("setProgress", empty)(count)
 
 
@@ -174,7 +174,7 @@ def run_forge_installer(version: str, java: str | os.PathLike | None = None) -> 
         if not download_file(FORGE_DOWNLOAD_URL.format(version=version), installer_path, {}, overwrite=True):
             raise VersionNotFound(version)
 
-        subprocess.run(["java" if java is None else str(java), "-jar", installer_path], check=True, cwd=tempdir)
+        subprocess.run(["java" if java is None else str(java), "-jar", installer_path], check=True, cwd=tempdir, startupinfo=SUBPROCESS_STARTUP_INFO)
 
 
 def list_forge_versions() -> list[str]:
