@@ -45,6 +45,9 @@ Source = "https://codeberg.org/JakobDev/minecraft-launcher-lib"
 Changelog = "https://minecraft-launcher-lib.readthedocs.io/en/stable/changelog.html"
 Donation = "https://ko-fi.com/jakobdev"
 
+[tool.setuptools]
+packages = ["minecraft_launcher_lib"]
+
 [tool.setuptools.dynamic]
 version = { file = "minecraft_launcher_lib/version.txt" }
 
