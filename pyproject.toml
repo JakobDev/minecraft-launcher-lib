@@ -8,7 +8,7 @@ description = "A library for creating a custom Minecraft launcher"
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["JakobDev", "Minecraft", "Mojang", "launcher", "minecraft-launcher", "java"]
-license = { text = "BSD-2-Clause" }
+license = "BSD-2-Clause"
 authors = [
   { name = "JakobDev", email = "jakobdev@gmx.de" }
 ]
@@ -16,7 +16,6 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Environment :: Other Environment",
-  "License :: OSI Approved :: BSD License",
   "Topic :: Games/Entertainment",
   "Operating System :: OS Independent",
   "Operating System :: POSIX",
