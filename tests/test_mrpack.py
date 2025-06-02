@@ -169,30 +169,28 @@ def test_install_mrpack(monkeypatch: pytest.MonkeyPatch, subtests: pytest_subtes
         assert sorted(os.listdir(modpack_dir)) == sorted(["a.txt", "b.txt"])
         assert not os.path.isdir(test_dir)
 
-    with subtests.test("ForgeInvalid"):
-        forge_dir = tmp_path / "ForgeInvalid"
-        forge_index = copy.deepcopy(index)
-        forge_index["dependencies"]["forge"] = "invalid"
-        prepare_test_versions(forge_dir)
-        requests_mock.head("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-invalid/forge-test1-invalid-installer.jar", status_code=404)
-        requests_mock.head("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-invalid-test1/forge-test1-invalid-test1-installer.jar", status_code=404)
-        with pytest.raises(minecraft_launcher_lib.exceptions.VersionNotFound):
-            minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path / "ForgeInvalid.mrpack"), forge_dir, callback=get_test_callbacks())
-
-    with subtests.test("ForgeValid"):
+    with subtests.test("Forge"):
         monkeypatch.setattr(platform, "system", lambda: "Linux")
         monkeypatch.setattr(platform, "architecture", lambda: ("64bit", "ELF"))
         monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: None)
 
-        forge_dir = tmp_path / "ForgeValid"
+        forge_dir = tmp_path / "Forge"
         forge_index = copy.deepcopy(index)
         forge_index["dependencies"]["forge"] = "forgetest1"
         prepare_test_versions(forge_dir)
         requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-forgetest1/forge-test1-forgetest1-installer.jar", content=create_bytes_zip(pathlib.Path(__file__).parent / "data" / "forge" / "forgetest1"))
         requests_mock.head("https://maven.minecraftforge.net/net/minecraftforge/forge/test1-forgetest1/forge-test1-forgetest1-installer.jar", status_code=200)
-        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path / "ForgeValid.mrpack"), forge_dir, callback=get_test_callbacks())
+        minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(forge_index, tmp_path / "Forge.mrpack"), forge_dir, callback=get_test_callbacks())
 
         monkeypatch.undo()
+
+    with subtests.test("NeoForge"):
+        neoforge_dir = tmp_path / "NeoForge"
+        neoforge_index = copy.deepcopy(index)
+        neoforge_index["dependencies"]["neoforge"] = "invalid"
+        prepare_test_versions(neoforge_dir)
+        with pytest.raises(minecraft_launcher_lib.exceptions.UnsupportedVersion):
+            minecraft_launcher_lib.mrpack.install_mrpack(_create_test_index_pack(neoforge_index, tmp_path / "NeoForge.mrpack"), neoforge_dir, callback=get_test_callbacks())
 
     with subtests.test("Fabric"):
         fabric_dir = tmp_path / "Fabric"

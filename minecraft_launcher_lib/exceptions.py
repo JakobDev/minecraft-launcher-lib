@@ -36,6 +36,8 @@ class UnsupportedVersion(ValueError):
 class ExternalProgramError(Exception):
     """
     This Exception is raised when a external program failed
+
+    .. deprecated:: 8.0
     """
     def __init__(self, command: list[str], stdout: bytes, stderr: bytes) -> None:
         self.command: list[str] = command

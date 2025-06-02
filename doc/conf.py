@@ -13,6 +13,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+from typing import Any
 import subprocess
 import importlib
 import pathlib
@@ -82,6 +83,7 @@ html_theme_options = {
 if os.environ.get("READTHEDOCS_CANONICAL_URL") is not None:
     html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
 
+commit: str | None = None
 try:
     commit = subprocess.run(["git", "log", "-n1", "--pretty=format:%H"], check=True, capture_output=True).stdout.decode("utf-8").strip()
 except Exception as ex:
@@ -95,11 +97,16 @@ else:
     extlinks = {"repolink": ("https://codeberg.org/JakobDev/minecraft-launcher-lib/src/branch/master/%s", "repofile %s")}
 
 
-def linkcode_resolve(domain: str, info: dict[str, str]):
-    if domain != "py":
-        return None
+def get_attribute(obj: Any, name: str) -> Any:
+    if "." in name:
+        first_part, other_part = name.split(".", 1)
+        return get_attribute(getattr(obj, first_part), other_part)
+    else:
+        return getattr(obj, name)
 
-    if "." in info["fullname"]:
+
+def linkcode_resolve(domain: str, info: dict[str, str]) -> str | None:
+    if domain != "py":
         return None
 
     if commit is None:
@@ -107,10 +114,21 @@ def linkcode_resolve(domain: str, info: dict[str, str]):
 
     module_name = info["module"].removeprefix("minecraft_launcher_lib.")
 
-    obj = getattr(getattr(minecraft_launcher_lib, module_name), info["fullname"])
+    try:
+        obj = get_attribute(getattr(minecraft_launcher_lib, module_name), info["fullname"])
+    except AttributeError:
+        return None
+
+    source_file = inspect.getsourcefile(obj)
+    if source_file is None:
+        return None
+
+    lib_path = os.path.dirname(minecraft_launcher_lib.__file__)
+    source_file = str(pathlib.Path(source_file).relative_to(lib_path))
+
     source_line = inspect.getsourcelines(obj)[1]
 
-    return f"https://codeberg.org/JakobDev/minecraft-launcher-lib/src/commit/{commit}/minecraft_launcher_lib/{module_name}.py#L{source_line}"
+    return f"https://codeberg.org/JakobDev/minecraft-launcher-lib/src/commit/{commit}/minecraft_launcher_lib/{source_file}#L{source_line}"
 
 
 def add_optional_extension(name: str) -> None:
@@ -137,7 +155,9 @@ redirects = {
     "natives": "modules/natives.html",
     "runtime": "modules/runtime.html",
     "utils": "modules/utils.html",
-    "develop/making_a_merge_request": "making_a_pull_request.html"
+    "develop/making_a_merge_request": "making_a_pull_request.html",
+    "tutorial/install_forge": "install_mod_loader.html",
+    "tutorial/install_fabric": "install_mod_loader.html",
 }
 
 
@@ -154,7 +174,7 @@ def write_module_file(in_path: pathlib.Path, out_dir: pathlib.Path) -> None:
 
 
 def write_modules() -> None:
-    MODULE_ORDER = ("command", "install", "natives", "microsoft_account", "utils", "news", "java_utils", "forge", "fabric", "quilt", "runtime", "vanilla_launcher", "mrpack", "exceptions", "types", "microsoft_types")
+    MODULE_ORDER = ("command", "install", "natives", "microsoft_account", "utils", "news", "java_utils", "mod_loader", "forge", "fabric", "quilt", "runtime", "vanilla_launcher", "mrpack", "exceptions", "types", "microsoft_types")
     modules_path = pathlib.Path(__file__).parent.parent / "minecraft_launcher_lib"
     modules_doc_dir = pathlib.Path(__file__).parent / "modules"
 
@@ -174,7 +194,10 @@ def write_modules() -> None:
         f.write(".. toctree::\n    :maxdepth: 2\n\n")
 
         for module in MODULE_ORDER:
-            write_module_file((modules_path / f"{module}.py"), modules_doc_dir)
+            if os.path.isfile(modules_path / module / "__init__.py"):
+                write_module_file((modules_path / module), modules_doc_dir)
+            else:
+                write_module_file((modules_path / f"{module}.py"), modules_doc_dir)
             f.write(f"    {module}\n")
 
         for path in modules_path.iterdir():
@@ -183,6 +206,7 @@ def write_modules() -> None:
 
             if not path.name.endswith(".py") or path.name.startswith("_"):
                 continue
+
             write_module_file(path, modules_doc_dir)
             f.write(f"    {path.stem}\n")
 

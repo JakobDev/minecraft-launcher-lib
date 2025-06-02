@@ -12,6 +12,7 @@ import pytest
 import shutil
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_quilt_get_all_minecraft_versions(requests_mock: requests_mock.Mocker) -> None:
     prepare_requests_mock(requests_mock)
 
@@ -21,6 +22,7 @@ def test_quilt_get_all_minecraft_versions(requests_mock: requests_mock.Mocker) -
         assert isinstance(i["stable"], bool)
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_quilt_get_stable_minecraft_versions(requests_mock: requests_mock.Mocker) -> None:
     prepare_requests_mock(requests_mock)
 
@@ -28,18 +30,21 @@ def test_quilt_get_stable_minecraft_versions(requests_mock: requests_mock.Mocker
     assert isinstance(version_list[0], str)
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_quilt_get_latest_minecraft_version(requests_mock: requests_mock.Mocker) -> None:
     prepare_requests_mock(requests_mock)
 
     assert minecraft_launcher_lib.quilt.get_latest_minecraft_version() == "unstable"
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_quilt_get_latest_stable_minecraft_version(requests_mock: requests_mock.Mocker) -> None:
     prepare_requests_mock(requests_mock)
 
     assert minecraft_launcher_lib.quilt.get_latest_stable_minecraft_version() == "test2"
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_quilt_is_minecraft_version_supported(requests_mock: requests_mock.Mocker) -> None:
     prepare_requests_mock(requests_mock)
 
@@ -47,7 +52,10 @@ def test_quilt_is_minecraft_version_supported(requests_mock: requests_mock.Mocke
     assert minecraft_launcher_lib.quilt.is_minecraft_version_supported("test1") is False
 
 
-def test_quilt_get_all_loader_versions() -> None:
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_quilt_get_all_loader_versions(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
     version_list = minecraft_launcher_lib.quilt.get_all_loader_versions()
     for i in version_list:
         assert isinstance(i["separator"], str)
@@ -56,14 +64,19 @@ def test_quilt_get_all_loader_versions() -> None:
         assert isinstance(i["version"], str)
 
 
-def test_quilt_get_latest_loader_version() -> None:
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_quilt_get_latest_loader_version(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
     assert isinstance(minecraft_launcher_lib.quilt.get_latest_loader_version(), str)
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_quilt_get_latest_installer_version() -> None:
     assert isinstance(minecraft_launcher_lib.quilt.get_latest_installer_version(), str)
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_install_quilt(monkeypatch: pytest.MonkeyPatch, subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
     monkeypatch.setattr(minecraft_launcher_lib.quilt, "is_minecraft_version_supported", lambda version: True if version == "test1" else False)
     monkeypatch.setattr(minecraft_launcher_lib.quilt, "get_latest_installer_version", lambda: "testinstaller")

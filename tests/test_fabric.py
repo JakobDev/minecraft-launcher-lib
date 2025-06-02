@@ -12,31 +12,49 @@ import pytest
 import shutil
 
 
-def test_fabric_get_all_minecraft_versions() -> None:
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_fabric_get_all_minecraft_versions(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
     version_list = minecraft_launcher_lib.fabric.get_all_minecraft_versions()
     assert isinstance(version_list[0]["version"], str)
     assert isinstance(version_list[0]["stable"], bool)
 
 
-def test_fabric_get_stable_minecraft_versions() -> None:
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_fabric_get_stable_minecraft_versions(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
     version_list = minecraft_launcher_lib.fabric.get_stable_minecraft_versions()
     assert isinstance(version_list[0], str)
 
 
-def test_fabric_get_latest_minecraft_version() -> None:
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_fabric_get_latest_minecraft_version(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
     assert isinstance(minecraft_launcher_lib.fabric.get_latest_minecraft_version(), str)
 
 
-def test_fabric_get_latest_stable_minecraft_version() -> None:
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_fabric_get_latest_stable_minecraft_version(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
     assert isinstance(minecraft_launcher_lib.fabric.get_latest_stable_minecraft_version(), str)
 
 
-def test_fabric_is_minecraft_version_supported() -> None:
-    assert minecraft_launcher_lib.fabric.is_minecraft_version_supported("1.16") is True
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_fabric_is_minecraft_version_supported(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
+    assert minecraft_launcher_lib.fabric.is_minecraft_version_supported("test2") is True
     assert minecraft_launcher_lib.fabric.is_minecraft_version_supported("1.0") is False
 
 
-def test_fabric_get_all_loader_versions() -> None:
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_fabric_get_all_loader_versions(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
     version_list = minecraft_launcher_lib.fabric.get_all_loader_versions()
     assert isinstance(version_list[0]["separator"], str)
     assert isinstance(version_list[0]["build"], int)
@@ -45,14 +63,19 @@ def test_fabric_get_all_loader_versions() -> None:
     assert isinstance(version_list[0]["stable"], bool)
 
 
-def test_fabric_get_latest_loader_version() -> None:
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
+def test_fabric_get_latest_loader_version(requests_mock: requests_mock.Mocker) -> None:
+    prepare_requests_mock(requests_mock)
+
     assert isinstance(minecraft_launcher_lib.fabric.get_latest_loader_version(), str)
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_fabric_get_latest_installer_version() -> None:
     assert isinstance(minecraft_launcher_lib.fabric.get_latest_installer_version(), str)
 
 
+@pytest.mark.filterwarnings("ignore:.:DeprecationWarning")
 def test_install_fabric(monkeypatch: pytest.MonkeyPatch, subtests: pytest_subtests.SubTests, requests_mock: requests_mock.Mocker, tmp_path: pathlib.Path) -> None:
     monkeypatch.setattr(minecraft_launcher_lib.fabric, "is_minecraft_version_supported", lambda version: True if version == "test1" else False)
     monkeypatch.setattr(minecraft_launcher_lib.fabric, "get_latest_installer_version", lambda: "testinstaller")

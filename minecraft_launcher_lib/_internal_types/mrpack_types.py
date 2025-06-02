@@ -25,6 +25,7 @@ class MrpackFile(TypedDict, total=False):
 MrpackDependencies = TypedDict("MrpackDependencies", {
     "minecraft": str,
     "forge": str,
+    "neoforge": str,
     "fabric-loader": str,
     "quilt-loader": str
 }, total=False)

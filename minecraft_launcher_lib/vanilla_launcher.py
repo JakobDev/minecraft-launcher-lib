@@ -17,7 +17,9 @@ __all__ = [
     "vanilla_launcher_profile_to_minecraft_options",
     "get_vanilla_launcher_profile_version",
     "add_vanilla_launcher_profile",
-    "do_vanilla_launcher_profiles_exists"
+    "do_vanilla_launcher_profiles_exists",
+    "create_empty_vanilla_launcher_profiles_file",
+    "ensure_vanilla_launcher_profiles_exists",
 ]
 
 
@@ -225,3 +227,45 @@ def do_vanilla_launcher_profiles_exists(minecraft_directory: str | os.PathLike) 
     :return: If profiles exists
     """
     return os.path.isfile(os.path.join(minecraft_directory, "launcher_profiles.json"))
+
+
+def create_empty_vanilla_launcher_profiles_file(minecraft_directory: str | os.PathLike) -> None:
+    """
+    Creates a :code:`launcher_profiles.json` file with the correct structure inside the Minecraft directory.
+    This function is useful for 3rd party software (e.g. some mod installers) that requires this file to be present.
+    A existing file will be overwritten, so sue this function with caution.
+
+    Example:
+
+        .. code:: python
+
+            minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+            minecraft_launcher_lib.vanilla_launcher.create_empty_vanilla_launcher_profiles_file(minecraft_directory)
+
+    :param minecraft_directory: The Minecraft directory
+
+    .. versionadded:: 8.0
+    """
+    with open(os.path.join(minecraft_directory, "launcher_profiles.json"), "w", encoding="utf-8") as f:
+        json.dump({"profiles": {}, "settings": {}, "version": 3}, f, ensure_ascii=False, indent=4)
+
+
+def ensure_vanilla_launcher_profiles_exists(minecraft_directory: str | os.PathLike) -> None:
+    """
+    Calls :func:`~minecraft_launcher_lib.vanilla_launcher.create_empty_vanilla_launcher_profiles_file` if
+    :func:`~minecraft_launcher_lib.vanilla_launcher.do_vanilla_launcher_profiles_exists` returns :code:`False`.
+    You should call this function before you use a 3rd party software that requires :code:`launcher_profiles.json` to be present.
+
+    Example:
+
+        .. code:: python
+
+            minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+            minecraft_launcher_lib.vanilla_launcher.ensure_vanilla_launcher_profiles_exists(minecraft_directory)
+
+    :param minecraft_directory: The Minecraft directory
+
+    .. versionadded:: 8.0
+    """
+    if not do_vanilla_launcher_profiles_exists(minecraft_directory):
+        create_empty_vanilla_launcher_profiles_file(minecraft_directory)
