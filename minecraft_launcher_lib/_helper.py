@@ -294,7 +294,7 @@ def get_requests_response_cache(url: str) -> requests.models.Response:
     """
     Caches the result of request.get(). If a request was made to the same URL within the last hour, the cache will be used, so you don't need to make a request to a URl each timje you call a function.
     """
-    global _requests_response_cache
+    global _requests_response_cache  # noqa: F824
     if url not in _requests_response_cache or (datetime.datetime.now() - _requests_response_cache[url]["datetime"]).total_seconds() / 60 / 60 >= 1:
         r = requests.get(url, headers={"user-agent": get_user_agent()})
         if r.status_code == 200:
