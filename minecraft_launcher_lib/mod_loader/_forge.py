@@ -4,8 +4,10 @@
 from .._helper import download_file, extract_file_from_zip, get_classpath_separator, get_library_path, get_jar_mainclass, parse_maven_metadata, empty, SUBPROCESS_STARTUP_INFO
 from ..install import install_minecraft_version, install_libraries
 from .._internal_types.forge_types import ForgeInstallProfile
+from .._internal_types.shared_types import ClientJson
 from ._base import ModLoaderBase
 from ..types import CallbackDict
+from typing import cast
 import subprocess
 import tempfile
 import zipfile
@@ -125,21 +127,37 @@ class Forge(ModLoaderBase):
                     version_content = f.read()
 
                 version_data: ForgeInstallProfile = json.loads(version_content)
-                forge_version_id = version_data["version"] if "version" in version_data else version_data["install"]["version"]
                 minecraft_version = version_data["minecraft"] if "minecraft" in version_data else version_data["install"]["minecraft"]
+                forge_version_id = self.get_installed_version(minecraft_version, loader_version)
 
                 # Install all needed libs from install_profile.json
                 if "libraries" in version_data:
                     install_libraries(minecraft_version, version_data["libraries"], str(minecraft_directory), callback)
 
-                # Extract the client.json
-                version_json_path = os.path.join(minecraft_directory, "versions", forge_version_id, forge_version_id + ".json")
+                # Install client json
+                client_json: ClientJson | None = None
+
+                if "version.json" in zf.namelist():
+                    with zf.open("version.json", "r") as f:
+                        client_json = json.loads(f.read())
+                elif "versionInfo" in version_data:
+                    client_json = version_data["versionInfo"]
+
+                # It should be set now
+                # If not, it should just throw a error later in the code
+                client_json = cast(ClientJson, client_json)
+
+                client_json["id"] = forge_version_id
+
+                version_dir = os.path.join(minecraft_directory, "versions", forge_version_id)
+
                 try:
-                    extract_file_from_zip(zf, "version.json", version_json_path, minecraft_directory=minecraft_directory)
-                except KeyError:
-                    if "versionInfo" in version_data:
-                        with open(version_json_path, "w", encoding="utf-8") as f:
-                            json.dump(version_data["versionInfo"], f, ensure_ascii=False, indent=4)
+                    os.makedirs(version_dir)
+                except FileExistsError:
+                    pass
+
+                with open(os.path.join(version_dir, f"{forge_version_id}.json"), "w", encoding="utf-8") as f:
+                    json.dump(client_json, f, ensure_ascii=False, indent=4)
 
                 # Extract forge libs from the installer
                 forge_lib_path = os.path.join(minecraft_directory, "libraries", "net", "minecraftforge", "forge", forge_version)
