@@ -63,7 +63,7 @@ def get_version_list() -> list[MinecraftVersionInfo]:
     vlist: VersionListManifestJson = get_requests_response_cache("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json").json()
     returnlist: list[MinecraftVersionInfo] = []
     for i in vlist["versions"]:
-        returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": datetime.fromisoformat(i["releaseTime"]), "complianceLevel": i["complianceLevel"]})
+        returnlist.append({"id": i["id"], "type": i["type"], "releaseTime": i["releaseTime"], "complianceLevel": i["complianceLevel"]})
     return returnlist
 
 
