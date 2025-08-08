@@ -2,3 +2,4 @@ include minecraft_launcher_lib/version.txt
 include minecraft_launcher_lib/py.typed
 include README.md
 include LICENSE
+exclude tests/*
