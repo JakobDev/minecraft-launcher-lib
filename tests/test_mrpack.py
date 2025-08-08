@@ -222,6 +222,11 @@ def test_mrpack_launch_version(subtests: pytest_subtests.SubTests, requests_mock
         assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path / "Forge.mrpack")) == "test1-forge-41.1.0"
         del index["dependencies"]["forge"]
 
+    with subtests.test("NeoForge"):
+        index["dependencies"]["neoforge"] = "21.8.29"
+        assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path / "neoForge.mrpack")) == "neoforge-21.8.29"
+        del index["dependencies"]["neoforge"]
+
     with subtests.test("Fabric"):
         index["dependencies"]["fabric-loader"] = "0.14.15"
         assert minecraft_launcher_lib.mrpack.get_mrpack_launch_version(_create_test_index_pack(index, tmp_path / "Fabric.mrpack")) == "fabric-loader-0.14.15-test1"

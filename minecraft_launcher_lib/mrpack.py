@@ -208,6 +208,8 @@ def get_mrpack_launch_version(path: str | os.PathLike) -> str:
 
             if "forge" in index["dependencies"]:
                 return index["dependencies"]["minecraft"] + "-forge-" + index["dependencies"]["forge"]
+            elif "neoforge" in index["dependencies"]:
+                return "neoforge-" + index["dependencies"]["neoforge"]
             elif "fabric-loader" in index["dependencies"]:
                 return "fabric-loader-" + index["dependencies"]["fabric-loader"] + "-" + index["dependencies"]["minecraft"]
             elif "quilt-loader" in index["dependencies"]:
