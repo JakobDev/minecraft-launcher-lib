@@ -196,18 +196,19 @@ def get_library_path(name: str, path: str | os.PathLike) -> str:
     """
     Returns the path from a library name
     """
+    if "@" in name:
+        name, suffix = name.split("@")
+    else:
+        suffix = "jar"
+
     libpath = os.path.join(path, "libraries")
     parts = name.split(":")
     base_path, libname, version = parts[0:3]
     for i in base_path.split("."):
         libpath = os.path.join(libpath, i)
-    try:
-        version, fileend = version.split("@")
-    except ValueError:
-        fileend = "jar"
 
     # construct a filename with the remaining parts
-    filename = f"{libname}-{version}{''.join(map(lambda p: f'-{p}', parts[3:]))}.{fileend}"
+    filename = f"{libname}-{version}{''.join(map(lambda p: f'-{p}', parts[3:]))}.{suffix}"
     libpath = os.path.join(libpath, libname, version, filename)
     return libpath
 

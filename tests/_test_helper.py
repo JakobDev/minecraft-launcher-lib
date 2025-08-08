@@ -73,6 +73,16 @@ def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
     requests_mock.get("https://meta.fabricmc.net/v2/versions/game", json=fabric_quilt_versions)
     requests_mock.get("https://meta.quiltmc.org/v3/versions/game", json=fabric_quilt_versions)
 
+    requests_mock.get("https://meta.fabricmc.net/v2/versions/loader", json=[
+        {"version": "0.1", "stable": False, "separator": ",", "build": 42, "maven": "net.fabricmc:fabric-loader:0.1"},
+        {"version": "0.2", "stable": True, "separator": ",", "build": 42, "maven": "net.fabricmc:fabric-loader:0.2"},
+    ])
+
+    requests_mock.get("https://meta.quiltmc.org/v3/versions/loader", json=[
+        {"version": "0.1-beta", "separator": ",", "build": 42, "maven": "org.quiltmc:quilt-loader::0.1-beta"},
+        {"version": "0.2", "separator": ",", "build": 42, "maven": "org.quiltmc:quilt-loader::0.2"},
+    ])
+
     online_release_version = read_test_json_file("versions/test1/test1.json")
     online_release_version["id"] = "online-release"
     online_release_version_bytes = json.dumps(online_release_version).encode("utf-8")
@@ -99,6 +109,23 @@ def prepare_requests_mock(requests_mock: requests_mock.Mocker) -> None:
 
     requests_mock.get("minecraft-launcher-lib-test://libraries/empty.jar", content=b"")
     requests_mock.get("minecraft-launcher-lib-test://libraries/mainclass.jar", content=read_test_file("forge/mainclass.zip"))
+
+    requests_mock.get("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml", text="""
+    <metadata>
+        <groupId>net.minecraftforge</groupId>
+        <artifactId>forge</artifactId>
+        <versioning>
+            <release>test1-1.0</release>
+            <latest>test1-1.0</latest>
+            <lastUpdated>0</lastUpdated>
+            <versions>
+                <version>test1-1.0</version>
+            </versions>
+        </versioning>
+    </metadata>
+    """)
+
+    requests_mock.get("https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge", json={"versions": []})
 
 
 def create_bytes_zip(source_dir: pathlib.Path) -> bytes:

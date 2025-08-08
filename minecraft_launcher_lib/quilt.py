@@ -2,6 +2,10 @@
 # SPDX-FileCopyrightText: Copyright (c) 2019-2025 JakobDev <jakobdev@gmx.de> and contributors
 # SPDX-License-Identifier: BSD-2-Clause
 """
+.. warning::
+    This module is deprecated and has been replaced by :mod:`~minecraft_launcher_lib.mod_loader`.
+    It will no longer receive updates or bug fixes and may be removed in a future release.
+
 quilt contains functions for dealing with the `Quilt modloader <https://quiltmc.org>`_.
 
 You may have noticed, that the Functions are the same as in the :doc:`fabric` module.
@@ -14,6 +18,7 @@ from .install import install_minecraft_version
 from .utils import is_version_valid
 import subprocess
 import tempfile
+import warnings
 import os
 
 
@@ -28,6 +33,7 @@ def get_all_minecraft_versions() -> list[QuiltMinecraftVersion]:
         for version in minecraft_launcher_lib.quilt.get_all_minecraft_versions():
             print(version["version"])
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     QUILT_MINECARFT_VERSIONS_URL = "https://meta.quiltmc.org/v3/versions/game"
     return get_requests_response_cache(QUILT_MINECARFT_VERSIONS_URL).json()
 
@@ -43,6 +49,8 @@ def get_stable_minecraft_versions() -> list[str]:
         for version in minecraft_launcher_lib.quilt.get_stable_minecraft_versions():
             print(version)
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     minecraft_versions = get_all_minecraft_versions()
     stable_versions = []
     for i in minecraft_versions:
@@ -61,6 +69,7 @@ def get_latest_minecraft_version() -> str:
 
         print("Latest Minecraft version: " + minecraft_launcher_lib.quilt.get_latest_minecraft_version())
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     minecraft_versions = get_all_minecraft_versions()
     return minecraft_versions[0]["version"]
 
@@ -75,6 +84,7 @@ def get_latest_stable_minecraft_version() -> str:
 
         print("Latest stable Minecraft version: " + minecraft_launcher_lib.quilt.get_latest_stable_minecraft_version())
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     stable_versions = get_stable_minecraft_versions()
     return stable_versions[0]
 
@@ -95,6 +105,8 @@ def is_minecraft_version_supported(version: str) -> bool:
 
     :param version: A vanilla version
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     minecraft_versions = get_all_minecraft_versions()
     for i in minecraft_versions:
         if i["version"] == version:
@@ -113,6 +125,7 @@ def get_all_loader_versions() -> list[QuiltLoader]:
         for version in minecraft_launcher_lib.quilt.get_all_loader_versions():
             print(version["version"])
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     QUILT_LOADER_VERSIONS_URL = "https://meta.quiltmc.org/v3/versions/loader"
     return get_requests_response_cache(QUILT_LOADER_VERSIONS_URL).json()
 
@@ -128,6 +141,7 @@ def get_latest_loader_version() -> str:
 
         print("Latest loader version: " + minecraft_launcher_lib.quilt.get_latest_loader_version())
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     loader_versions = get_all_loader_versions()
     return loader_versions[0]["version"]
 
@@ -142,6 +156,7 @@ def get_latest_installer_version() -> str:
 
         print("Latest installer version: " + minecraft_launcher_lib.quilt.get_latest_installer_version())
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     QUILT_INSTALLER_MAVEN_URL = "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/maven-metadata.xml"
     return parse_maven_metadata(QUILT_INSTALLER_MAVEN_URL)["latest"]
 
@@ -166,6 +181,8 @@ def install_quilt(minecraft_version: str, minecraft_directory: str | os.PathLike
     :raises VersionNotFound: The given Minecraft does not exists
     :raises UnsupportedVersion: The given Minecraft version is not supported by Quilt
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     path = str(minecraft_directory)
     if not callback:
         callback = {}

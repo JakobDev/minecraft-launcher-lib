@@ -9,11 +9,7 @@ from ._helper import download_file, empty, check_path_inside_minecraft_directory
 from .types import MrpackInformation, MrpackInstallOptions, CallbackDict
 from ._internal_types.mrpack_types import MrpackIndex, MrpackFile
 from .install import install_minecraft_version
-from .forge import install_forge_version
-from .exceptions import VersionNotFound
-from .fabric import install_fabric
-from .quilt import install_quilt
-import requests
+from .mod_loader import get_mod_loader
 import zipfile
 import json
 import os
@@ -172,25 +168,24 @@ def install_mrpack(path: str | os.PathLike, minecraft_directory: str | os.PathLi
         install_minecraft_version(index["dependencies"]["minecraft"], minecraft_directory, callback=callback)
 
         if "forge" in index["dependencies"]:
-            forge_version = None
-            FORGE_DOWNLOAD_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
-            for current_forge_version in (index["dependencies"]["minecraft"] + "-" + index["dependencies"]["forge"], index["dependencies"]["minecraft"] + "-" + index["dependencies"]["forge"] + "-" + index["dependencies"]["minecraft"]):
-                if requests.head(FORGE_DOWNLOAD_URL.replace("{version}", current_forge_version)).status_code == 200:
-                    forge_version = current_forge_version
-                    break
-            else:
-                raise VersionNotFound(index["dependencies"]["forge"])
+            callback.get("setStatus", empty)("Installing Forge " + index["dependencies"]["forge"] + " for Minecraft " + index["dependencies"]["minecraft"])
+            forge = get_mod_loader("forge")
+            forge.install(index["dependencies"]["minecraft"], minecraft_directory, loader_version=index["dependencies"]["forge"], callback=callback)
 
-            callback.get("setStatus", empty)(f"Installing Forge {forge_version}")
-            install_forge_version(forge_version, minecraft_directory, callback=callback)
+        if "neoforge" in index["dependencies"]:
+            callback.get("setStatus", empty)("Installing Neoforge " + index["dependencies"]["neoforge"] + " for Minecraft " + index["dependencies"]["minecraft"])
+            neoforge = get_mod_loader("neoforge")
+            neoforge.install(index["dependencies"]["minecraft"], minecraft_directory, loader_version=index["dependencies"]["neoforge"], callback=callback)
 
         if "fabric-loader" in index["dependencies"]:
             callback.get("setStatus", empty)("Installing Fabric " + index["dependencies"]["fabric-loader"] + " for Minecraft " + index["dependencies"]["minecraft"])
-            install_fabric(index["dependencies"]["minecraft"], minecraft_directory, loader_version=index["dependencies"]["fabric-loader"], callback=callback)
+            fabric = get_mod_loader("fabric")
+            fabric.install(index["dependencies"]["minecraft"], minecraft_directory, loader_version=index["dependencies"]["fabric-loader"], callback=callback)
 
         if "quilt-loader" in index["dependencies"]:
             callback.get("setStatus", empty)("Installing Quilt " + index["dependencies"]["quilt-loader"] + " for Minecraft " + index["dependencies"]["minecraft"])
-            install_quilt(index["dependencies"]["minecraft"], minecraft_directory, loader_version=index["dependencies"]["quilt-loader"], callback=callback)
+            quilt = get_mod_loader("quilt")
+            quilt.install(index["dependencies"]["minecraft"], minecraft_directory, loader_version=index["dependencies"]["quilt-loader"], callback=callback)
 
 
 def get_mrpack_launch_version(path: str | os.PathLike) -> str:
@@ -213,6 +208,8 @@ def get_mrpack_launch_version(path: str | os.PathLike) -> str:
 
             if "forge" in index["dependencies"]:
                 return index["dependencies"]["minecraft"] + "-forge-" + index["dependencies"]["forge"]
+            elif "neoforge" in index["dependencies"]:
+                return "neoforge-" + index["dependencies"]["neoforge"]
             elif "fabric-loader" in index["dependencies"]:
                 return "fabric-loader-" + index["dependencies"]["fabric-loader"] + "-" + index["dependencies"]["minecraft"]
             elif "quilt-loader" in index["dependencies"]:

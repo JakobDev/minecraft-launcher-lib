@@ -6,7 +6,7 @@
     ],
     "spec": 1,
     "profile": "forge",
-    "version": "forgetest1",
+    "version": "test1-forge-forgetest1",
     "path": null,
     "minecraft": "test1",
     "serverJarPath": "{LIBRARY_DIR}/net/minecraft/server/{MINECRAFT_VERSION}/server-{MINECRAFT_VERSION}.jar",

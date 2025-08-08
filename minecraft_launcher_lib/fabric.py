@@ -1,7 +1,14 @@
 # This file is part of minecraft-launcher-lib (https://codeberg.org/JakobDev/minecraft-launcher-lib)
 # SPDX-FileCopyrightText: Copyright (c) 2019-2025 JakobDev <jakobdev@gmx.de> and contributors
 # SPDX-License-Identifier: BSD-2-Clause
-"fabric contains functions for dealing with the `Fabric modloader <https://fabricmc.net/>`_."
+"""
+.. warning::
+    This module is deprecated and has been replaced by :mod:`~minecraft_launcher_lib.mod_loader`.
+    It will no longer receive updates or bug fixes and may be removed in a future release.
+
+fabric contains functions for dealing with the `Fabric modloader <https://fabricmc.net/>`_.
+"""
+
 from ._helper import download_file, get_requests_response_cache, parse_maven_metadata, empty
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
 from .types import FabricMinecraftVersion, FabricLoader, CallbackDict
@@ -9,6 +16,7 @@ from .install import install_minecraft_version
 from .utils import is_version_valid
 import subprocess
 import tempfile
+import warnings
 import os
 
 
@@ -23,6 +31,7 @@ def get_all_minecraft_versions() -> list[FabricMinecraftVersion]:
         for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions():
             print(version["version"])
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     FABRIC_MINECARFT_VERSIONS_URL = "https://meta.fabricmc.net/v2/versions/game"
     return get_requests_response_cache(FABRIC_MINECARFT_VERSIONS_URL).json()
 
@@ -38,6 +47,7 @@ def get_stable_minecraft_versions() -> list[str]:
         for version in minecraft_launcher_lib.fabric.get_stable_minecraft_versions():
             print(version)
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     minecraft_versions = get_all_minecraft_versions()
     stable_versions = []
     for i in minecraft_versions:
@@ -56,6 +66,7 @@ def get_latest_minecraft_version() -> str:
 
         print("Latest Minecraft version: " + minecraft_launcher_lib.fabric.get_latest_minecraft_version())
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     minecraft_versions = get_all_minecraft_versions()
     return minecraft_versions[0]["version"]
 
@@ -70,6 +81,7 @@ def get_latest_stable_minecraft_version() -> str:
 
         print("Latest stable Minecraft version: " + minecraft_launcher_lib.fabric.get_latest_stable_minecraft_version())
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     stable_versions = get_stable_minecraft_versions()
     return stable_versions[0]
 
@@ -90,6 +102,7 @@ def is_minecraft_version_supported(version: str) -> bool:
 
     :param version: A vanilla version
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     minecraft_versions = get_all_minecraft_versions()
     for i in minecraft_versions:
         if i["version"] == version:
@@ -108,6 +121,7 @@ def get_all_loader_versions() -> list[FabricLoader]:
         for version in minecraft_launcher_lib.fabric.get_all_loader_versions():
             print(version["version"])
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     FABRIC_LOADER_VERSIONS_URL = "https://meta.fabricmc.net/v2/versions/loader"
     return get_requests_response_cache(FABRIC_LOADER_VERSIONS_URL).json()
 
@@ -122,6 +136,7 @@ def get_latest_loader_version() -> str:
 
         print("Latest loader version: " + minecraft_launcher_lib.fabric.get_latest_loader_version())
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     loader_versions = get_all_loader_versions()
     return loader_versions[0]["version"]
 
@@ -136,6 +151,7 @@ def get_latest_installer_version() -> str:
 
         print("Latest installer version: " + minecraft_launcher_lib.fabric.get_latest_installer_version())
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
     FABRIC_INSTALLER_MAVEN_URL = "https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml"
     return parse_maven_metadata(FABRIC_INSTALLER_MAVEN_URL)["latest"]
 
@@ -143,7 +159,6 @@ def get_latest_installer_version() -> str:
 def install_fabric(minecraft_version: str, minecraft_directory: str | os.PathLike, loader_version: str | None = None, callback: CallbackDict | None = None, java: str | os.PathLike | None = None) -> None:
     """
     Installs the Fabric modloader.
-    For more information take a look at the :doc:`tutorial </tutorial/install_fabric>`.
 
     Example:
 
@@ -161,6 +176,8 @@ def install_fabric(minecraft_version: str, minecraft_directory: str | os.PathLik
     :raises VersionNotFound: The given Minecraft does not exists
     :raises UnsupportedVersion: The given Minecraft version is not supported by Fabric
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     path = str(minecraft_directory)
     if not callback:
         callback = {}

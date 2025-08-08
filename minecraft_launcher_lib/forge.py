@@ -2,6 +2,10 @@
 # SPDX-FileCopyrightText: Copyright (c) 2019-2025 JakobDev <jakobdev@gmx.de> and contributors
 # SPDX-License-Identifier: BSD-2-Clause
 """
+.. warning::
+    This module is deprecated and has been replaced by :mod:`~minecraft_launcher_lib.mod_loader`.
+    It will no longer receive updates or bug fixes and may be removed in a future release.
+
 .. note::
     Before using this module, please read this comment from the forge developers:
 
@@ -22,6 +26,7 @@ from .exceptions import VersionNotFound
 from .types import CallbackDict
 import subprocess
 import tempfile
+import warnings
 import zipfile
 import json
 import os
@@ -88,6 +93,8 @@ def install_forge_version(versionid: str, path: str | os.PathLike, callback: Cal
 
     Raises a :class:`~minecraft_launcher_lib.exceptions.VersionNotFound` exception when the given forge version is not found
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     if callback is None:
         callback = {}
 
@@ -166,6 +173,8 @@ def run_forge_installer(version: str, java: str | os.PathLike | None = None) -> 
     :param version: A Forge Version. You can get a List of Forge versions using :func:`list_forge_versions`
     :param java: A Path to a custom Java executable
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     FORGE_DOWNLOAD_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
 
     with tempfile.TemporaryDirectory(prefix="minecraft-launcher-lib-forge-installer-") as tempdir:
@@ -181,6 +190,8 @@ def list_forge_versions() -> list[str]:
     """
     Returns a list of all forge versions
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     MAVEN_METADATA_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml"
     return parse_maven_metadata(MAVEN_METADATA_URL)["versions"]
 
@@ -191,6 +202,8 @@ def find_forge_version(vanilla_version: str) -> str | None:
 
     :param vanilla_version: A vanilla Minecraft version
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     version_list = list_forge_versions()
     for i in version_list:
         version_split = i.split("-")
@@ -205,6 +218,8 @@ def is_forge_version_valid(forge_version: str) -> bool:
 
     :param forge_version: A Forge Version
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     forge_version_list = list_forge_versions()
     return forge_version in forge_version_list
 
@@ -215,6 +230,8 @@ def supports_automatic_install(forge_version: str) -> bool:
 
     :param forge_version: A Forge Version
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     try:
         vanilla_version, forge = forge_version.split("-")
         version_split = vanilla_version.split(".")
@@ -235,6 +252,8 @@ def forge_to_installed_version(forge_version: str) -> str:
 
     Raises a ValueError if the Version is invalid.
     """
+    warnings.warn("This module is deprecated and has been replaced by mod_loader", DeprecationWarning)
+
     try:
         vanilla_part, forge_part = forge_version.split("-")
         return f"{vanilla_part}-forge-{forge_part}"

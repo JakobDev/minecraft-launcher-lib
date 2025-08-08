@@ -141,3 +141,13 @@ def test_do_vanilla_launcher_profiles_exists(tmp_path: pathlib.Path) -> None:
     assert minecraft_launcher_lib.vanilla_launcher.do_vanilla_launcher_profiles_exists(tmp_path / ".minecraft") is False
     _prepare_vanilla_launcher_test_env(tmp_path)
     assert minecraft_launcher_lib.vanilla_launcher.do_vanilla_launcher_profiles_exists(tmp_path / ".minecraft") is True
+
+
+def test_create_empty_vanilla_launcher_profiles_file(tmp_path: pathlib.Path) -> None:
+    minecraft_launcher_lib.vanilla_launcher.create_empty_vanilla_launcher_profiles_file(tmp_path)
+    assert (tmp_path / "launcher_profiles.json").is_file()
+
+
+def test_ensure_vanilla_launcher_profiles_exists(tmp_path: pathlib.Path) -> None:
+    minecraft_launcher_lib.vanilla_launcher.ensure_vanilla_launcher_profiles_exists(tmp_path)
+    assert (tmp_path / "launcher_profiles.json").is_file()
