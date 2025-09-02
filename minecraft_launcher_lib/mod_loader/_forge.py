@@ -11,6 +11,7 @@ from typing import cast
 import subprocess
 import tempfile
 import zipfile
+import shutil
 import json
 import os
 
@@ -116,6 +117,8 @@ class Forge(ModLoaderBase):
         forge_installer_url = self.get_installer_url(minecraft_version, loader_version)
         forge_version = f"{minecraft_version}-{loader_version}"
 
+        forge_version_id = self.get_installed_version(minecraft_version, loader_version)
+
         with tempfile.TemporaryDirectory(prefix="minecraft-launcher-lib-") as tempdir:
             installer_path = os.path.join(tempdir, "installer.jar")
 
@@ -128,7 +131,6 @@ class Forge(ModLoaderBase):
 
                 version_data: ForgeInstallProfile = json.loads(version_content)
                 minecraft_version = version_data["minecraft"] if "minecraft" in version_data else version_data["install"]["minecraft"]
-                forge_version_id = self.get_installed_version(minecraft_version, loader_version)
 
                 # Install all needed libs from install_profile.json
                 if "libraries" in version_data:
@@ -204,3 +206,11 @@ class Forge(ModLoaderBase):
             # Run the processors
             if "processors" in version_data:
                 self._forge_processors(version_data, minecraft_directory, tempdir, lzma_path, installer_path, callback, java)
+
+        # If Forge provides no client.jar, we can just copy the client.jar from the base minecraft version
+        forge_jar_path = os.path.join(minecraft_directory, "versions", forge_version_id, f"{forge_version_id}.jar")
+        if not os.path.isfile(forge_jar_path):
+            shutil.copyfile(os.path.join(
+                minecraft_directory, "versions", minecraft_version,
+                f"{minecraft_version}.jar"), forge_jar_path
+            )
