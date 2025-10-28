@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 from typing import TypedDict
 import requests
-import datetime
+import datetime  # noqa: F401
 
 
 class RequestsResponseCache(TypedDict):
