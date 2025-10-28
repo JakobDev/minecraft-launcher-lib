@@ -53,6 +53,9 @@ class Neoforge(ModLoaderBase):
             if self._normalize_minecraft_version(current_minecraft_version) == minecraft_version:
                 version_list.append(current_version)
 
+        # The versions are sorted from oldest to newest but we want newest to oldest
+        version_list.reverse()
+
         return version_list
 
     def get_installer_url(self, minecraft_version: str, loader_version: str) -> str:
