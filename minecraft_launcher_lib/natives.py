@@ -94,4 +94,4 @@ def extract_natives(versionid: str, path: str | os.PathLike, extract_path: str) 
             continue
 
         lib_path, extension = os.path.splitext(current_path)
-        extract_natives_file(f"{lib_path}-{native}{extension}", extract_path, i.get("extract", {"exclude": []}))
+        extract_natives_file(f"{lib_path}-{native}{extension}", extract_path, i.get("extract", {"exclude": []}))  # type: ignore[arg-type] # mypy bug 20138
