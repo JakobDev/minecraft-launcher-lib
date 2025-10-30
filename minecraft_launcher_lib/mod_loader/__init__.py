@@ -100,7 +100,7 @@ class ModLoader():
 
     def get_loader_versions(self, minecraft_version: str, stable_only: bool) -> list[str]:
         """
-        Returns all loader versions that exists for the given Minecraft version
+        Returns all loader versions from newest to oldest that exists for the given Minecraft version
 
         Example:
 

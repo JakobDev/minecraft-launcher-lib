@@ -44,8 +44,8 @@ def test_mod_loader_neoforge_get_loader_versions(requests_mock: requests_mock.Mo
 
     all_versions = neoforge.get_loader_versions("1.20", False)
     assert len(all_versions) == 2
-    assert all_versions[0] == "20.0.neoforge-beta"
-    assert all_versions[1] == "20.0.neoforge"
+    assert all_versions[0] == "20.0.neoforge"
+    assert all_versions[1] == "20.0.neoforge-beta"
 
 
 def test_mod_loader_neoforge_get_installer_url() -> None:
