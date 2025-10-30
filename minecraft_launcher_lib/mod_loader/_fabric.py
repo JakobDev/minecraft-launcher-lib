@@ -39,5 +39,5 @@ class Fabric(FabricQuiltBase):
 
             # Run the installer see https://fabricmc.net/wiki/install#cli_installation
             callback.get("setStatus", empty)("Running installer")
-            command = [java, "-jar", installer_path, "client", "-dir", minecraft_directory, "-mcversion", minecraft_version, "-noprofile", "-snapshot"]
+            command = [java, "-jar", installer_path, "client", "-dir", minecraft_directory, "-mcversion", minecraft_version, "-loader", loader_version, "-noprofile", "-snapshot"]
             subprocess.run(command, cwd=tempdir, check=True, startupinfo=SUBPROCESS_STARTUP_INFO)
