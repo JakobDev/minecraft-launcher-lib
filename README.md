@@ -61,7 +61,7 @@ Features:
 - Easy installing
 - Get command to run Minecraft
 - Login to Microsoft account
-- Supports [Forge](https://minecraftforge.net), [Fabric](https://fabricmc.net), [Quilt](https://quiltmc.org) and Liteloader
+- Supports [Forge](https://minecraftforge.net), [Fabric](https://fabricmc.net), [Quilt](https://quiltmc.org), [NeoForge](https://neoforged.net) and Liteloader
 - Old versions like alpha or beta supported
 - All functions have type annotations and docstrings
 - Only depents on [requests](https://pypi.org/project/requests)
