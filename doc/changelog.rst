@@ -2,6 +2,15 @@ Changelog
 ==================================================
 
 -------------------------
+8.0
+-------------------------
+- Added ``mod_loader`` module (`#177 <https://codeberg.org/JakobDev/minecraft-launcher-lib/pulls/177>`_)
+- Deprecated ``forge`` module (`#177 <https://codeberg.org/JakobDev/minecraft-launcher-lib/pulls/177>`_)
+- Deprecated ``fabric`` module (`#177 <https://codeberg.org/JakobDev/minecraft-launcher-lib/pulls/177>`_)
+- Deprecated ``quilt`` module (`#177 <https://codeberg.org/JakobDev/minecraft-launcher-lib/pulls/177>`_)
+- Hide cmd on Windows (`izharus <https://codeberg.org/izharus>`_ in `#148 <https://codeberg.org/JakobDev/minecraft-launcher-lib/pulls/148>`_)
+
+-------------------------
 7.1
 -------------------------
 - Fixed tempfile handling on Windows (`#144 <https://codeberg.org/JakobDev/minecraft-launcher-lib/issues/144>`_)

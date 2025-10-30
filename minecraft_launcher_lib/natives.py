@@ -61,37 +61,44 @@ def extract_natives_file(filename: str, extract_path: str, extract_data: dict[Li
                 zf.extract(i, extract_path)
 
 
-def extract_natives(versionid: str, path: str | os.PathLike, extract_path: str) -> None:
+def extract_natives(version: str, minecraft_directory: str | os.PathLike, extract_path: str | os.PathLike) -> None:
     """
     Extract all native libraries from a version into the given directory. The directory will be created, if it does not exist.
 
+    The natives are all extracted while installing. So you don't need to use this function in most cases.
+
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        minecraft_launcher_lib.natives.extract_natives("1.21", minecraft_directory, "/path/to/extract")
+
     :param version: The Minecraft version
     :param minecraft_directory: The path to your Minecraft directory
-    :param callback: The same dict as for :func:`~minecraft_launcher_lib.install.install_minecraft_version`
+    :param extract_path: The directory to which the native libraries will be extracted
     :raises VersionNotFound: The Minecraft version was not found
     :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
-
-    The natives are all extracted while installing. So you don't need to use this function in most cases.
     """
-    if not os.path.isfile(os.path.join(path, "versions", versionid, versionid + ".json")):
-        raise VersionNotFound(versionid)
+    if not os.path.isfile(os.path.join(minecraft_directory, "versions", version, version + ".json")):
+        raise VersionNotFound(version)
 
-    with open(os.path.join(path, "versions", versionid, versionid + ".json"), "r", encoding="utf-8") as f:
+    with open(os.path.join(minecraft_directory, "versions", version, version + ".json"), "r", encoding="utf-8") as f:
         data: ClientJson = json.load(f)
 
     if "inheritsFrom" in data:
-        data = inherit_json(data, path)
+        data = inherit_json(data, minecraft_directory)
 
     for i in data["libraries"]:
         # Check, if the rules allow this lib for the current system
         if "rules" in i and not parse_rule_list(i["rules"], {}):
             continue
 
-        current_path = get_library_path(i["name"], path)
+        current_path = get_library_path(i["name"], minecraft_directory)
         native = get_natives(i)
 
         if native == "":
             continue
 
         lib_path, extension = os.path.splitext(current_path)
-        extract_natives_file(f"{lib_path}-{native}{extension}", extract_path, i.get("extract", {"exclude": []}))  # type: ignore[arg-type] # mypy bug 20138
+        extract_natives_file(f"{lib_path}-{native}{extension}", str(extract_path), i.get("extract", {"exclude": []}))  # type: ignore[arg-type] # mypy bug 20138

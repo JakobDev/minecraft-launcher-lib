@@ -126,25 +126,21 @@ def get_arguments(data: list[str | ClientJsonArgumentRule], versionData: ClientJ
 
 def get_minecraft_command(version: str, minecraft_directory: str | os.PathLike, options: MinecraftOptions) -> list[str]:
     """
-    Returns the command for running minecraft as list. The given command can be executed with subprocess. Use :func:`~minecraft_launcher_lib.utils.get_minecraft_directory` to get the default Minecraft directory.
+    Returns the command to run Minecraft as a list. The returned command can be executed using Python’s `subprocess module <https://docs.python.org/3/library/subprocess.html>`_.
 
-    :param version: The Minecraft version
-    :param minecraft_directory: The path to your Minecraft directory
-    :param options: Some Options (see below)
-
-    ``options`` is a dict:
+    You must provide a dictionary containing launch options. Some options are required and others are optional. The following options are available:
 
     .. code:: python
 
         options = {
             # This is needed
-            "username": The Username,
-            "uuid": uuid of the user,
-            "token": the accessToken,
+            "username": "", # The Username,
+            "uuid": "", # uuid of the user,
+            "token": "", # the accessToken,
             # This is optional
             "executablePath": "java", # The path to the java executable
             "defaultExecutablePath": "java", # The path to the java executable if the client.json has none
-            "jvmArguments": [], #The jvmArguments
+            "jvmArguments": [], # The jvmArguments
             "launcherName": "minecraft-launcher-lib", # The name of your launcher
             "launcherVersion": "1.0", # The version of your launcher
             "gameDirectory": "/home/user/.minecraft", # The gameDirectory (default is the path given in arguments)
@@ -164,8 +160,26 @@ def get_minecraft_command(version: str, minecraft_directory: str | os.PathLike, 
             "quickPlayRealms": None, # The Quick Play Realms
         }
 
-    You can use the :doc:`microsoft_account` module to get the needed information.
-    For more information about the options take a look at the :doc:`/tutorial/more_launch_options` tutorial.
+    Use the :doc:`microsoft_account` module to obtain account-related information.
+    For details about available options, see the :doc:`/tutorial/more_launch_options` tutorial.
+
+    To test this function without logging in, use :func:`~minecraft_launcher_lib.utils.generate_test_options` to create sample launch options.
+    Only use those test options for development and testing until you implement proper account handling
+
+    Example:
+
+    .. code:: python
+
+        options = minecraft_launcher_lib.utils.generate_test_options()
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        command = minecraft_launcher_lib.command.get_minecraft_command("1.21", minecraft_directory, options)
+        subprocess.run(command, pwd=minecraft_directory)
+
+    :param version: The Minecraft version
+    :param minecraft_directory: The path to your Minecraft directory
+    :param options: Some Options
+    :raises VersionNotFound: The Minecraft version was not found
+    :return: The command
     """
     path = str(minecraft_directory)
 
