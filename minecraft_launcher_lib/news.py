@@ -14,7 +14,22 @@ import requests
 
 
 def get_minecraft_news() -> MinecraftNews:
-    "Returns general news about Minecraft"
+    """
+    Returns general news about Minecraft. It uses https://launchercontent.mojang.com/news.json as source.
+
+    Example:
+
+    .. code:: python
+
+        news = minecraft_launcher_lib.news.get_minecraft_news()
+        for entry in news["entries"]:
+            print(entry["title"] + ":")
+            print(entry["text"])
+            print()
+
+    :return: The news
+    """
+
     news = requests.get("https://launchercontent.mojang.com/news.json", headers={"user-agent": get_user_agent()}).json()
 
     for entry in news["entries"]:
@@ -24,5 +39,19 @@ def get_minecraft_news() -> MinecraftNews:
 
 
 def get_java_patch_notes() -> JavaPatchNotes:
-    "Returns the patch notes for Minecraft Java Edition"
+    """
+    Returns the patch notes for Minecraft Java Edition. It uses https://launchercontent.mojang.com/javaPatchNotes.json as source.
+
+    Example:
+
+    .. code:: python
+
+        news = minecraft_launcher_lib.news.get_java_patch_notes()
+        for entry in news["entries"]:
+            print(entry["title"] + ":")
+            print(entry["body"])
+            print()
+
+    :return: The patch notes
+    """
     return requests.get("https://launchercontent.mojang.com/javaPatchNotes.json", headers={"user-agent": get_user_agent()}).json()

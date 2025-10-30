@@ -62,6 +62,16 @@ def load_vanilla_launcher_profiles(minecraft_directory: str | os.PathLike) -> li
     """
     Loads the profiles of the Vanilla Launcher from the given Minecraft directory
 
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        profiles = minecraft_launcher_lib.vanilla_launcher.load_vanilla_launcher_profiles(minecraft_directory)
+
+        for profile in profiles:
+            print(profile["name"])
+
     :param minecraft_directory: The Minecraft directory
     :return: A List with the Profiles
     """
@@ -117,6 +127,21 @@ def vanilla_launcher_profile_to_minecraft_options(vanilla_profile: VanillaLaunch
     Converts a VanillaLauncherProfile into a Options dict, that can be used by :func:`~minecraft_launcher_lib.command.get_minecraft_command`.
     You still need to add the Login Data to the Options before you can use it.
 
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        profiles = minecraft_launcher_lib.vanilla_launcher.load_vanilla_launcher_profiles(minecraft_directory)
+
+        test_options = minecraft_launcher_lib.utils.generate_test_options()
+        profile_options = minecraft_launcher_lib.vanilla_launcher.vanilla_launcher_profile_to_minecraft_options(profiles[0])
+        options = test_options | profile_options
+
+        minecraft_version = minecraft_launcher_lib.vanilla_launcher.get_vanilla_launcher_profile_version(profiles[0])
+        command = minecraft_launcher_lib.command.get_minecraft_command(minecraft_version, minecraft_directory, options)
+        subprocess.run(command, cwd=minecraft_directory)
+
     :param vanilla_profile: The profile as returned by :func:`load_vanilla_launcher_profiles`
     :raises InvalidVanillaLauncherProfile: The given Profile is invalid
     :return: The Options Dict
@@ -147,6 +172,16 @@ def get_vanilla_launcher_profile_version(vanilla_profile: VanillaLauncherProfile
     """
     Returns the Minecraft version of the VanillaProfile. Handles ``latest-release`` and ``latest-snapshot``.
 
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        profiles = minecraft_launcher_lib.vanilla_launcher.load_vanilla_launcher_profiles(minecraft_directory)
+
+        for profile in profiles:
+            print(minecraft_launcher_lib.vanilla_launcher.get_vanilla_launcher_profile_version(profile))
+
     :param vanilla_profile: The Profile
     :type vanilla_profile: VanillaLauncherProfile
     :raises InvalidVanillaLauncherProfile: The given Profile is invalid
@@ -166,6 +201,18 @@ def get_vanilla_launcher_profile_version(vanilla_profile: VanillaLauncherProfile
 def add_vanilla_launcher_profile(minecraft_directory: str | os.PathLike, vanilla_profile: VanillaLauncherProfile) -> None:
     """
     Adds a new Profile to the Vanilla Launcher
+
+    Example:
+
+    .. code:: python
+
+        profile: minecraft_launcher_lib.types.VanillaLauncherProfile = {
+            "name": "test",
+            "versionType": "latest-release",
+        }
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(minecraft_directory, profile)
 
     :param minecraft_directory: The Minecraft directory
     :param vanilla_profile: The new Profile
@@ -223,6 +270,16 @@ def do_vanilla_launcher_profiles_exists(minecraft_directory: str | os.PathLike) 
     """
     Checks if profiles from the vanilla launcher can be found
 
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        if minecraft_launcher_lib.vanilla_launcher.do_vanilla_launcher_profiles_exists(minecraft_directory):
+            print("Profiles exists")
+        else:
+            print("Profiles do not exists")
+
     :param minecraft_directory: The Minecraft directory
     :return: If profiles exists
     """
@@ -237,10 +294,10 @@ def create_empty_vanilla_launcher_profiles_file(minecraft_directory: str | os.Pa
 
     Example:
 
-        .. code:: python
+    .. code:: python
 
-            minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
-            minecraft_launcher_lib.vanilla_launcher.create_empty_vanilla_launcher_profiles_file(minecraft_directory)
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        minecraft_launcher_lib.vanilla_launcher.create_empty_vanilla_launcher_profiles_file(minecraft_directory)
 
     :param minecraft_directory: The Minecraft directory
 
@@ -258,10 +315,10 @@ def ensure_vanilla_launcher_profiles_exists(minecraft_directory: str | os.PathLi
 
     Example:
 
-        .. code:: python
+    .. code:: python
 
-            minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
-            minecraft_launcher_lib.vanilla_launcher.ensure_vanilla_launcher_profiles_exists(minecraft_directory)
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        minecraft_launcher_lib.vanilla_launcher.ensure_vanilla_launcher_profiles_exists(minecraft_directory)
 
     :param minecraft_directory: The Minecraft directory
 

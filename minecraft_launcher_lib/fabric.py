@@ -8,7 +8,6 @@
 
 fabric contains functions for dealing with the `Fabric modloader <https://fabricmc.net/>`_.
 """
-
 from ._helper import download_file, get_requests_response_cache, parse_maven_metadata, empty
 from .exceptions import VersionNotFound, UnsupportedVersion, ExternalProgramError
 from .types import FabricMinecraftVersion, FabricLoader, CallbackDict

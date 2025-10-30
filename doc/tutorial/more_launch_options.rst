@@ -3,7 +3,7 @@ More Launch Options
 minecraft-launcher-lib offers various options for launching Minecraft. This page shows the most important ones. For a full list check out the documentation of the :doc:`/modules/command` module.
 
 -------------------------
-JVM Arguemnts
+JVM Arguments
 -------------------------
 JVM Arguments are a list of strings. Each argument is a entry in the list. Here is a example:
 

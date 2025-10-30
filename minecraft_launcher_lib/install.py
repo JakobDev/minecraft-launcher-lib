@@ -189,17 +189,13 @@ def do_version_install(versionid: str, path: str, callback: CallbackDict, url: s
     callback.get("setStatus", empty)("Installation complete")
 
 
-def install_minecraft_version(versionid: str, minecraft_directory: str | os.PathLike, callback: CallbackDict | None = None) -> None:
+def install_minecraft_version(version: str, minecraft_directory: str | os.PathLike, callback: CallbackDict | None = None) -> None:
     """
-    Installs a minecraft version into the given path. e.g. ``install_version("1.14", "/tmp/minecraft")``. Use :func:`~minecraft_launcher_lib.utils.get_minecraft_directory` to get the default Minecraft directory.
+    Installs a Minecraft version to the specified path.
+    It also verifies and repairs an existing installation, so call it before launching.
+    Only missing or corrupted files will be downloaded.
 
-    :param versionid: The Minecraft version
-    :param minecraft_directory: The path to your Minecraft directory
-    :param callback: Some functions that are called to monitor the progress (see below)
-    :raises VersionNotFound: The Minecraft version was not found
-    :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
-
-    ``callback`` is a dict with functions that are called with arguments to get the progress. You can use it to show the progress to the user.
+    You can pass a dict with functions as ``callback`` parameter to monitor the progress:
 
     .. code:: python
 
@@ -209,18 +205,31 @@ def install_minecraft_version(versionid: str, minecraft_directory: str | os.Path
             "setMax": some_function, # This function is called to set to max progress.
         }
 
-    Files that are already exists will not be replaced.
+    For more details, check the :doc:`corresponding tutorial </tutorial/get_installation_progress>`.
+
+    Example:
+
+    .. code:: python
+
+        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        minecraft_launcher_lib.install.install_minecraft_version("1.21", minecraft_directory)
+
+    :param version: The Minecraft version
+    :param minecraft_directory: The path to your Minecraft directory
+    :param callback: Some functions that are called to monitor the progress
+    :raises VersionNotFound: The Minecraft version was not found
+    :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
     """
     if isinstance(minecraft_directory, os.PathLike):
         minecraft_directory = str(minecraft_directory)
     if callback is None:
         callback = {}
-    if os.path.isfile(os.path.join(minecraft_directory, "versions", versionid, f"{versionid}.json")):
-        do_version_install(versionid, minecraft_directory, callback)
+    if os.path.isfile(os.path.join(minecraft_directory, "versions", version, f"{version}.json")):
+        do_version_install(version, minecraft_directory, callback)
         return
     version_list = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json", headers={"user-agent": get_user_agent()}).json()
     for i in version_list["versions"]:
-        if i["id"] == versionid:
-            do_version_install(versionid, minecraft_directory, callback, url=i["url"], sha1=i["sha1"])
+        if i["id"] == version:
+            do_version_install(version, minecraft_directory, callback, url=i["url"], sha1=i["sha1"])
             return
-    raise VersionNotFound(versionid)
+    raise VersionNotFound(version)
